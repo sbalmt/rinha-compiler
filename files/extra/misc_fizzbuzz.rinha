@@ -1,0 +1,25 @@
+let fizzbuzz = fn (i) => {
+  let rec = fn (c) => {
+    if (c % 3 == 0 && c % 5 == 0) {
+      print("FizzBuzz")
+    } else {
+      if (c % 3 == 0) {
+        print("Fizz")
+      } else {
+        if (c % 5 == 0) {
+          print("Buzz")
+        } else {
+          print(c)
+        }
+      }
+    }
+
+    if (c < i) {
+      rec(c + 1)
+    }
+  };
+
+  rec(1)
+};
+
+fizzbuzz(100)
