@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./out",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "newLine": "lf",
+    "strict": true,
+    "incremental": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": false,
+    "allowJs": true
+  },
+  "exclude": [
+    "*.config.js",
+    "./bin/**/*",
+    "./test/**/*",
+  ]
+}

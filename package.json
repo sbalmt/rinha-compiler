@@ -1,0 +1,34 @@
+{
+  "name": "@balmanth/rinha-compiler",
+  "description": "A small compiler and interpreter for the rinha language contest",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "author": {
+    "name": "Silas B. Domingos",
+    "url": "https://github.com/balmanth"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-balmanth:balmanth/rinha-compiler.git"
+  },
+  "scripts": {
+    "parser:make": "xcm -s ./xcheme/parser.xcm -t ./src/rinha.js",
+    "parser:test": "xcm --run --tokens --nodes --symbols -s ./xcheme/parser.xcm -t ./tests/syntax.rinha",
+    "test": "jest --runInBand --config=./jest.config.js",
+    "watch": "webpack --watch",
+    "build": "webpack --mode production --devtool hidden-source-map",
+    "clean": "tsc --build --clean ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@xcheme/cli": "^0.0.14",
+    "@xcheme/core": "^0.0.13",
+    "prettier": "^3.0.3",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-shebang-plugin": "^1.1.8"
+  }
+}

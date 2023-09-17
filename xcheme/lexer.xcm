@@ -1,0 +1,51 @@
+/**
+ * RINHA lexer
+ */
+
+// General patterns
+alias token EXTRA as '_';
+alias token ALPHA as from 'A' to 'Z' | from 'a' to 'z';
+alias token DIGIT as from '0' to '9';
+alias token WORD as EXTRA | ALPHA | DIGIT;
+alias token END as not WORD;
+
+// Keyword patterns
+export token<auto> T_KEYWORD as map {
+  <100> LET as 'let',
+  <101> FUNCTION as 'fn',
+
+  <120> TRUE as 'true',
+  <121> FALSE as 'false',
+
+  <150> IF as 'if',
+  <151> ELSE as 'else'
+} & END;
+
+export token<250> T_IDENTIFIER as (ALPHA | EXTRA) & opt repeat WORD;
+export token<251> T_INTEGER as '0' | from '1' to '9' & opt repeat DIGIT;
+export token<252> T_STRING as '"' & repeat ('\\' then any else not '"' then any) & '"';
+
+// Punctuation patterns
+export token<auto> T_SYMBOL as map {
+  <300> EQUAL as '=',
+  <301> PLUS as '+',
+  <302> MINUS as '-',
+  <303> ASTERISK as '*',
+  <304> SLASH as '/',
+  <305> PERCENT as '%',
+  <306> OPN_CHEVRON as '<',
+  <307> CLS_CHEVRON as '>',
+  <308> OPN_PARENTHESIS as '(',
+  <309> CLS_PARENTHESIS as ')',
+  <310> OPN_CURLY_BRACKETS as '{',
+  <311> CLS_CURLY_BRACKETS as '}',
+  <312> COMMA as ',',
+  <313> SEMICOLON as ';',
+  <314> EQUAL_EQUAL as '==',
+  <315> EXCLAMATION_EQUAL as '!=',
+  <316> OPN_CHEVRON_EQUAL as '<=',
+  <317> CLS_CHEVRON_EQUAL as '>=',
+  <318> EQUAL_CLS_CHEVRON as '=>',
+  <319> PIPE_PIPE as '||',
+  <320> AND_AND as '&&'
+};

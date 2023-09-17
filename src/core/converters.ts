@@ -1,0 +1,19 @@
+import * as Core from '@xcheme/core';
+
+import { VarValueType } from './scope';
+
+export const convertToString = <T extends Core.Types>(value: VarValueType<T>): string => {
+  if (value instanceof Core.Node || value instanceof Function) {
+    return `<#closure>`;
+  }
+
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+
+  if (typeof value === 'number') {
+    return value.toString();
+  }
+
+  return value!;
+};

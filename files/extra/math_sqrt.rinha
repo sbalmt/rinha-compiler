@@ -1,0 +1,28 @@
+let sqrt = fn (x) => {
+  if (x == 0 || x == 1) {
+    x
+  } else {
+    let rec = fn (start, end) => {
+      if (start <=  end) {
+        let mid = (start + end) / 2;
+        let sqr = mid * mid;
+
+        if (sqr == x) {
+          mid
+        } else {
+          if (sqr <= x) {
+            rec(start - 1, end)
+          } else {
+            rec(start, end - 1)
+          }
+        }
+      } else {
+        false // There's no valid SQRT
+      }
+    };
+
+    rec(1, x)
+  }
+};
+
+print(sqrt(625))

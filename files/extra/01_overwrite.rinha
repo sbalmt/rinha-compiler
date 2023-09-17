@@ -1,0 +1,7 @@
+let oldPrint = print;
+
+print = fn (value) => {
+    oldPrint("Output: " + value)
+}
+
+print("Hello World")

@@ -1,0 +1,8 @@
+let x = 10;
+
+let shadowing = fn (value) => {
+    let x = x + value;
+    x
+};
+
+print(shadowing(5))
