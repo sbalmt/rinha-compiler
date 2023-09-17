@@ -1,6 +1,6 @@
 {
   "name": "@balmanth/rinha-compiler",
-  "description": "A small compiler and interpreter for the rinha language contest",
+  "description": "A small compiler and interpreter for the Rinha language contest",
   "private": true,
   "version": "1.0.0",
   "license": "MIT",
