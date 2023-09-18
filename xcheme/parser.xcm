@@ -3,36 +3,31 @@
  */
 import './lexer';
 
-// Whitespace and Comment patterns
+// Whitespace and Comments
 skip map {
   ' ', '\t', '\v','\f', '\r', '\n',
   '/*' & opt repeat (not '*/' then any) & '*/',
   '//' & opt repeat (not '\n' then any)
 };
 
-// ---------------------------------------------------------------
-
-alias<ID> node IDENTIFIER as symbol<ID> append<1000> T_IDENTIFIER;
-
-alias<ID, OPERAND, OPERATOR> node BIN_OP as OPERAND & opt repeat pivot<ID> (OPERATOR & OPERAND);
-
-alias node FUNCTION_PARAM as append<1100> next T_IDENTIFIER & opt (T_SYMBOL.COMMA & FUNCTION_PARAM);
-
-alias<EXPR> node FUNCTION_PARAMETERS as T_SYMBOL.OPN_PARENTHESIS & append<1401> opt FUNCTION_PARAM & T_SYMBOL.CLS_PARENTHESIS;
-
 // All operands
-alias<EXPR, STMTS> node OPERANDS as append<auto> map {
+alias node FUNCTION_PARAM as append<1100> next T_IDENTIFIER & opt (T_SYMBOL.COMMA & FUNCTION_PARAM);
+alias node FUNCTION_PARAMETERS as T_SYMBOL.OPN_PARENTHESIS & append<1401> opt FUNCTION_PARAM & T_SYMBOL.CLS_PARENTHESIS;
+alias<STMTS> node FUNCTION_BLOCK as (STMTS | append<1402> EXPR<STMTS>);
+
+alias<STMTS> node OPERANDS as append<auto> map {
   <1100> T_IDENTIFIER,
   <1101> T_INTEGER,
   <1102> T_STRING,
   <1103> T_KEYWORD.TRUE,
   <1103> T_KEYWORD.FALSE,
-  <1104> T_KEYWORD.FUNCTION & FUNCTION_PARAMETERS<EXPR> & T_SYMBOL.EQUAL_CLS_CHEVRON & place next STMT_BLOCK
+  <1104> T_KEYWORD.FUNCTION & FUNCTION_PARAMETERS & T_SYMBOL.EQUAL_CLS_CHEVRON & place next FUNCTION_BLOCK<STMTS>,
+  <1105> T_SYMBOL.OPN_PARENTHESIS & EXPR<STMTS> & T_SYMBOL.COMMA & place next EXPR<STMTS> & T_SYMBOL.CLS_PARENTHESIS
 };
 
-alias<EXPR> node GROUP as place (T_SYMBOL.OPN_PARENTHESIS & EXPR & T_SYMBOL.CLS_PARENTHESIS);
+// Operators and Operations
+alias<ID, OPERAND, OPERATOR> node BIN_OP as OPERAND & opt repeat pivot<ID> (OPERATOR & OPERAND);
 
-// Operators and Operands
 alias node<1200> ASSIGN_OP as T_SYMBOL.EQUAL; // Assign
 
 alias node<1201> LOGICAL_OR_OP as T_SYMBOL.PIPE_PIPE; // Logical or
@@ -62,13 +57,12 @@ alias node<auto> MULTIPLY_OP as map {
 };
 
 alias<STMTS> node INVOKE_ARG_LIST as place next EXPR<STMTS> & opt (T_SYMBOL.COMMA & INVOKE_ARG_LIST<STMTS>);
-
 alias<STMTS> node INVOKE_ARGS as T_SYMBOL.OPN_PARENTHESIS & opt INVOKE_ARG_LIST<STMTS> & T_SYMBOL.CLS_PARENTHESIS;
-
 alias<OPERAND, STMTS> node INVOKE_OP as OPERAND & opt repeat pivot<1214> INVOKE_ARGS<STMTS>;
 
-// Operation expressions
-alias<STMTS> node VALUE_EXPR as OPERANDS<EXPR<STMTS>, STMTS> | GROUP<EXPR<STMTS>>;
+alias<STMTS> node GROUP as place (T_SYMBOL.OPN_PARENTHESIS & EXPR<STMTS> & T_SYMBOL.CLS_PARENTHESIS);
+
+alias<STMTS> node VALUE_EXPR as OPERANDS<STMTS> | GROUP<STMTS>;
 alias<STMTS> node INVOKE_EXPR as INVOKE_OP<VALUE_EXPR<STMTS>, STMTS>;
 alias<STMTS> node MULTIPLY_EXPR as BIN_OP<auto, INVOKE_EXPR<STMTS>, MULTIPLY_OP>;
 alias<STMTS> node ADD_EXPR as BIN_OP<auto, MULTIPLY_EXPR<STMTS>, ADD_OP>;
@@ -80,27 +74,21 @@ alias<STMTS> node ASSIGN_EXPR as BIN_OP<auto, LOGICAL_OR_EXPR<STMTS>, ASSIGN_OP>
 
 alias<STMTS> node EXPR as ASSIGN_EXPR<STMTS>;
 
-// ---------------------------------------------------------------
-
 // Expression patterns
-alias<STMTS> node<1300> EXPR_STATEMENT as EXPR<STMTS>;
-
-// Declaration patterns
+alias<ID> node IDENTIFIER as symbol<ID> append<1000> T_IDENTIFIER;
 alias node DECL_ASSIGNMENT as place right (T_SYMBOL.EQUAL & EXPR<PROGRAM>);
 
-alias node<auto> ALL_DECLARATIONS as map {
-  <1301> T_KEYWORD.LET & IDENTIFIER<2000> & opt DECL_ASSIGNMENT
-} & T_SYMBOL.SEMICOLON;
-
-// Statement patterns
 alias node STMT_CONDITION as T_SYMBOL.OPN_PARENTHESIS & append<1400> EXPR<PROGRAM> & T_SYMBOL.CLS_PARENTHESIS;
-alias node STMT_BLOCK     as T_SYMBOL.OPN_CURLY_BRACKETS & opt append<1402> scope (repeat place next append<auto> PROGRAM) & T_SYMBOL.CLS_CURLY_BRACKETS;
+alias node STMT_BLOCK as T_SYMBOL.OPN_CURLY_BRACKETS & opt append<1402> scope (repeat place next append<auto> PROGRAM) & T_SYMBOL.CLS_CURLY_BRACKETS;
 
-alias node<auto> ALL_STATEMENTS as map {
+alias<STMTS> node<1300> EXPR_STATEMENT as EXPR<STMTS>;
+
+alias node<auto> ALL_KEYWORDS as map {
+  <1301> T_KEYWORD.LET & IDENTIFIER<2000> & opt DECL_ASSIGNMENT & T_SYMBOL.SEMICOLON,
   <1302> T_KEYWORD.IF & STMT_CONDITION & place next STMT_BLOCK & opt (T_KEYWORD.ELSE & place next STMT_BLOCK)
 };
 
-// Parser entry point
-alias node<auto> PROGRAM as ALL_DECLARATIONS | ALL_STATEMENTS | EXPR_STATEMENT<STMT_BLOCK>;
+// Entry point
+alias node<auto> PROGRAM as ALL_KEYWORDS | EXPR_STATEMENT<STMT_BLOCK>;
 
 node<auto> PARSER as PROGRAM;

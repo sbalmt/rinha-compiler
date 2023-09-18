@@ -4,7 +4,11 @@ import { VarValueType } from './scope';
 
 export const convertToString = <T extends Core.Types>(value: VarValueType<T>): string => {
   if (value instanceof Core.Node || value instanceof Function) {
-    return `<#closure>`;
+    return '<#closure>';
+  }
+
+  if (value instanceof Array) {
+    return '(term, term)';
   }
 
   if (typeof value === 'boolean') {

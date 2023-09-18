@@ -2,19 +2,19 @@ import * as Core from '@xcheme/core';
 
 import * as Errors from './errors';
 
-type VarMapType<T extends Core.Types> = {
-  [identifier: string]: VarValueType<T>;
-};
+export type VarCallableType<T extends Core.Types> = Core.Node<T> | VarCallbackType<T>;
 
 export type VarCallbackType<T extends Core.Types> = (scope: Scope<T>, args: Core.Node<T>) => VarValueType<T>;
 
-export type VarValueType<T extends Core.Types> =
-  | undefined
-  | number
-  | string
-  | boolean
-  | Core.Node<T>
-  | VarCallbackType<T>;
+export type VarSingleType<T extends Core.Types> = undefined | number | string | boolean | VarCallableType<T>;
+
+export type VarTupleType<T extends Core.Types> = [VarValueType<T>, VarValueType<T>];
+
+export type VarValueType<T extends Core.Types> = VarSingleType<T> | VarTupleType<T>;
+
+type VarMapType<T extends Core.Types> = {
+  [identifier: string]: VarValueType<T>;
+};
 
 export class Scope<T extends Core.Types> {
   private variables: VarMapType<T> = {};
@@ -24,7 +24,7 @@ export class Scope<T extends Core.Types> {
     this.parent = parent;
   }
 
-  createNativeVariable(identifier: string, callback: VarCallbackType<T>): void {
+  createCustomVariable(identifier: string, callback: VarCallbackType<T>): void {
     this.variables[identifier] = callback;
   }
 

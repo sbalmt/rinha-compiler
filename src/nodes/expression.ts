@@ -5,6 +5,7 @@ import * as Integer from './operands/integer';
 import * as String from './operands/string';
 import * as Boolean from './operands/boolean';
 import * as Closure from './operands/closure';
+import * as Tuple from './operands/tuple';
 
 import * as Invoke from './operations/invoke';
 import * as Arithmetic from './operations/arithmetic';
@@ -33,6 +34,9 @@ export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.No
 
     case Closure.Type:
       return Closure.consumeNode(node);
+
+    case Tuple.Type:
+      return Tuple.consumeNode(scope, node);
 
     case Assignment.Type:
       return Assignment.consumeNode(scope, node);

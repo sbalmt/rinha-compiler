@@ -8,7 +8,8 @@ export const enum Types {
   NOT_A_NUMBER,
   INVALID_CALL,
   MISSING_PARAMETER,
-  EXTRA_PARAMETER
+  EXTRA_PARAMETER,
+  INVALID_TUPLE
 }
 
 const errorMessages = {
@@ -19,7 +20,8 @@ const errorMessages = {
   [Types.NOT_A_NUMBER]: 'Operand "{0}" is not number at line {1}, column {2}.',
   [Types.INVALID_CALL]: 'Operand "{0}" at line {1}, column {2} is not a function.',
   [Types.MISSING_PARAMETER]: 'Parameter for argument "{0}" at line {1}, column {2} is missing.',
-  [Types.EXTRA_PARAMETER]: 'Extra parameter "{0}" is not necessary at line {1}, column {2}.'
+  [Types.EXTRA_PARAMETER]: 'Extra parameter "{0}" is not necessary at line {1}, column {2}.',
+  [Types.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.'
 };
 
 const fillMessage = (message: string, fragment: Core.Fragment) => {
