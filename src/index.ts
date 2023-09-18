@@ -11,7 +11,7 @@ import { Scope, VarValueType } from './core/scope';
 import { convertToString } from './core/converters';
 
 const filePath = process.argv[2] || 0;
-const fileName = filePath !== 0 ? Path.basename(filePath) : 'sdtin';
+const fileName = filePath !== 0 ? Path.basename(filePath) : 'stdin';
 const source = FS.readFileSync(filePath).toString();
 
 const context = new Core.Context(fileName, {
