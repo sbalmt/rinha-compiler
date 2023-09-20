@@ -16,8 +16,14 @@ type VarMapType<T extends Core.Types> = {
   [identifier: string]: VarValueType<T>;
 };
 
+type VarRecordType<T extends Core.Types> = {
+  identifier: string;
+  value: VarValueType<T>;
+};
+
 export class Scope<T extends Core.Types> {
   private variables: VarMapType<T> = {};
+
   private parent: Scope<T> | undefined;
 
   constructor(parent?: Scope<T>) {
@@ -60,5 +66,14 @@ export class Scope<T extends Core.Types> {
     }
 
     throw Errors.getMessage(Errors.Types.UNDEFINED_IDENTIFIER, node.fragment);
+  }
+
+  *[Symbol.iterator](): Iterator<VarRecordType<T>> {
+    for (const identifier in this.variables) {
+      yield {
+        identifier,
+        value: this.variables[identifier]
+      };
+    }
   }
 }

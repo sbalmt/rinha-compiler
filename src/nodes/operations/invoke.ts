@@ -6,6 +6,7 @@ import * as Block from '../block';
 
 import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
+import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
 
 export const Type = 1214;
 
@@ -36,8 +37,8 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       }
 
       const argValue = Expression.consumeNode(scope, argNode);
-
       closureScope.createVariable(paramNode, argValue);
+
       argNode = argNode.next!;
     } while ((paramNode = paramNode.next!));
 
@@ -46,5 +47,21 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
     }
   }
 
-  return Block.consumeNodes(closureScope, closureBlock.right!);
+  const cacheKey = identifyCache(closureScope);
+
+  if (!cacheKey) {
+    return Block.consumeNodes(closureScope, closureBlock.right!);
+  }
+
+  const cacheResult = retrieveCache(cacheKey);
+
+  if (cacheResult) {
+    return cacheResult;
+  }
+
+  const result = Block.consumeNodes(closureScope, closureBlock.right!);
+
+  storeCache(cacheKey, result);
+
+  return result;
 };
