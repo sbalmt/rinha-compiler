@@ -64,7 +64,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       return Arithmetic.consumeNode(scope, node);
 
     case Invoke.Type:
-      return Invoke.consumeNode(scope, node.left!);
+      return Invoke.consumeNode(scope, node);
 
     default:
       throw `Unexpected expression node type (${node.value}).`;

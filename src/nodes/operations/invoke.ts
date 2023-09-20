@@ -10,15 +10,16 @@ import { Scope, VarValueType } from '../../core/scope';
 export const Type = 1214;
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const closureNode = scope.readVariable(node);
-  const closureArguments = node.next!;
+  const callableNode = node.left!;
+  const closureArguments = callableNode.next!;
+  const closureNode = Expression.consumeNode(scope, callableNode);
 
   if (closureNode instanceof Function) {
     return closureNode(scope, closureArguments);
   }
 
   if (!(closureNode instanceof Core.Node)) {
-    throw Errors.getMessage(Errors.Types.INVALID_CALL, node.fragment);
+    throw Errors.getMessage(Errors.Types.INVALID_CALL, callableNode.fragment);
   }
 
   const closureScope = new Scope(closureNode.data.value as Scope<Metadata>);
@@ -31,7 +32,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
 
     do {
       if (!argNode) {
-        throw Errors.getMessage(Errors.Types.MISSING_PARAMETER, node.fragment);
+        throw Errors.getMessage(Errors.Types.MISSING_PARAMETER, callableNode.fragment);
       }
 
       const argValue = Expression.consumeNode(scope, argNode);
