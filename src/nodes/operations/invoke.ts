@@ -10,58 +10,72 @@ import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
 
 export const Type = 1214;
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const callableNode = node.left!;
-  const closureArguments = callableNode.next!;
-  const closureNode = Expression.consumeNode(scope, callableNode);
+const prepareScope = (
+  scope: Scope<Metadata>,
+  funcNode: Core.Node<Metadata>,
+  callNode: Core.Node<Metadata>,
+  paramNode: Core.Node<Metadata>,
+  argNode: Core.Node<Metadata>
+): Scope<Metadata> => {
+  const newScope = new Scope(funcNode.data.value as Scope<Metadata>);
 
-  if (closureNode instanceof Function) {
-    return closureNode(scope, closureArguments);
-  }
-
-  if (!(closureNode instanceof Core.Node)) {
-    throw Errors.getMessage(Errors.Types.INVALID_CALL, callableNode.fragment);
-  }
-
-  const closureScope = new Scope(closureNode.data.value as Scope<Metadata>);
-  const closureParameters = closureNode.right!;
-  const closureBlock = closureParameters.next!;
-
-  if (closureParameters.right) {
-    let paramNode = closureParameters.right!;
-    let argNode = closureArguments;
-
-    do {
-      if (!argNode) {
-        throw Errors.getMessage(Errors.Types.MISSING_PARAMETER, callableNode.fragment);
-      }
-
-      const argValue = Expression.consumeNode(scope, argNode);
-      closureScope.createVariable(paramNode, argValue);
-
-      argNode = argNode.next!;
-    } while ((paramNode = paramNode.next!));
-
-    if (argNode) {
-      throw Errors.getMessage(Errors.Types.EXTRA_PARAMETER, argNode.fragment);
+  do {
+    if (!argNode) {
+      throw Errors.getMessage(Errors.Types.MISSING_PARAMETER, callNode.fragment);
     }
+
+    const argValue = Expression.consumeNode(scope, argNode);
+    newScope.createVariable(paramNode, argValue);
+
+    argNode = argNode.next!;
+  } while ((paramNode = paramNode.next!));
+
+  if (argNode) {
+    throw Errors.getMessage(Errors.Types.EXTRA_PARAMETER, argNode.fragment);
   }
 
-  const cacheKey = identifyCache(closureScope);
+  return newScope;
+};
 
+const consumeFromCache = (scope: Scope<Metadata>, blockNode: Core.Node<Metadata>) => {
+  const cacheKey = identifyCache(scope);
   if (!cacheKey) {
-    return Block.consumeNodes(closureScope, closureBlock.right!);
+    return Block.consumeNodes(scope, blockNode.right!);
   }
 
   const cacheResult = retrieveCache(cacheKey);
-
   if (cacheResult) {
     return cacheResult;
   }
 
-  const result = Block.consumeNodes(closureScope, closureBlock.right!);
+  const rawResult = Block.consumeNodes(scope, blockNode.right!);
+  storeCache(cacheKey, rawResult);
 
-  storeCache(cacheKey, result);
+  return rawResult;
+};
 
-  return result;
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+  const callNode = node.left!;
+  const closureArgs = callNode.next!;
+  const closureNode = Expression.consumeNode(scope, callNode);
+
+  if (closureNode instanceof Function) {
+    return closureNode(scope, closureArgs);
+  }
+
+  if (!(closureNode instanceof Core.Node)) {
+    throw Errors.getMessage(Errors.Types.INVALID_CALL, callNode.fragment);
+  }
+
+  const closureParams = closureNode.right!;
+  const closureFirstParam = closureParams.right;
+  const closureBlock = closureParams.next!;
+
+  if (!closureFirstParam) {
+    return Block.consumeNodes(scope, closureBlock.right!);
+  }
+
+  const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, closureArgs);
+
+  return consumeFromCache(closureScope, closureBlock);
 };
