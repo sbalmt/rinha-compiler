@@ -65,4 +65,6 @@ globalScope.createCustomVariable(
   }
 );
 
-Block.consumeNodes(globalScope, context.node.next!);
+if (context.node.next) {
+  Block.consumeNodes(globalScope, context.node.next!);
+}
