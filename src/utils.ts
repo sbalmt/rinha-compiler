@@ -24,5 +24,3 @@ export const consumeTokens = <T extends Core.Types>(tokens: Core.TokenList<T>, c
 
   return !context.logs.count(Core.LogType.ERROR);
 };
-
-
