@@ -14,7 +14,7 @@ skip map {
 alias node FUNCTION_PARAM as append<1100> next T_IDENTIFIER & opt (T_SYMBOL.COMMA & FUNCTION_PARAM);
 alias node FUNCTION_PARAMETERS as T_SYMBOL.OPN_PARENTHESIS & append<1401> opt FUNCTION_PARAM & T_SYMBOL.CLS_PARENTHESIS;
 
-alias<STMTS> node FUNCTION_BLOCK as (STMTS | append<1402> EXPR<STMTS>);
+alias<STMTS> node FUNCTION_BLOCK as (STMTS | append<1402> append <1300> EXPR<STMTS>);
 
 alias<STMTS> node OPERANDS as append<auto> map {
   <1100> T_IDENTIFIER,
