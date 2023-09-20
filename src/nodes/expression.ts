@@ -14,11 +14,12 @@ import * as Equality from './operations/equality';
 import * as Logical from './operations/logical';
 import * as Assignment from './operations/assignment';
 
+import { Metadata } from '../core/metadata';
 import { Scope, VarValueType } from '../core/scope';
 
 export const Type = 1300;
 
-export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case Identifier.Type:
       return Identifier.consumeNode(scope, node);
@@ -33,7 +34,7 @@ export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.No
       return Boolean.consumeNode(node);
 
     case Closure.Type:
-      return Closure.consumeNode(node);
+      return Closure.consumeNode(scope, node);
 
     case Tuple.Type:
       return Tuple.consumeNode(scope, node);

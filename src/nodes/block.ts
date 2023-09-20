@@ -4,9 +4,10 @@ import * as Expression from './expression';
 import * as Variable from './variable';
 import * as Condition from './condition';
 
+import { Metadata } from '../core/metadata';
 import { Scope, VarValueType } from '../core/scope';
 
-export const consumeNodes = <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   let result;
 
   do {

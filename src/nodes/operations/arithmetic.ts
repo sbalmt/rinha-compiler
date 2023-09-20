@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Errors from '../../core/errors';
 import * as Expression from '../expression';
 
+import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
 import { convertToString } from '../../core/converters';
 
@@ -14,14 +15,14 @@ export const enum Types {
   MODULO
 }
 
-const requireNumber = <T extends Core.Types>(value: VarValueType<T>, node: Core.Node<T>): value is number => {
+const requireNumber = (value: VarValueType<Metadata>, node: Core.Node<Metadata>): value is number => {
   if (typeof value !== 'number') {
     throw Errors.getMessage(Errors.Types.NOT_A_NUMBER, node.fragment);
   }
   return true;
 };
 
-export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 

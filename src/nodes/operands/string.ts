@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
+import { Metadata } from '../../core/metadata';
+
 export const Type = 1102;
 
-export const consumeNode = <T extends Core.Types>(node: Core.Node<T>): string => {
-  const value = node.fragment.data;
-
-  return value.substring(1, value.length - 1).replace(/(\\[\w\\])/g, (match) => {
+const parseString = (raw: string): string => {
+  return raw.substring(1, raw.length - 1).replace(/(\\[\w\\])/g, (match) => {
     switch (match) {
       case '\\r':
         return '\r';
@@ -17,4 +17,16 @@ export const consumeNode = <T extends Core.Types>(node: Core.Node<T>): string =>
         return match[1];
     }
   });
+};
+
+export const consumeNode = (node: Core.Node<Metadata>): string => {
+  if (!node.assigned) {
+    const value = node.fragment.data;
+
+    node.assign({
+      value: parseString(value)
+    });
+  }
+
+  return node.data.value as string;
 };

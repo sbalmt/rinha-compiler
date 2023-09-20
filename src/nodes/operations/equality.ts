@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Expression from '../expression';
 
+import { Metadata } from '../../core/metadata';
 import { Scope } from '../../core/scope';
 
 export const enum Types {
@@ -9,7 +10,7 @@ export const enum Types {
   NOT_EQUAL
 }
 
-export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): boolean => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): boolean => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 

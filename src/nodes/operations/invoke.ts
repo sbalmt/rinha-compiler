@@ -4,11 +4,12 @@ import * as Errors from '../../core/errors';
 import * as Expression from '../expression';
 import * as Block from '../block';
 
+import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
 
 export const Type = 1214;
 
-export const consumeNode = <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const closureNode = scope.readVariable(node);
   const closureArguments = node.next!;
 

@@ -9,6 +9,7 @@ import * as Block from './nodes/block';
 import { consumeSource, consumeTokens } from './utils';
 import { Scope, VarValueType } from './core/scope';
 import { convertToString } from './core/converters';
+import { Metadata } from './core/metadata';
 
 const filePath = process.argv[2] || 0;
 const fileName = filePath !== 0 ? Path.basename(filePath) : 'stdin';
@@ -35,7 +36,7 @@ const globalScope = new Scope();
 
 globalScope.createCustomVariable(
   'print',
-  <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+  (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
     const result = Expression.consumeNode(scope, node);
     console.log(convertToString(result));
     return result;
@@ -44,7 +45,7 @@ globalScope.createCustomVariable(
 
 globalScope.createCustomVariable(
   'first',
-  <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+  (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
     const tuple = Expression.consumeNode(scope, node);
     if (!(tuple instanceof Array)) {
       throw Errors.getMessage(Errors.Types.INVALID_TUPLE, node.fragment);
@@ -55,7 +56,7 @@ globalScope.createCustomVariable(
 
 globalScope.createCustomVariable(
   'second',
-  <T extends Core.Types>(scope: Scope<T>, node: Core.Node<T>): VarValueType<T> => {
+  (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
     const tuple = Expression.consumeNode(scope, node);
     if (!(tuple instanceof Array)) {
       throw Errors.getMessage(Errors.Types.INVALID_TUPLE, node.fragment);

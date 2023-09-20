@@ -1,9 +1,17 @@
 import * as Core from '@xcheme/core';
 
+import { Metadata } from '../../core/metadata';
+
 export const Type = 1103;
 
-export const consumeNode = <T extends Core.Types>(node: Core.Node<T>): boolean => {
-  const value = node.fragment.data;
+export const consumeNode = (node: Core.Node<Metadata>): boolean => {
+  if (!node.assigned) {
+    const value = node.fragment.data;
 
-  return value === 'true';
+    node.assign({
+      value: value === 'true'
+    });
+  }
+
+  return node.data.value as boolean;
 };
