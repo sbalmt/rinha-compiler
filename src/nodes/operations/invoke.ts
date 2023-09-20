@@ -21,7 +21,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
     throw Errors.getMessage(Errors.Types.INVALID_CALL, node.fragment);
   }
 
-  const closureScope = new Scope(scope);
+  const closureScope = new Scope(closureNode.data.value as Scope<Metadata>);
   const closureParameters = closureNode.right!;
   const closureBlock = closureParameters.next!;
 
