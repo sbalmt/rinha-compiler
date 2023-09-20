@@ -9,29 +9,22 @@ The purpose of this project is to create an interpreter and AOT compiler for the
 
 ## Get started
 
-1. Install NodeJS:
-
-```
-https://nodejs.org/en/download/package-manager
-```
-
-2. Clone Repository:
+1. Clone:
 
 ```
 git clone git@github.com:balmanth/rinha-compiler.git
 ```
 
-3. Build Application:
+2. Docker build:
 
 ```
-cd rinha-compiler
-npm run build
+docker build -t rinha-compiler .
 ```
 
-4. Run:
+4. Docker run:
 
 ```
-node ./bin/rinha.js ./files/fib.rinha
+docker run -v $(pwd)/files:/var/rinha/ rinha-compiler /var/rinha/source.rinha
 ```
 
 ## License
