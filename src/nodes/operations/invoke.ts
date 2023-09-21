@@ -16,7 +16,9 @@ const prepareScope = (
   paramNode: Core.Node<Metadata>,
   argNode: Core.Node<Metadata>
 ) => {
-  const newScope = new Scope(funcNode.data.value as Scope<Metadata>);
+  const boundScope = funcNode.data.value as Scope<Metadata>;
+  const scopeName = callNode.fragment.data;
+  const newScope = new Scope(boundScope, scopeName);
 
   do {
     if (!argNode) {
@@ -75,6 +77,10 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   }
 
   const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, callArgs);
+
+  if (scope.name !== callNode.fragment.data) {
+    return Block.consumeNodes(closureScope, closureBlock.right!);
+  }
 
   return consumeFromCache(closureScope, closureBlock);
 };

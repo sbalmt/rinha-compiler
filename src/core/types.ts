@@ -36,5 +36,9 @@ export const enum NodeTypes {
 
   EXPRESSION = 1300,
   VARIABLE = 1301,
-  CONDITION = 1302
+  IF_ELSE = 1302,
+
+  CONDITION = 1400,
+  PARAMETERS = 1401,
+  BLOCK = 1402
 }

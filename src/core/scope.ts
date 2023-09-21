@@ -26,10 +26,13 @@ type VarRecordType<T extends Core.Types> = {
 export class Scope<T extends Core.Types> {
   private variables: VarMapType<T> = {};
 
-  private parent: Scope<T> | undefined;
+  private scopeParent: Scope<T> | undefined;
 
-  constructor(parent?: Scope<T>) {
-    this.parent = parent;
+  private scopeName: string | undefined;
+
+  constructor(parent?: Scope<T>, name?: string) {
+    this.scopeParent = parent;
+    this.scopeName = name;
   }
 
   createCustomVariable(identifier: string, callback: VarCallbackType<T>): void {
@@ -49,8 +52,8 @@ export class Scope<T extends Core.Types> {
       return (this.variables[identifier] = value);
     }
 
-    if (this.parent) {
-      return this.parent.updateVariable(node, value);
+    if (this.scopeParent) {
+      return this.scopeParent.updateVariable(node, value);
     }
 
     throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
@@ -63,11 +66,19 @@ export class Scope<T extends Core.Types> {
       return this.variables[identifier];
     }
 
-    if (this.parent) {
-      return this.parent.readVariable(node);
+    if (this.scopeParent) {
+      return this.scopeParent.readVariable(node);
     }
 
     throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
+  }
+
+  get parent(): Scope<T> | undefined {
+    return this.scopeParent;
+  }
+
+  get name(): string | undefined {
+    return this.scopeName;
   }
 
   *[Symbol.iterator](): Iterator<VarRecordType<T>> {

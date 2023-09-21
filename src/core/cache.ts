@@ -6,29 +6,29 @@ type CacheType<T extends Core.Types> = {
   [key: string]: VarValueType<T>;
 };
 
-const globalCache = {};
+const globalCache: CacheType<Core.Types> = {};
 
 export const storeCache = <T extends Core.Types>(key: string, value: VarValueType<T>): void => {
   (globalCache as CacheType<T>)[key] = value;
 };
 
 export const retrieveCache = <T extends Core.Types>(key: string): VarValueType<T> => {
-  return (globalCache as CacheType<T>)[key];
+  return globalCache[key];
 };
 
 export const identifyCache = <T extends Core.Types>(scope: Scope<T>): string | undefined => {
   const pairs = [];
 
   for (const { identifier, value } of scope) {
-    if (value instanceof Core.Node) {
+    if (value instanceof Core.Node || value instanceof Function) {
       pairs.push(identifier);
     } else {
-      pairs.push(identifier, ':', value);
+      pairs.push(identifier, '=', value);
     }
   }
 
   if (pairs.length > 0) {
-    return pairs.join('_');
+    return pairs.join(',');
   }
 
   return undefined;

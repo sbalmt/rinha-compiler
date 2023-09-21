@@ -21,7 +21,7 @@ export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>) 
         Variable.consumeNode(scope, node.right!);
         break;
 
-      case NodeTypes.CONDITION:
+      case NodeTypes.IF_ELSE:
         result = Condition.consumeNode(scope, node.right!);
         break;
 
