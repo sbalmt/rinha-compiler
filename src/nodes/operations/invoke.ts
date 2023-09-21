@@ -20,7 +20,7 @@ const prepareScope = (
 
   do {
     if (!argNode) {
-      throw Errors.getMessage(ErrorTypes.MISSING_PARAMETER, callNode.fragment);
+      throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
     }
 
     const argValue = Expression.consumeNode(scope, argNode);
@@ -30,7 +30,7 @@ const prepareScope = (
   } while ((paramNode = paramNode.next!));
 
   if (argNode) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_PARAMETER, argNode.fragment);
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argNode.fragment);
   }
 
   return newScope;
@@ -55,11 +55,11 @@ const consumeFromCache = (scope: Scope<Metadata>, blockNode: Core.Node<Metadata>
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const callNode = node.left!;
-  const closureArgs = callNode.next!;
+  const callArgs = callNode.next!;
   const closureNode = Expression.consumeNode(scope, callNode);
 
   if (closureNode instanceof Function) {
-    return closureNode(scope, closureArgs);
+    return closureNode(scope, callArgs);
   }
 
   if (!(closureNode instanceof Core.Node)) {
@@ -74,7 +74,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
     return Block.consumeNodes(scope, closureBlock.right!);
   }
 
-  const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, closureArgs);
+  const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, callArgs);
 
   return consumeFromCache(closureScope, closureBlock);
 };

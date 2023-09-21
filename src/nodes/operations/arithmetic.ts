@@ -24,11 +24,11 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   }
 
   if (!isNumber(lhs)) {
-    throw Errors.getMessage(ErrorTypes.NOT_A_NUMBER, node.left!.fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.left!.fragment);
   }
 
   if (!isNumber(rhs)) {
-    throw Errors.getMessage(ErrorTypes.NOT_A_NUMBER, node.right!.fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.right!.fragment);
   }
 
   switch (node.value) {

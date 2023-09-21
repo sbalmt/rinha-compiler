@@ -7,11 +7,11 @@ const errorMessages = {
   [ErrorTypes.UNEXPECTED_TOKEN]: 'Unexpected token "{0}" at line {1}, column {2}.',
   [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax "{0}" at line {1}, column {2}.',
   [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier "{0}" at line {1}, column {2} was not defined.',
-  [ErrorTypes.NOT_A_NUMBER]: 'Operand "{0}" at line {1}, column {2} is not a number.',
+  [ErrorTypes.INVALID_NUMBER]: 'Operand "{0}" at line {1}, column {2} is not a number.',
+  [ErrorTypes.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.',
   [ErrorTypes.INVALID_CALL]: 'Operand "{0}" at line {1}, column {2} is not a function.',
-  [ErrorTypes.MISSING_PARAMETER]: 'Parameter for argument "{0}" at line {1}, column {2} is missing.',
-  [ErrorTypes.EXTRA_PARAMETER]: 'Extra parameter "{0}" is not necessary at line {1}, column {2}.',
-  [ErrorTypes.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.'
+  [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for "{0}" at line {1}, column {2}.',
+  [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument "{0}" at line {1}, column {2} is not necessary.'
 };
 
 const fillMessage = (message: string, fragment: Core.Fragment) => {
