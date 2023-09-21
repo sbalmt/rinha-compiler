@@ -8,8 +8,6 @@ import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
 import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
 
-export const Type = 1214;
-
 const prepareScope = (
   scope: Scope<Metadata>,
   funcNode: Core.Node<Metadata>,

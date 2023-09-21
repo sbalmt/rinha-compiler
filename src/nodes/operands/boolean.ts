@@ -2,8 +2,6 @@ import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
 
-export const Type = 1103;
-
 export const consumeNode = (node: Core.Node<Metadata>): boolean => {
   if (!node.assigned) {
     const value = node.fragment.data;

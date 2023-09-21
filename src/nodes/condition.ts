@@ -6,8 +6,6 @@ import * as Expression from './expression';
 import { Metadata } from '../core/metadata';
 import { Scope, VarValueType } from '../core/scope';
 
-export const Type = 1302;
-
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const condition = Expression.consumeNode(scope, node.right!);
   const blockScope = new Scope(scope);

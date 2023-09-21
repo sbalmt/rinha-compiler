@@ -2,8 +2,6 @@ import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
 
-export const Type = 1102;
-
 const parseString = (raw: string): string => {
   return raw.substring(1, raw.length - 1).replace(/(\\[\w\\])/g, (match) => {
     switch (match) {

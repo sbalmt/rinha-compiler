@@ -6,14 +6,7 @@ import * as Expression from '../expression';
 import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
 import { convertToString } from '../../core/converters';
-
-export const enum Types {
-  ADD = 1209,
-  SUBTRACT,
-  MULTIPLY,
-  DIVIDE,
-  MODULO
-}
+import { Nodes } from '../../core/types';
 
 const requireNumber = (value: VarValueType<Metadata>, node: Core.Node<Metadata>): value is number => {
   if (typeof value !== 'number') {
@@ -26,7 +19,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (node.value === Types.ADD) {
+  if (node.value === Nodes.ADD) {
     if (typeof lhs !== 'number' || typeof rhs !== 'number') {
       return convertToString(lhs) + convertToString(rhs);
     }
@@ -39,19 +32,16 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   }
 
   switch (node.value) {
-    case Types.ADD:
-      return lhs + rhs;
-
-    case Types.SUBTRACT:
+    case Nodes.SUBTRACT:
       return lhs - rhs;
 
-    case Types.MULTIPLY:
+    case Nodes.MULTIPLY:
       return lhs * rhs;
 
-    case Types.DIVIDE:
+    case Nodes.DIVIDE:
       return Math.trunc(lhs / rhs);
 
-    case Types.MODULO:
+    case Nodes.MODULO:
       return lhs % rhs;
 
     default:

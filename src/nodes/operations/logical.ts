@@ -4,21 +4,17 @@ import * as Expression from '../expression';
 
 import { Metadata } from '../../core/metadata';
 import { Scope } from '../../core/scope';
-
-export const enum Types {
-  LOGICAL_OR = 1201,
-  LOGICAL_AND
-}
+import { Nodes } from '../../core/types';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): boolean => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
   switch (node.value) {
-    case Types.LOGICAL_OR:
+    case Nodes.LOGICAL_OR:
       return lhs !== false || rhs !== false;
 
-    case Types.LOGICAL_AND:
+    case Nodes.LOGICAL_AND:
       return lhs !== false && rhs !== false;
 
     default:
