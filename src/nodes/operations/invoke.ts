@@ -6,8 +6,8 @@ import * as Block from '../block';
 
 import { Metadata } from '../../core/metadata';
 import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
-import { Scope, VarValueType } from '../../core/scope';
 import { ErrorTypes } from '../../core/types';
+import { Scope } from '../../core/scope';
 
 const prepareScope = (
   scope: Scope<Metadata>,
