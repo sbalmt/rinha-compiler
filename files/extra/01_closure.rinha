@@ -7,4 +7,4 @@ let test = fn () => {
 
 let a = 9;
 
-print(test()(5))
+print(test()(5)) // 59

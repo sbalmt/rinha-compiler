@@ -4,4 +4,4 @@ print = fn (value) => {
     oldPrint("Output: " + value)
 }
 
-print("Hello World")
+print("Hello World") // Output: Hello World

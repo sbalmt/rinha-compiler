@@ -5,4 +5,4 @@ let shadowing = fn (value) => {
     x
 };
 
-print(shadowing(5))
+print(shadowing(5)) // 15

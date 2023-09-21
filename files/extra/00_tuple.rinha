@@ -1,0 +1,8 @@
+let t1 = ("1st", "2nd");
+let t2 = (("1st-1st", "1st-2nd"), ("2nd-1st", "2nd-2nd"));
+
+print(first(t1))          // 1st
+print(second(t1))         // 2nd
+
+print(second(first(t2)))  // 1st-2nd
+print(first(second(t2)))  // 2nd-1st

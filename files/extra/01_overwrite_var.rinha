@@ -6,4 +6,4 @@ let scope = fn (value) => {
 
 scope(5)
 
-print(x)
+print(x) // 15
