@@ -21,10 +21,16 @@ git clone git@github.com:balmanth/rinha-compiler.git
 docker build -t rinha-compiler .
 ```
 
-4. Docker run:
+4. Docker run (For RINHA requirements):
 
 ```
-docker run -v $(pwd)/files:/var/rinha/ rinha-compiler /var/rinha/source.rinha
+docker run --memory=2g --cpus=2 --volume=$(pwd)/files:/var/rinha/ rinha-compiler /var/rinha/source.rinha
+```
+
+5. If you wanna test out of the RINHA requirements:
+
+```
+docker run --volume=$(pwd)/files:/var/rinha/ rinha-compiler /var/rinha/extra/math_sqrt.rinha
 ```
 
 ## License
