@@ -1,4 +1,16 @@
-export const enum Nodes {
+export const enum ErrorTypes {
+  DUPLICATE_IDENTIFIER = 0x100,
+  UNEXPECTED_TOKEN,
+  UNEXPECTED_SYNTAX,
+  UNDEFINED_IDENTIFIER,
+  NOT_A_NUMBER,
+  INVALID_CALL,
+  MISSING_PARAMETER,
+  EXTRA_PARAMETER,
+  INVALID_TUPLE
+}
+
+export const enum NodeTypes {
   IDENTIFIER = 1100,
   INTEGER = 1101,
   STRING = 1102,

@@ -2,6 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Errors from './errors';
 
+import { ErrorTypes } from './types';
+
 export type VarCallableType<T extends Core.Types> = Core.Node<T> | VarCallbackType<T>;
 
 export type VarCallbackType<T extends Core.Types> = (scope: Scope<T>, args: Core.Node<T>) => VarValueType<T>;
@@ -51,7 +53,7 @@ export class Scope<T extends Core.Types> {
       return this.parent.updateVariable(node, value);
     }
 
-    throw Errors.getMessage(Errors.Types.UNDEFINED_IDENTIFIER, node.fragment);
+    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
   }
 
   readVariable(node: Core.Node<T>): VarValueType<T> {
@@ -65,7 +67,7 @@ export class Scope<T extends Core.Types> {
       return this.parent.readVariable(node);
     }
 
-    throw Errors.getMessage(Errors.Types.UNDEFINED_IDENTIFIER, node.fragment);
+    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
   }
 
   *[Symbol.iterator](): Iterator<VarRecordType<T>> {

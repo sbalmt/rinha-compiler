@@ -9,6 +9,7 @@ import * as Block from './nodes/block';
 import { consumeSource, consumeTokens } from './utils';
 import { Scope, VarValueType } from './core/scope';
 import { convertToString } from './core/converters';
+import { ErrorTypes } from './core/types';
 import { Metadata } from './core/metadata';
 
 const filePath = process.argv[2] || 0;
@@ -17,7 +18,7 @@ const source = FS.readFileSync(filePath).toString();
 
 const context = new Core.Context(fileName, {
   errors: {
-    duplicateSymbolIdentifier: Errors.Types.DUPLICATE_IDENTIFIER
+    duplicateSymbolIdentifier: ErrorTypes.DUPLICATE_IDENTIFIER
   }
 });
 
@@ -48,7 +49,7 @@ globalScope.createCustomVariable(
   (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
     const tuple = Expression.consumeNode(scope, node);
     if (!(tuple instanceof Array)) {
-      throw Errors.getMessage(Errors.Types.INVALID_TUPLE, node.fragment);
+      throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
     }
     return tuple[0];
   }
@@ -59,7 +60,7 @@ globalScope.createCustomVariable(
   (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
     const tuple = Expression.consumeNode(scope, node);
     if (!(tuple instanceof Array)) {
-      throw Errors.getMessage(Errors.Types.INVALID_TUPLE, node.fragment);
+      throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
     }
     return tuple[1];
   }

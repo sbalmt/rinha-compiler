@@ -5,43 +5,43 @@ import * as Expression from '../expression';
 
 import { Metadata } from '../../core/metadata';
 import { Scope, VarValueType } from '../../core/scope';
+import { ErrorTypes, NodeTypes } from '../../core/types';
 import { convertToString } from '../../core/converters';
-import { Nodes } from '../../core/types';
 
-const requireNumber = (value: VarValueType<Metadata>, node: Core.Node<Metadata>): value is number => {
-  if (typeof value !== 'number') {
-    throw Errors.getMessage(Errors.Types.NOT_A_NUMBER, node.fragment);
-  }
-  return true;
+const isNumber = (value: VarValueType<Metadata>): value is number => {
+  return typeof value === 'number';
 };
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (node.value === Nodes.ADD) {
-    if (typeof lhs !== 'number' || typeof rhs !== 'number') {
+  if (node.value === NodeTypes.ADD) {
+    if (!isNumber(lhs) || !isNumber(rhs)) {
       return convertToString(lhs) + convertToString(rhs);
     }
-
     return lhs + rhs;
   }
 
-  if (!requireNumber(lhs, node.left!) || !requireNumber(rhs, node.right!)) {
-    return 0;
+  if (!isNumber(lhs)) {
+    throw Errors.getMessage(ErrorTypes.NOT_A_NUMBER, node.left!.fragment);
+  }
+
+  if (!isNumber(rhs)) {
+    throw Errors.getMessage(ErrorTypes.NOT_A_NUMBER, node.right!.fragment);
   }
 
   switch (node.value) {
-    case Nodes.SUBTRACT:
+    case NodeTypes.SUBTRACT:
       return lhs - rhs;
 
-    case Nodes.MULTIPLY:
+    case NodeTypes.MULTIPLY:
       return lhs * rhs;
 
-    case Nodes.DIVIDE:
+    case NodeTypes.DIVIDE:
       return Math.trunc(lhs / rhs);
 
-    case Nodes.MODULO:
+    case NodeTypes.MODULO:
       return lhs % rhs;
 
     default:

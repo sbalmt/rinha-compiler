@@ -1,27 +1,17 @@
 import * as Core from '@xcheme/core';
 
-export const enum Types {
-  DUPLICATE_IDENTIFIER = 0x100,
-  UNEXPECTED_TOKEN,
-  UNEXPECTED_SYNTAX,
-  UNDEFINED_IDENTIFIER,
-  NOT_A_NUMBER,
-  INVALID_CALL,
-  MISSING_PARAMETER,
-  EXTRA_PARAMETER,
-  INVALID_TUPLE
-}
+import { ErrorTypes } from './types';
 
 const errorMessages = {
-  [Types.DUPLICATE_IDENTIFIER]: 'Duplicate identifier "{0}" at line {1}, column {2}.',
-  [Types.UNEXPECTED_TOKEN]: 'Unexpected token "{0}" at line {1}, column {2}.',
-  [Types.UNEXPECTED_SYNTAX]: 'Unexpected syntax "{0}" at line {1}, column {2}.',
-  [Types.UNDEFINED_IDENTIFIER]: 'Identifier "{0}" at line {1}, column {2} was not defined.',
-  [Types.NOT_A_NUMBER]: 'Operand "{0}" is not number at line {1}, column {2}.',
-  [Types.INVALID_CALL]: 'Operand "{0}" at line {1}, column {2} is not a function.',
-  [Types.MISSING_PARAMETER]: 'Parameter for argument "{0}" at line {1}, column {2} is missing.',
-  [Types.EXTRA_PARAMETER]: 'Extra parameter "{0}" is not necessary at line {1}, column {2}.',
-  [Types.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.'
+  [ErrorTypes.DUPLICATE_IDENTIFIER]: 'Duplicate identifier "{0}" at line {1}, column {2}.',
+  [ErrorTypes.UNEXPECTED_TOKEN]: 'Unexpected token "{0}" at line {1}, column {2}.',
+  [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax "{0}" at line {1}, column {2}.',
+  [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier "{0}" at line {1}, column {2} was not defined.',
+  [ErrorTypes.NOT_A_NUMBER]: 'Operand "{0}" at line {1}, column {2} is not a number.',
+  [ErrorTypes.INVALID_CALL]: 'Operand "{0}" at line {1}, column {2} is not a function.',
+  [ErrorTypes.MISSING_PARAMETER]: 'Parameter for argument "{0}" at line {1}, column {2} is missing.',
+  [ErrorTypes.EXTRA_PARAMETER]: 'Extra parameter "{0}" is not necessary at line {1}, column {2}.',
+  [ErrorTypes.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.'
 };
 
 const fillMessage = (message: string, fragment: Core.Fragment) => {
@@ -44,8 +34,7 @@ const fillMessage = (message: string, fragment: Core.Fragment) => {
 };
 
 export const getMessage = (value: number, fragment: Core.Fragment) => {
-  const message = errorMessages[value as Types];
-
+  const message = errorMessages[value as ErrorTypes];
   if (!message) {
     throw `Error message (code: ${value}) doesn't found.`;
   }

@@ -5,8 +5,9 @@ import * as Expression from '../expression';
 import * as Block from '../block';
 
 import { Metadata } from '../../core/metadata';
-import { Scope, VarValueType } from '../../core/scope';
 import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
+import { Scope, VarValueType } from '../../core/scope';
+import { ErrorTypes } from '../../core/types';
 
 const prepareScope = (
   scope: Scope<Metadata>,
@@ -19,7 +20,7 @@ const prepareScope = (
 
   do {
     if (!argNode) {
-      throw Errors.getMessage(Errors.Types.MISSING_PARAMETER, callNode.fragment);
+      throw Errors.getMessage(ErrorTypes.MISSING_PARAMETER, callNode.fragment);
     }
 
     const argValue = Expression.consumeNode(scope, argNode);
@@ -29,7 +30,7 @@ const prepareScope = (
   } while ((paramNode = paramNode.next!));
 
   if (argNode) {
-    throw Errors.getMessage(Errors.Types.EXTRA_PARAMETER, argNode.fragment);
+    throw Errors.getMessage(ErrorTypes.EXTRA_PARAMETER, argNode.fragment);
   }
 
   return newScope;
@@ -62,7 +63,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   }
 
   if (!(closureNode instanceof Core.Node)) {
-    throw Errors.getMessage(Errors.Types.INVALID_CALL, callNode.fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callNode.fragment);
   }
 
   const closureParams = closureNode.right!;

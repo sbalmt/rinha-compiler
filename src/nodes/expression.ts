@@ -16,53 +16,53 @@ import * as Assignment from './operations/assignment';
 
 import { Metadata } from '../core/metadata';
 import { Scope, VarValueType } from '../core/scope';
-import { Nodes } from '../core/types';
+import { NodeTypes } from '../core/types';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
-    case Nodes.IDENTIFIER:
+    case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);
 
-    case Nodes.INTEGER:
+    case NodeTypes.INTEGER:
       return Integer.consumeNode(node);
 
-    case Nodes.STRING:
+    case NodeTypes.STRING:
       return String.consumeNode(node);
 
-    case Nodes.BOOLEAN:
+    case NodeTypes.BOOLEAN:
       return Boolean.consumeNode(node);
 
-    case Nodes.CLOSURE:
+    case NodeTypes.CLOSURE:
       return Closure.consumeNode(scope, node);
 
-    case Nodes.TUPLE:
+    case NodeTypes.TUPLE:
       return Tuple.consumeNode(scope, node);
 
-    case Nodes.ASSIGNMENT:
+    case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);
 
-    case Nodes.LOGICAL_OR:
-    case Nodes.LOGICAL_AND:
+    case NodeTypes.LOGICAL_OR:
+    case NodeTypes.LOGICAL_AND:
       return Logical.consumeNode(scope, node);
 
-    case Nodes.EQUAL:
-    case Nodes.NOT_EQUAL:
+    case NodeTypes.EQUAL:
+    case NodeTypes.NOT_EQUAL:
       return Equality.consumeNode(scope, node);
 
-    case Nodes.GREATER_THAN:
-    case Nodes.LESS_THAN:
-    case Nodes.GREATER_THAN_OR_EQUAL:
-    case Nodes.LESS_THAN_OR_EQUAL:
+    case NodeTypes.GREATER_THAN:
+    case NodeTypes.LESS_THAN:
+    case NodeTypes.GREATER_THAN_OR_EQUAL:
+    case NodeTypes.LESS_THAN_OR_EQUAL:
       return Relational.consumeNode(scope, node);
 
-    case Nodes.ADD:
-    case Nodes.SUBTRACT:
-    case Nodes.MULTIPLY:
-    case Nodes.DIVIDE:
-    case Nodes.MODULO:
+    case NodeTypes.ADD:
+    case NodeTypes.SUBTRACT:
+    case NodeTypes.MULTIPLY:
+    case NodeTypes.DIVIDE:
+    case NodeTypes.MODULO:
       return Arithmetic.consumeNode(scope, node);
 
-    case Nodes.INVOKE:
+    case NodeTypes.INVOKE:
       return Invoke.consumeNode(scope, node);
 
     default:
