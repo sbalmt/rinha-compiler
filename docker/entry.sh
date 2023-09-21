@@ -1,2 +1,2 @@
 #!/bin/sh
-node ./bin/rinha.js $1
+node --stack-size=524288 ./bin/rinha.js $1
