@@ -25,4 +25,4 @@ let sqrt = fn (x) => {
   }
 };
 
-print(sqrt(625))
+print(sqrt(5625))
