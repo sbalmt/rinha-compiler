@@ -3,15 +3,15 @@ import * as Core from '@xcheme/core';
 import { ErrorTypes } from './types';
 
 const errorMessages = {
-  [ErrorTypes.DUPLICATE_IDENTIFIER]: 'Duplicate identifier "{0}" at line {1}, column {2}.',
-  [ErrorTypes.UNEXPECTED_TOKEN]: 'Unexpected token "{0}" at line {1}, column {2}.',
-  [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax "{0}" at line {1}, column {2}.',
-  [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier "{0}" at line {1}, column {2} was not defined.',
-  [ErrorTypes.INVALID_NUMBER]: 'Operand "{0}" at line {1}, column {2} is not a number.',
-  [ErrorTypes.INVALID_TUPLE]: 'Argument "{0}" is not a tuple at line {1}, column {2}.',
-  [ErrorTypes.INVALID_CALL]: 'Operand "{0}" at line {1}, column {2} is not a function.',
-  [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for "{0}" at line {1}, column {2}.',
-  [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument "{0}" at line {1}, column {2} is not necessary.'
+  [ErrorTypes.DUPLICATE_IDENTIFIER]: 'Duplicate identifier `{0}` at line {1}, column {2}.',
+  [ErrorTypes.UNEXPECTED_TOKEN]: 'Unexpected token `{0}` at line {1}, column {2}.',
+  [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax `{0}` at line {1}, column {2}.',
+  [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier `{0}` at line {1}, column {2} was not defined.',
+  [ErrorTypes.INVALID_NUMBER]: 'Operand `{0}` at line {1}, column {2} is not a number.',
+  [ErrorTypes.INVALID_TUPLE]: 'Argument `{0}` is not a tuple at line {1}, column {2}.',
+  [ErrorTypes.INVALID_CALL]: 'Operand `{0}` at line {1}, column {2} is not a function.',
+  [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for `{0}` at line {1}, column {2}.',
+  [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument `{0}` at line {1}, column {2} is not necessary.'
 };
 
 const fillMessage = (message: string, fragment: Core.Fragment) => {
@@ -35,6 +35,7 @@ const fillMessage = (message: string, fragment: Core.Fragment) => {
 
 export const getMessage = (value: number, fragment: Core.Fragment) => {
   const message = errorMessages[value as ErrorTypes];
+
   if (!message) {
     throw `Error message (code: ${value}) doesn't found.`;
   }
@@ -42,6 +43,13 @@ export const getMessage = (value: number, fragment: Core.Fragment) => {
   return fillMessage(message, fragment);
 };
 
-export const getLogMessage = (error: Core.LogRecord) => {
-  return getMessage(error.value, error.fragment);
+export const printLogs = (logs: Core.LogList): void => {
+  console.error('ERRORS:');
+
+  for (const log of logs) {
+    const location = log.fragment.location;
+    const message = getMessage(log.value, log.fragment);
+
+    console.error(`\t[${location.name}]: ${message}`);
+  }
 };

@@ -21,20 +21,17 @@ const context = new Core.Context(fileName, {
 });
 
 if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) {
-  console.log('ERROR');
-
-  for (const log of context.logs) {
-    const location = log.fragment.location;
-    console.log(`\t[${location.name}]: ${Errors.getLogMessage(log)}`);
-  }
-
+  Errors.printLogs(context.logs);
   process.exit(1);
 }
 
 if (context.node.next) {
-  const globalScope = new Scope();
-
-  injectBuiltIns(globalScope);
-
-  Block.consumeNodes(globalScope, context.node.next!);
+  try {
+    const globalScope = new Scope();
+    injectBuiltIns(globalScope);
+    Block.consumeNodes(globalScope, context.node.next!);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 }
