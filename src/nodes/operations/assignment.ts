@@ -3,9 +3,9 @@ import * as Core from '@xcheme/core';
 import * as Expression from '../expression';
 
 import { Metadata } from '../../core/metadata';
-import { Scope, VarValueType } from '../../core/scope';
+import { Scope } from '../../core/scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const targetNode = node.left!;
   const sourceExpression = node.right!;
 

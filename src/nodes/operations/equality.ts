@@ -6,7 +6,7 @@ import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
 import { Scope } from '../../core/scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): boolean => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 

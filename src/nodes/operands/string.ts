@@ -17,7 +17,7 @@ const parseString = (raw: string): string => {
   });
 };
 
-export const consumeNode = (node: Core.Node<Metadata>): string => {
+export const consumeNode = (node: Core.Node<Metadata>) => {
   if (!node.assigned) {
     const value = node.fragment.data;
 

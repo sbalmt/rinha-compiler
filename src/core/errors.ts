@@ -14,7 +14,7 @@ const errorMessages = {
   [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument `{0}` at line {1}, column {2} is not necessary.'
 };
 
-const fillMessage = (message: string, fragment: Core.Fragment) => {
+const buildMessage = (message: string, fragment: Core.Fragment) => {
   const location = fragment.location;
 
   return message.replace(/(\{[0-2]\})/g, (match: string): string => {
@@ -40,7 +40,7 @@ export const getMessage = (value: number, fragment: Core.Fragment) => {
     throw `Error message (code: ${value}) doesn't found.`;
   }
 
-  return fillMessage(message, fragment);
+  return buildMessage(message, fragment);
 };
 
 export const printLogs = (logs: Core.LogList): void => {

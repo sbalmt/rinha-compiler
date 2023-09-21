@@ -5,7 +5,7 @@ import * as Expression from '../expression';
 import { Metadata } from '../../core/metadata';
 import { Scope, VarTupleType } from '../../core/scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarTupleType<Metadata> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   if (!node.assigned) {
     const first = Expression.consumeNode(scope, node.right!);
     const second = Expression.consumeNode(scope, node.right!.next!);

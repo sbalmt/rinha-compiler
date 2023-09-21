@@ -15,7 +15,7 @@ const prepareScope = (
   callNode: Core.Node<Metadata>,
   paramNode: Core.Node<Metadata>,
   argNode: Core.Node<Metadata>
-): Scope<Metadata> => {
+) => {
   const newScope = new Scope(funcNode.data.value as Scope<Metadata>);
 
   do {
@@ -53,7 +53,7 @@ const consumeFromCache = (scope: Scope<Metadata>, blockNode: Core.Node<Metadata>
   return rawResult;
 };
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const callNode = node.left!;
   const callArgs = callNode.next!;
   const closureNode = Expression.consumeNode(scope, callNode);

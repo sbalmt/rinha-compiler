@@ -8,6 +8,12 @@ import { convertToString } from './converters';
 import { ErrorTypes } from './types';
 import { Scope } from './scope';
 
+export const injectBuiltIns = (scope: Scope<Metadata>): void => {
+  scope.createCustomVariable('first', firstFn);
+  scope.createCustomVariable('second', secondFn);
+  scope.createCustomVariable('print', printFn);
+};
+
 const printFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const result = Expression.consumeNode(scope, node);
   console.log(convertToString(result));
@@ -28,10 +34,4 @@ const secondFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
   }
   return tuple[1];
-};
-
-export const injectBuiltIns = (scope: Scope<Metadata>): void => {
-  scope.createCustomVariable('print', printFn);
-  scope.createCustomVariable('first', firstFn);
-  scope.createCustomVariable('second', secondFn);
 };

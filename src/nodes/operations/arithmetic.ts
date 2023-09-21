@@ -12,7 +12,7 @@ const isNumber = (value: VarValueType<Metadata>): value is number => {
   return typeof value === 'number';
 };
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): number | string => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
