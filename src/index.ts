@@ -3,11 +3,10 @@ import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Errors from './core/errors';
-import * as Expression from './nodes/expression';
 import * as Block from './nodes/block';
 
 import { consumeSource, consumeTokens } from './utils';
-import { convertToString } from './core/converters';
+import { injectBuiltIns } from './core/builtins';
 import { ErrorTypes } from './core/types';
 import { Scope } from './core/scope';
 
@@ -32,30 +31,10 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
   process.exit(1);
 }
 
-const globalScope = new Scope();
-
-globalScope.createCustomVariable('print', (scope, node) => {
-  const result = Expression.consumeNode(scope, node);
-  console.log(convertToString(result));
-  return result;
-});
-
-globalScope.createCustomVariable('first', (scope, node) => {
-  const tuple = Expression.consumeNode(scope, node);
-  if (!(tuple instanceof Array)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
-  }
-  return tuple[0];
-});
-
-globalScope.createCustomVariable('second', (scope, node) => {
-  const tuple = Expression.consumeNode(scope, node);
-  if (!(tuple instanceof Array)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
-  }
-  return tuple[1];
-});
-
 if (context.node.next) {
+  const globalScope = new Scope();
+
+  injectBuiltIns(globalScope);
+
   Block.consumeNodes(globalScope, context.node.next!);
 }
