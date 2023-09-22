@@ -6,17 +6,21 @@ import * as Expression from './expression';
 import { Metadata } from '../../core/metadata';
 import { convertToString, isNumber } from '../../core/converters';
 import { ErrorTypes, NodeTypes } from '../../core/types';
-import { Scope } from '../scope';
+import { VarValueType } from '../../evaluator/scope';
+import { combineNodes } from '../ast';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): number | string => {
-  const lhs = Expression.consumeNode(scope, node.left!);
-  const rhs = Expression.consumeNode(scope, node.right!);
+const optimizeNodes = (node: Core.Node<Metadata>) => {
+  const lhs = Expression.consumeNode(node.left!);
+  const rhs = Expression.consumeNode(node.right!);
+
+  if (lhs === undefined || rhs === undefined) {
+    return undefined;
+  }
 
   if (node.value === NodeTypes.ADD) {
     if (!isNumber(lhs) || !isNumber(rhs)) {
       return convertToString(lhs) + convertToString(rhs);
     }
-
     return lhs + rhs;
   }
 
@@ -40,8 +44,23 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
 
     case NodeTypes.MODULO:
       return lhs % rhs;
-
-    default:
-      throw `Unexpected arithmetic node type (${node.value}).`;
   }
+
+  return undefined;
+};
+
+export const consumeNode = (node: Core.Node<Metadata>): VarValueType<Metadata> => {
+  const value = optimizeNodes(node);
+
+  if (value !== undefined) {
+    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER);
+
+    optimizedNode.assign({
+      value
+    });
+
+    node.swap(optimizedNode);
+  }
+
+  return value;
 };

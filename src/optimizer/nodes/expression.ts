@@ -5,6 +5,8 @@ import * as String from './string';
 import * as Boolean from './boolean';
 import * as Tuple from './tuple';
 import * as Invoke from './invoke';
+import * as Arithmetic from './arithmetic';
+import * as Comparison from './comparison';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
@@ -28,6 +30,10 @@ export const consumeNode = (node: Core.Node<Metadata>): VarValueType<Metadata> =
       return Tuple.consumeNode(node);
 
     case NodeTypes.ASSIGNMENT:
+      consumeNode(node.left!);
+      consumeNode(node.right!);
+      break;
+
     case NodeTypes.LOGICAL_OR:
     case NodeTypes.LOGICAL_AND:
     case NodeTypes.EQUAL:
@@ -36,14 +42,14 @@ export const consumeNode = (node: Core.Node<Metadata>): VarValueType<Metadata> =
     case NodeTypes.LESS_THAN:
     case NodeTypes.GREATER_THAN_OR_EQUAL:
     case NodeTypes.LESS_THAN_OR_EQUAL:
+      return Comparison.consumeNode(node);
+
     case NodeTypes.ADD:
     case NodeTypes.SUBTRACT:
     case NodeTypes.MULTIPLY:
     case NodeTypes.DIVIDE:
     case NodeTypes.MODULO:
-      node.left && consumeNode(node.left);
-      node.right && consumeNode(node.right);
-      break;
+      return Arithmetic.consumeNode(node);
 
     case NodeTypes.INVOKE:
       Invoke.consumeNode(node);
