@@ -5,16 +5,24 @@ import * as Expression from './expression';
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
+import { VarValueType } from '../../evaluator/scope';
 
-const optimizeNodes = (node: Core.Node<Metadata>) => {
-  const lhs = Expression.consumeNode(node.left!);
-  const rhs = Expression.consumeNode(node.right!);
+type ComparisonNodeTypes =
+  | NodeTypes.LOGICAL_OR
+  | NodeTypes.LOGICAL_AND
+  | NodeTypes.EQUAL
+  | NodeTypes.NOT_EQUAL
+  | NodeTypes.GREATER_THAN
+  | NodeTypes.LESS_THAN
+  | NodeTypes.GREATER_THAN_OR_EQUAL
+  | NodeTypes.LESS_THAN_OR_EQUAL;
 
-  if (lhs === undefined || rhs === undefined) {
-    return undefined;
-  }
-
-  switch (node.value) {
+const evaluateOperation = (
+  lhs: VarValueType<Metadata>,
+  rhs: VarValueType<Metadata>,
+  operations: ComparisonNodeTypes
+) => {
+  switch (operations) {
     case NodeTypes.LOGICAL_OR:
       return lhs !== false || rhs !== false;
 
@@ -28,33 +36,30 @@ const optimizeNodes = (node: Core.Node<Metadata>) => {
       return lhs !== rhs;
 
     case NodeTypes.GREATER_THAN:
-      return lhs > rhs;
+      return lhs! > rhs!;
 
     case NodeTypes.LESS_THAN:
-      return lhs < rhs;
+      return lhs! < rhs!;
 
     case NodeTypes.GREATER_THAN_OR_EQUAL:
-      return lhs >= rhs;
+      return lhs! >= rhs!;
 
     case NodeTypes.LESS_THAN_OR_EQUAL:
-      return lhs <= rhs;
+      return lhs! <= rhs!;
   }
-
-  return undefined;
 };
 
 export const consumeNode = (node: Core.Node<Metadata>) => {
-  const value = optimizeNodes(node);
+  const lhs = Expression.consumeNode(node.left!);
+  const rhs = Expression.consumeNode(node.right!);
 
-  if (value !== undefined) {
-    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.BOOLEAN);
-
-    optimizedNode.assign({
-      value
-    });
+  if (lhs !== undefined && rhs !== undefined) {
+    const evaluatedValue = evaluateOperation(lhs, rhs, node.value);
+    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.BOOLEAN, evaluatedValue);
 
     node.swap(optimizedNode);
+    return evaluatedValue;
   }
 
-  return value;
+  return undefined;
 };

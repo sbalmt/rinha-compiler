@@ -6,33 +6,20 @@ import * as Expression from './expression';
 import { Metadata } from '../../core/metadata';
 import { convertToString, isNumber } from '../../core/converters';
 import { ErrorTypes, NodeTypes } from '../../core/types';
-import { VarValueType } from '../../evaluator/scope';
 import { combineNodes } from '../ast';
 
-const optimizeNodes = (node: Core.Node<Metadata>) => {
-  const lhs = Expression.consumeNode(node.left!);
-  const rhs = Expression.consumeNode(node.right!);
+type ArithmeticNodeTypes =
+  | NodeTypes.ADD
+  | NodeTypes.SUBTRACT
+  | NodeTypes.MULTIPLY
+  | NodeTypes.DIVIDE
+  | NodeTypes.MODULO;
 
-  if (lhs === undefined || rhs === undefined) {
-    return undefined;
-  }
+const evaluateOperation = (lhs: number, rhs: number, operation: ArithmeticNodeTypes) => {
+  switch (operation) {
+    case NodeTypes.ADD:
+      return lhs + rhs;
 
-  if (node.value === NodeTypes.ADD) {
-    if (!isNumber(lhs) || !isNumber(rhs)) {
-      return convertToString(lhs) + convertToString(rhs);
-    }
-    return lhs + rhs;
-  }
-
-  if (!isNumber(lhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.left!.fragment);
-  }
-
-  if (!isNumber(rhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.right!.fragment);
-  }
-
-  switch (node.value) {
     case NodeTypes.SUBTRACT:
       return lhs - rhs;
 
@@ -45,22 +32,37 @@ const optimizeNodes = (node: Core.Node<Metadata>) => {
     case NodeTypes.MODULO:
       return lhs % rhs;
   }
-
-  return undefined;
 };
 
-export const consumeNode = (node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const value = optimizeNodes(node);
+export const consumeNode = (node: Core.Node<Metadata>) => {
+  const lhs = Expression.consumeNode(node.left!);
+  const rhs = Expression.consumeNode(node.right!);
 
-  if (value !== undefined) {
-    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER);
-
-    optimizedNode.assign({
-      value
-    });
+  if (isNumber(lhs) && isNumber(rhs)) {
+    const evaluatedValue = evaluateOperation(lhs, rhs, node.value);
+    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, evaluatedValue);
 
     node.swap(optimizedNode);
+    return evaluatedValue;
   }
 
-  return value;
+  if (lhs !== undefined && rhs !== undefined) {
+    if (node.value === NodeTypes.ADD) {
+      const concatenatedValue = convertToString(lhs) + convertToString(rhs);
+      const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, concatenatedValue);
+
+      node.swap(optimizedNode);
+      return concatenatedValue;
+    }
+
+    if (!isNumber(lhs)) {
+      throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.left!.fragment);
+    }
+
+    if (!isNumber(rhs)) {
+      throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.right!.fragment);
+    }
+  }
+
+  return undefined;
 };
