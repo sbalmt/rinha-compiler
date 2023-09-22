@@ -1,12 +1,12 @@
 import * as Core from '@xcheme/core';
 
 import * as Errors from '../../core/errors';
-import * as Expression from '../expression';
+import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { Scope, VarValueType } from '../../core/scope';
-import { ErrorTypes, NodeTypes } from '../../core/types';
 import { convertToString } from '../../core/converters';
+import { ErrorTypes, NodeTypes } from '../../core/types';
+import { Scope, VarValueType } from '../scope';
 
 const isNumber = (value: VarValueType<Metadata>): value is number => {
   return typeof value === 'number';

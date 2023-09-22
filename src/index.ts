@@ -3,12 +3,11 @@ import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Errors from './core/errors';
-import * as Block from './nodes/block';
+import * as Evaluator from './evaluator';
+import * as Optimizer from './optimizer';
 
 import { consumeSource, consumeTokens } from './utils';
-import { injectBuiltIns } from './core/builtins';
 import { ErrorTypes } from './core/types';
-import { Scope } from './core/scope';
 
 const filePath = process.argv[2] || 0;
 const fileName = filePath !== 0 ? Path.basename(filePath) : 'stdin';
@@ -27,9 +26,9 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 
 if (context.node.next) {
   try {
-    const globalScope = new Scope();
-    injectBuiltIns(globalScope);
-    Block.consumeNodes(globalScope, context.node.next!);
+    const node = context.node.next;
+    Optimizer.consumeNodes(node);
+    Evaluator.consumeNodes(node);
   } catch (e) {
     console.error(e);
     process.exit(1);

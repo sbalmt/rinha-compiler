@@ -3,8 +3,8 @@ import * as Core from '@xcheme/core';
 import * as Block from './block';
 import * as Expression from './expression';
 
-import { Metadata } from '../core/metadata';
-import { Scope, VarValueType } from '../core/scope';
+import { Metadata } from '../../core/metadata';
+import { Scope, VarValueType } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const condition = Expression.consumeNode(scope, node.right!);

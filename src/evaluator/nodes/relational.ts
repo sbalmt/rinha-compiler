@@ -1,10 +1,10 @@
 import * as Core from '@xcheme/core';
 
-import * as Expression from '../expression';
+import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
-import { Scope } from '../../core/scope';
+import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);

@@ -1,22 +1,21 @@
 import * as Core from '@xcheme/core';
 
-import * as Identifier from './operands/identifier';
-import * as Integer from './operands/integer';
-import * as String from './operands/string';
-import * as Boolean from './operands/boolean';
-import * as Closure from './operands/closure';
-import * as Tuple from './operands/tuple';
+import * as Identifier from './identifier';
+import * as Integer from './integer';
+import * as String from './string';
+import * as Boolean from './boolean';
+import * as Closure from './closure';
+import * as Tuple from './tuple';
+import * as Invoke from './invoke';
+import * as Arithmetic from './arithmetic';
+import * as Relational from './relational';
+import * as Equality from './equality';
+import * as Logical from './logical';
+import * as Assignment from './assignment';
 
-import * as Invoke from './operations/invoke';
-import * as Arithmetic from './operations/arithmetic';
-import * as Relational from './operations/relational';
-import * as Equality from './operations/equality';
-import * as Logical from './operations/logical';
-import * as Assignment from './operations/assignment';
-
-import { Metadata } from '../core/metadata';
-import { Scope, VarValueType } from '../core/scope';
-import { NodeTypes } from '../core/types';
+import { Metadata } from '../../core/metadata';
+import { NodeTypes } from '../../core/types';
+import { Scope, VarValueType } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
@@ -36,7 +35,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       return Closure.consumeNode(scope, node);
 
     case NodeTypes.TUPLE:
-      return Tuple.consumeNode(scope, node);
+      return Tuple.consumeNode(node);
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);

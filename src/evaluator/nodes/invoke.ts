@@ -1,13 +1,13 @@
 import * as Core from '@xcheme/core';
 
 import * as Errors from '../../core/errors';
-import * as Expression from '../expression';
-import * as Block from '../block';
+import * as Expression from './expression';
+import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
-import { identifyCache, retrieveCache, storeCache } from '../../core/cache';
+import { identifyCache, retrieveCache, storeCache } from '../cache';
 import { ErrorTypes } from '../../core/types';
-import { Scope } from '../../core/scope';
+import { Scope } from '../scope';
 
 const prepareScope = (
   scope: Scope<Metadata>,

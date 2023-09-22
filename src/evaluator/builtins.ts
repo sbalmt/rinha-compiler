@@ -1,14 +1,14 @@
 import * as Core from '@xcheme/core';
 
-import * as Expression from '../nodes/expression';
-import * as Errors from './errors';
+import * as Expression from './nodes/expression';
+import * as Errors from '../core/errors';
 
-import { Metadata } from './metadata';
-import { convertToString } from './converters';
-import { ErrorTypes } from './types';
+import { Metadata } from '../core/metadata';
+import { convertToString } from '../core/converters';
+import { ErrorTypes } from '../core/types';
 import { Scope } from './scope';
 
-export const injectBuiltIns = (scope: Scope<Metadata>): void => {
+export const setBuiltIns = (scope: Scope<Metadata>): void => {
   scope.createCustomVariable('first', firstFn);
   scope.createCustomVariable('second', secondFn);
   scope.createCustomVariable('print', printFn);

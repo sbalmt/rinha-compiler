@@ -1,4 +1,4 @@
-import { Scope, VarValueType } from './scope';
+import { Scope, VarValueType } from '../evaluator/scope';
 
 export type Metadata = {
   token: never;

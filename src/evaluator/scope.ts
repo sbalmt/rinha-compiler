@@ -1,8 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from './errors';
+import * as Errors from '../core/errors';
 
-import { ErrorTypes } from './types';
+import { ErrorTypes } from '../core/types';
 
 export type VarCallableType<T extends Core.Types> = Core.Node<T> | VarCallbackType<T>;
 

@@ -17,14 +17,12 @@ const parseString = (raw: string): string => {
   });
 };
 
-export const consumeNode = (node: Core.Node<Metadata>) => {
-  if (!node.assigned) {
-    const value = node.fragment.data;
+export const consumeNode = (node: Core.Node<Metadata>): string => {
+  const value = parseString(node.fragment.data);
 
-    node.assign({
-      value: parseString(value)
-    });
-  }
+  node.assign({
+    value
+  });
 
-  return node.data.value as string;
+  return value;
 };
