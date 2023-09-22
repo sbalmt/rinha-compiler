@@ -1,4 +1,4 @@
-from node:20-alpine
+FROM node:20.7.0-alpine3.18
 
 WORKDIR /usr/src/rinha
 
