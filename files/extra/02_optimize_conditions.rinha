@@ -1,0 +1,38 @@
+let x = 1 + 1 == 2;
+let y = 2 - 1 == 0;
+
+if (x) {
+  print("it's true")
+  print("continue")
+} else {
+  print("it's false")
+  print("stop")
+}
+
+if (y) {
+  print("it's true")
+  print("stop")
+} else {
+  print("it's false")
+  print("continue")
+}
+
+if (true) {
+
+} else {
+  print("never performed")
+}
+
+if (false) {
+  print("never performed")
+} else {
+  
+}
+
+if (true) {
+
+} else {
+  
+}
+
+print("success")

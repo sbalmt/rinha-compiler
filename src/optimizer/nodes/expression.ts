@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import * as Identifier from './identifier';
 import * as Integer from './integer';
 import * as String from './string';
 import * as Boolean from './boolean';
@@ -9,13 +10,13 @@ import * as Arithmetic from './arithmetic';
 import * as Comparison from './comparison';
 
 import { Metadata } from '../../core/metadata';
-import { NodeTypes } from '../../core/types';
 import { VarValueType } from '../../evaluator/scope';
+import { NodeTypes } from '../../core/types';
 
 export const consumeNode = (node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
-      break;
+      return Identifier.consumeNode(node);
 
     case NodeTypes.INTEGER:
       return Integer.consumeNode(node);

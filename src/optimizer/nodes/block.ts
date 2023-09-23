@@ -8,22 +8,27 @@ import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
 
 export const consumeNodes = (node: Core.Node<Metadata>) => {
-  do {
+  retry: do {
     switch (node.value) {
       case NodeTypes.EXPRESSION:
         Expression.consumeNode(node.right!);
         break;
 
       case NodeTypes.VARIABLE:
-        Variable.consumeNode(node.right!);
+        if (Variable.consumeNode(node, node.right!)) {
+          continue retry;
+        }
         break;
 
       case NodeTypes.IF_ELSE:
-        Condition.consumeNode(node.right!);
+        if (Condition.consumeNode(node, node.right!)) {
+          continue retry;
+        }
         break;
 
       default:
         throw `Unexpected block node type (${node.value}).`;
     }
-  } while ((node = node.next!));
+    node = node.next!;
+  } while (node);
 };
