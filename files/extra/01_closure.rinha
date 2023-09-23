@@ -1,10 +1,10 @@
 
-let test = fn () => {
-  let closure = fn (n) => n * d + a;
-  let d = 10;
+let test = fn (p) => {
+  let closure = fn (n) => n * m + a / p;
+  let m = 10;
   closure
 };
 
 let a = 9;
 
-print(test()(5)) // 59
+print(test(2)(5)) // 54

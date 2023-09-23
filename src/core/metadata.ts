@@ -3,7 +3,9 @@ import { Scope, VarValueType } from '../evaluator/scope';
 export type Metadata = {
   token: never;
 
-  record: never;
+  record: {
+    references: number;
+  };
 
   node: {
     recursive?: boolean;

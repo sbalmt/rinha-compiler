@@ -8,16 +8,10 @@ import { convertToString } from '../core/converters';
 import { ErrorTypes } from '../core/types';
 import { Scope } from './scope';
 
-export const setBuiltIns = (scope: Scope<Metadata>): void => {
+export const applyBuiltIn = (scope: Scope<Metadata>): void => {
   scope.createCustomVariable('first', firstFn);
   scope.createCustomVariable('second', secondFn);
   scope.createCustomVariable('print', printFn);
-};
-
-const printFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
-  const result = Expression.consumeNode(scope, node);
-  console.log(convertToString(result));
-  return result;
 };
 
 const firstFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
@@ -34,4 +28,10 @@ const secondFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, node.fragment);
   }
   return tuple[1];
+};
+
+const printFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
+  const result = Expression.consumeNode(scope, node);
+  console.log(convertToString(result));
+  return result;
 };

@@ -10,6 +10,10 @@ export const enum ErrorTypes {
   EXTRA_ARGUMENT
 }
 
+export const enum SymbolTypes {
+  Identifier = 2000
+}
+
 export const enum NodeTypes {
   IDENTIFIER = 1100,
   INTEGER = 1101,

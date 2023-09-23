@@ -16,7 +16,7 @@ export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
         break;
 
       case NodeTypes.VARIABLE:
-        if (Variable.consumeNode(scope, node, node.right!)) {
+        if (Variable.consumeNode(node, node.right!)) {
           continue retry;
         }
         break;

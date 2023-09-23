@@ -1,13 +1,13 @@
-export type Scope = {
-  recursive: boolean;
-  parent?: Scope;
-  name: string;
-};
+export class Scope {
+  private scopeName: string;
 
-export const createScope = (name: string, parent?: Scope) => {
-  return {
-    recursive: false,
-    parent,
-    name
-  };
-};
+  recursive = false;
+
+  constructor(name: string) {
+    this.scopeName = name;
+  }
+
+  get name() {
+    return this.scopeName;
+  }
+}
