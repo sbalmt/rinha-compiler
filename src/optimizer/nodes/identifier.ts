@@ -7,14 +7,29 @@ import { VarValueType } from '../../evaluator/scope';
 import { ErrorTypes } from '../../core/types';
 import { Scope } from '../scope';
 
+const isShadowing = (scope: Scope, identifier: string) => {
+  return scope.name === identifier;
+};
+
+const findSymbol = (scope: Scope, table: Core.SymbolTable<Metadata>, identifier: string) => {
+  if (isShadowing(scope, identifier)) {
+    return table.parent?.find(identifier);
+  }
+  return table.find(identifier);
+};
+
+const getSymbol = (scope: Scope, node: Core.Node<Metadata>, identifier: string) => {
+  const symbol = findSymbol(scope, node.table, identifier);
+  if (!symbol) {
+    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
+  }
+  return symbol;
+};
+
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (!scope.assigning) {
     const identifier = node.fragment.data;
-    const symbol = node.table.find(identifier);
-
-    if (!symbol) {
-      throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
-    }
+    const symbol = getSymbol(scope, node, identifier);
 
     if (symbol.node) {
       const valueNode = symbol.node.right!;
