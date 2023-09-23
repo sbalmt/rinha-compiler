@@ -4,6 +4,7 @@ export type Metadata = {
   token: never;
 
   record: {
+    mutable: boolean;
     references: number;
   };
 

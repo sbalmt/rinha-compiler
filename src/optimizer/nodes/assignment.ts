@@ -16,14 +16,15 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, lhsNode.fragment);
   }
 
-  scope.pure = false;
-
-  scope.assignment = true;
-  Expression.consumeNode(scope, lhsNode);
-  scope.assignment = false;
-
   const symbol = resolveSymbol(scope, lhsNode);
+  symbol.data.mutable = true;
   symbol.data.references++;
 
+  scope.pure = false;
+  scope.assignment = true;
+
+  Expression.consumeNode(scope, lhsNode);
+
+  scope.assignment = false;
   return Expression.consumeNode(scope, rhsNode);
 };

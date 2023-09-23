@@ -28,6 +28,7 @@ export const resolveSymbol = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (!symbol.assigned) {
     symbol.assign({
+      mutable: false,
       references: 0
     });
   }

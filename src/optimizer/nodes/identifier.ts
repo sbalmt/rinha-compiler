@@ -9,7 +9,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (!scope.assignment) {
     const symbol = resolveSymbol(scope, node);
 
-    if (symbol.node) {
+    if (symbol.node && !symbol.data.mutable) {
       const valueNode = symbol.node.right!;
 
       if (valueNode.assigned && valueNode.data.value !== undefined) {
