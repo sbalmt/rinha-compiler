@@ -1,0 +1,22 @@
+assert(1 + 9 == 10)
+
+assert(1 - 9 == 0 - 8)
+
+assert(2 * 2 == 4)
+
+assert(9 / 3 == 3)
+assert(9 / 2 == 4)
+
+assert(15 % 3 == 0)
+assert(15 % 6 == 3)
+
+// --- Precedence ---
+
+assert(1 + 5 * 2 - 1 == 10)
+assert(1 * 5 - 2 + 7 == 10)
+
+assert(1 + 5 / 2 - 1 == 2)
+assert(1 / 5 - 2 + 4 == 2)
+
+assert(5 + 5 % 2 - 1 == 5)
+assert(2 % 5 - 2 + 5 == 5)

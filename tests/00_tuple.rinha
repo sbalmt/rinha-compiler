@@ -1,0 +1,8 @@
+let t1 = ("1st", "2nd");
+let t2 = (("1st-1st", "1st-2nd"), ("2nd-1st", "2nd-2nd"));
+
+assert(first(t1) == "1st")
+assert(second(t1) == "2nd")
+
+assert(second(first(t2)) == "1st-2nd")
+assert(first(second(t2)) == "2nd-1st")

@@ -1,0 +1,4 @@
+assert(1)
+assert((1,0))
+assert("hello")
+assert(true)

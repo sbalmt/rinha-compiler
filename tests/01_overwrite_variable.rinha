@@ -1,0 +1,9 @@
+let num = 10;
+
+let changeValue = fn (new) => {
+    num = num + new
+};
+
+changeValue(5)
+
+assert(num == 15)

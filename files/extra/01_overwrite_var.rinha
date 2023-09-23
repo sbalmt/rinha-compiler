@@ -1,9 +1,0 @@
-let x = 10;
-
-let scope = fn (value) => {
-    x = x + value
-};
-
-scope(5)
-
-print(x) // 15

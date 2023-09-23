@@ -1,0 +1,8 @@
+let num = 10;
+
+let shadowing = fn (inc) => {
+    let num = num + inc;
+    num
+};
+
+assert(shadowing(5) == 15)

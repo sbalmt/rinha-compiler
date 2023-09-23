@@ -4,4 +4,4 @@ print = fn (value) => {
     oldPrint("Output: " + value)
 }
 
-print("Hello World") // Output: Hello World
+assert(print("Hello World") == "Output: Hello World")
