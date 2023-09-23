@@ -23,12 +23,12 @@ export const identifyCache = <T extends Core.Types>(scope: Scope<T>): string | u
     if (value instanceof Core.Node || value instanceof Function) {
       pairs.push(identifier);
     } else {
-      pairs.push(identifier, '=', value);
+      pairs.push(value);
     }
   }
 
   if (pairs.length > 0) {
-    return pairs.join(',');
+    return pairs.join(':');
   }
 
   return undefined;
