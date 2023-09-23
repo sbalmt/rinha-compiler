@@ -10,14 +10,14 @@ export const consumeNode = (parent: Core.Node<Metadata>, node: Core.Node<Metadat
   const identifier = node.fragment.data;
   const newScope = new Scope(identifier);
   const varValue = Expression.consumeNode(newScope, node.right!);
-  const nextNode = parent.next;
 
-  if (varValue !== undefined && nextNode) {
+  if (varValue !== undefined) {
     registerPostAction(() => {
-      const symbol = node.table.get(identifier)!;
-      if (symbol.data.references === 0) {
-        parent.swap(nextNode);
-        parent.set(Core.NodeDirection.Next, parent.next);
+      if (parent.next) {
+        const symbol = node.table.get(identifier)!;
+        if (!symbol.assigned || symbol.data.references === 0) {
+          parent.swap(parent.next);
+        }
       }
     });
   }
