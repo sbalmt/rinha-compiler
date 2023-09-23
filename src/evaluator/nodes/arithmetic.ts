@@ -4,7 +4,7 @@ import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { convertToString, isNumber } from '../../core/converters';
+import { convertToString, ensureInt32, isNumber } from '../../core/converters';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
@@ -17,7 +17,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       return convertToString(lhs) + convertToString(rhs);
     }
 
-    return lhs + rhs;
+    return ensureInt32(lhs) + ensureInt32(rhs);
   }
 
   if (!isNumber(lhs)) {
@@ -30,16 +30,16 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
 
   switch (node.value) {
     case NodeTypes.SUBTRACT:
-      return lhs - rhs;
+      return ensureInt32(lhs) - ensureInt32(rhs);
 
     case NodeTypes.MULTIPLY:
-      return lhs * rhs;
+      return ensureInt32(lhs) * ensureInt32(rhs);
 
     case NodeTypes.DIVIDE:
-      return Math.trunc(lhs / rhs);
+      return Math.trunc(ensureInt32(lhs) / ensureInt32(rhs));
 
     case NodeTypes.MODULO:
-      return lhs % rhs;
+      return ensureInt32(lhs) % ensureInt32(rhs);
 
     default:
       throw `Unexpected arithmetic node type (${node.value}).`;

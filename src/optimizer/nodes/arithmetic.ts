@@ -4,7 +4,7 @@ import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { convertToString, isNumber } from '../../core/converters';
+import { convertToString, ensureInt32, isNumber } from '../../core/converters';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
 import { Scope } from '../scope';
@@ -19,19 +19,19 @@ type ArithmeticNodeTypes =
 const evaluateOperation = (lhs: number, rhs: number, operation: ArithmeticNodeTypes) => {
   switch (operation) {
     case NodeTypes.ADD:
-      return lhs + rhs;
+      return ensureInt32(lhs) + ensureInt32(rhs);
 
     case NodeTypes.SUBTRACT:
-      return lhs - rhs;
+      return ensureInt32(lhs) - ensureInt32(rhs);
 
     case NodeTypes.MULTIPLY:
-      return lhs * rhs;
+      return ensureInt32(lhs) * ensureInt32(rhs);
 
     case NodeTypes.DIVIDE:
-      return Math.trunc(lhs / rhs);
+      return Math.trunc(ensureInt32(lhs) / ensureInt32(rhs));
 
     case NodeTypes.MODULO:
-      return lhs % rhs;
+      return ensureInt32(lhs) % ensureInt32(rhs);
   }
 };
 

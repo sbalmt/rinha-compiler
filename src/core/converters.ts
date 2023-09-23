@@ -6,6 +6,14 @@ export const isNumber = <T extends Core.Types>(value: VarValueType<T>): value is
   return typeof value === 'number';
 };
 
+export const convertToNumber = (value: string) => {
+  return parseInt(value, 10);
+};
+
+export const ensureInt32 = (value: number): number => {
+  return value | 0;
+};
+
 export const convertToString = <T extends Core.Types>(value: VarValueType<T>) => {
   if (value instanceof Core.Node || value instanceof Function) {
     return '<#closure>';
@@ -20,7 +28,7 @@ export const convertToString = <T extends Core.Types>(value: VarValueType<T>) =>
   }
 
   if (typeof value === 'number') {
-    return value.toString();
+    return ensureInt32(value).toString();
   }
 
   return value!;

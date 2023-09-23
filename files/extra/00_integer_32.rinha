@@ -1,0 +1,5 @@
+let max = 2147483647;
+let min = 0 - 2147483648;
+
+print(max + 1) // Positive overflow (- 2147483648)
+print(min - 1) // Negative overflow (2147483647)
