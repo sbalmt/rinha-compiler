@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
 import * as Errors from '../../core/errors';
-
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../core/types';
+import { resolveSymbol } from '../symbols';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -18,10 +18,12 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   scope.pure = false;
 
-  scope.assigning = true;
+  scope.assignment = true;
   Expression.consumeNode(scope, lhsNode);
-  scope.assigning = false;
+  scope.assignment = false;
 
-  const rhs = Expression.consumeNode(scope, rhsNode);
-  return rhs;
+  const symbol = resolveSymbol(scope, lhsNode);
+  symbol.data.references++;
+
+  return Expression.consumeNode(scope, rhsNode);
 };

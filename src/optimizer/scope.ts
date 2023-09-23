@@ -3,7 +3,7 @@ export class Scope {
 
   pure = true;
 
-  assigning = false;
+  assignment = false;
 
   recursive = false;
 

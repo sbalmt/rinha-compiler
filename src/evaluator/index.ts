@@ -8,6 +8,7 @@ import { Scope } from './scope';
 
 export const consumeNodes = (node: Core.Node<Metadata>) => {
   const scope = new Scope();
+
   applyBuiltIn(scope);
   Block.consumeNodes(scope, node);
 };
