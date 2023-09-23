@@ -17,8 +17,7 @@ const prepareScope = (
   argNode: Core.Node<Metadata>
 ) => {
   const boundScope = funcNode.data.value as Scope<Metadata>;
-  const scopeName = callNode.fragment.data;
-  const newScope = new Scope(boundScope, scopeName);
+  const newScope = new Scope(boundScope);
 
   do {
     if (!argNode) {
@@ -78,7 +77,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
 
   const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, callArgs);
 
-  if (scope.name !== callNode.fragment.data) {
+  if (!closureNode.data.recursive) {
     return Block.consumeNodes(closureScope, closureBlock.right!);
   }
 

@@ -6,6 +6,7 @@ import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
 import { VarValueType } from '../../evaluator/scope';
+import { Scope } from '../scope';
 
 type ComparisonNodeTypes =
   | NodeTypes.LOGICAL_OR
@@ -49,9 +50,9 @@ const evaluateOperation = (
   }
 };
 
-export const consumeNode = (node: Core.Node<Metadata>) => {
-  const lhs = Expression.consumeNode(node.left!);
-  const rhs = Expression.consumeNode(node.right!);
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const lhs = Expression.consumeNode(scope, node.left!);
+  const rhs = Expression.consumeNode(scope, node.right!);
 
   if (lhs !== undefined && rhs !== undefined) {
     const evaluatedValue = evaluateOperation(lhs, rhs, node.value);

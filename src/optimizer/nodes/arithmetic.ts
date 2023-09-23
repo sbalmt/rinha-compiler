@@ -7,6 +7,7 @@ import { Metadata } from '../../core/metadata';
 import { convertToString, isNumber } from '../../core/converters';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
+import { Scope } from '../scope';
 
 type ArithmeticNodeTypes =
   | NodeTypes.ADD
@@ -34,9 +35,9 @@ const evaluateOperation = (lhs: number, rhs: number, operation: ArithmeticNodeTy
   }
 };
 
-export const consumeNode = (node: Core.Node<Metadata>) => {
-  const lhs = Expression.consumeNode(node.left!);
-  const rhs = Expression.consumeNode(node.right!);
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const lhs = Expression.consumeNode(scope, node.left!);
+  const rhs = Expression.consumeNode(scope, node.right!);
 
   if (isNumber(lhs) && isNumber(rhs)) {
     const evaluatedValue = evaluateOperation(lhs, rhs, node.value);

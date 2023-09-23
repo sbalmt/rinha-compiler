@@ -28,11 +28,8 @@ export class Scope<T extends Core.Types> {
 
   private scopeParent: Scope<T> | undefined;
 
-  private scopeName: string | undefined;
-
-  constructor(parent?: Scope<T>, name?: string) {
+  constructor(parent?: Scope<T>) {
     this.scopeParent = parent;
-    this.scopeName = name;
   }
 
   createCustomVariable(identifier: string, callback: VarCallbackType<T>): void {
@@ -75,10 +72,6 @@ export class Scope<T extends Core.Types> {
 
   get parent(): Scope<T> | undefined {
     return this.scopeParent;
-  }
-
-  get name(): string | undefined {
-    return this.scopeName;
   }
 
   *[Symbol.iterator](): Iterator<VarRecordType<T>> {

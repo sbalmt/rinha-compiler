@@ -4,6 +4,7 @@ import * as Block from './block';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
+import { Scope } from '../scope';
 
 const resolvedNode = (parent: Core.Node<Metadata>, node: Core.Node<Metadata>) => {
   const nextNode = parent.next;
@@ -13,8 +14,8 @@ const resolvedNode = (parent: Core.Node<Metadata>, node: Core.Node<Metadata>) =>
   parent.swap(node);
 };
 
-export const consumeNode = (parent: Core.Node<Metadata>, node: Core.Node<Metadata>) => {
-  const condition = Expression.consumeNode(node.right!);
+export const consumeNode = (scope: Scope, parent: Core.Node<Metadata>, node: Core.Node<Metadata>) => {
+  const condition = Expression.consumeNode(scope, node.right!);
 
   const successBlock = node.next!;
   const failureBlock = successBlock.next!;
@@ -29,8 +30,8 @@ export const consumeNode = (parent: Core.Node<Metadata>, node: Core.Node<Metadat
     return true;
   }
 
-  Block.consumeNodes(successBlock.right!);
-  Block.consumeNodes(failureBlock.right!);
+  Block.consumeNodes(scope, successBlock.right!);
+  Block.consumeNodes(scope, failureBlock.right!);
 
   return false;
 };

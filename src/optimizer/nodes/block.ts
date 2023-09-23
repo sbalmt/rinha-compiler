@@ -6,22 +6,23 @@ import * as Condition from './condition';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
+import { Scope } from '../scope';
 
-export const consumeNodes = (node: Core.Node<Metadata>) => {
+export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   retry: do {
     switch (node.value) {
       case NodeTypes.EXPRESSION:
-        Expression.consumeNode(node.right!);
+        Expression.consumeNode(scope, node.right!);
         break;
 
       case NodeTypes.VARIABLE:
-        if (Variable.consumeNode(node, node.right!)) {
+        if (Variable.consumeNode(scope, node, node.right!)) {
           continue retry;
         }
         break;
 
       case NodeTypes.IF_ELSE:
-        if (Condition.consumeNode(node, node.right!)) {
+        if (Condition.consumeNode(scope, node, node.right!)) {
           continue retry;
         }
         break;

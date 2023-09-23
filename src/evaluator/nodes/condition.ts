@@ -8,7 +8,7 @@ import { Scope, VarValueType } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const condition = Expression.consumeNode(scope, node.right!);
-  const blockScope = new Scope(scope, scope.name);
+  const blockScope = new Scope(scope);
 
   const successBlock = node.next!;
   const failureBlock = successBlock.next;

@@ -3,18 +3,24 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
+import { Scope } from '../scope';
 
-const consumeArguments = (node: Core.Node<Metadata>) => {
+const consumeArguments = (scope: Scope, node: Core.Node<Metadata>) => {
   while (node) {
-    Expression.consumeNode(node);
+    Expression.consumeNode(scope, node);
     node = node.next!;
   }
 };
 
-export const consumeNode = (node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callNode = node.left!;
   const argumentsNode = callNode.next!;
+  const identifier = callNode.fragment.data;
 
-  Expression.consumeNode(callNode);
-  consumeArguments(argumentsNode);
+  Expression.consumeNode(scope, callNode);
+  consumeArguments(scope, argumentsNode);
+
+  if (scope.name === identifier) {
+    scope.recursive = true;
+  }
 };
