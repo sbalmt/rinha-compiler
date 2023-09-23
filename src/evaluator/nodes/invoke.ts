@@ -1,40 +1,32 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { identifyCache, retrieveCache, storeCache } from '../cache';
-import { ErrorTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const prepareScope = (
   scope: Scope<Metadata>,
   funcNode: Core.Node<Metadata>,
-  callNode: Core.Node<Metadata>,
   paramNode: Core.Node<Metadata>,
   argNode: Core.Node<Metadata>
 ) => {
   const boundScope = funcNode.data.value as Scope<Metadata>;
-  const newScope = new Scope(boundScope);
+  const parametersCount = funcNode.data.parameters!;
+  const callScope = new Scope(boundScope);
 
-  do {
-    if (!argNode) {
-      throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
-    }
-
+  for (let counter = 0; counter < parametersCount; ++counter) {
     const argValue = Expression.consumeNode(scope, argNode);
-    newScope.createVariable(paramNode, argValue);
+
+    callScope.createVariable(paramNode, argValue);
 
     argNode = argNode.next!;
-  } while ((paramNode = paramNode.next!));
-
-  if (argNode) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argNode.fragment);
+    paramNode = paramNode.next!;
   }
 
-  return newScope;
+  return callScope;
 };
 
 const consumeFromCache = (scope: Scope<Metadata>, blockNode: Core.Node<Metadata>) => {
@@ -71,7 +63,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
     return Block.consumeNodes(scope, closureBlock.right!);
   }
 
-  const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, callArgs);
+  const closureScope = prepareScope(scope, closureNode, closureFirstParam, callArgs);
   const { pure, recursive } = closureNode.data;
 
   if (!pure || !recursive) {

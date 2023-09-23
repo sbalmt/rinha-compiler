@@ -18,14 +18,19 @@ const isCallable = (symbol: Core.SymbolRecord<Metadata>): boolean => {
 };
 
 const isDeclared = (symbol: Core.SymbolRecord<Metadata>): boolean => {
-  return symbol.value === SymbolTypes.BuiltIn || symbol.node!.right!.assigned;
+  return symbol.node!.right!.assigned;
 };
 
 const consumeArguments = (scope: Scope, node: Core.Node<Metadata>) => {
+  let counter = 0;
+
   while (node) {
     Expression.consumeNode(scope, node);
     node = node.next!;
+    counter++;
   }
+
+  return counter;
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -43,7 +48,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     const identifier = callNode.fragment.data;
     const selfCalling = scope.name === identifier;
 
-    if (!selfCalling && !isDeclared(symbol)) {
+    if (!isDeclared(symbol)) {
       throw Errors.getMessage(ErrorTypes.EARLY_CALL, callNode.fragment);
     }
 
@@ -51,7 +56,17 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       scope.recursive = true;
     }
 
+    const argumentsNode = callNode.next!;
+    const argumentsCount = consumeArguments(scope, argumentsNode);
+
+    if (argumentsCount > symbol.node!.right!.data.parameters!) {
+      throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
+    }
+
+    if (argumentsCount < symbol.node!.right!.data.parameters!) {
+      throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
+    }
+
     Expression.consumeNode(scope, callNode);
-    consumeArguments(scope, callNode.next!);
   }
 };

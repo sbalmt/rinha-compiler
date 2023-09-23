@@ -11,6 +11,7 @@ export type Metadata = {
   node: {
     pure?: boolean;
     recursive?: boolean;
+    parameters?: number;
     value?: VarValueType<Metadata> | Scope<Metadata>;
   };
 };
