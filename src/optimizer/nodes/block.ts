@@ -6,9 +6,9 @@ import * as Condition from './condition';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
-import { Scope } from '../scope';
+import { Scope, ScopeTypes } from '../scope';
 
-export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   retry: do {
     switch (node.value) {
       case NodeTypes.EXPRESSION:
@@ -30,4 +30,14 @@ export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
     }
     node = node.next!;
   } while (node);
+};
+
+export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
+  const type = scope.type;
+  scope.type = ScopeTypes.BLOCK;
+
+  const result = consumeInnerNodes(scope, node);
+  scope.type = type;
+
+  return result;
 };

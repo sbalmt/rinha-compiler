@@ -38,8 +38,9 @@ docker run --volume=$(pwd)/files:/var/rinha/ rinha /var/rinha/extra/math_sqrt.ri
 Everyone knows using an interpreted language for interpreting another one is slow as hell, so down below are listed some optimizations made in order to make this challenge a bit fair compared to compiled languages.
 
 1. Resolve literal values and expressions.
-2. Remove unreferenced symbols and never called statements (dead code).
-3. Memoization of pure and recursive functions (runtime).
+2. Remove unreferenced symbols and never used statements (dead code).
+3. Tail call optimization for recursive functions (when it fits).
+4. Memoization of pure and recursive functions (runtime).
 
 ## License
 

@@ -1,11 +1,20 @@
+export const enum ScopeTypes {
+  BLOCK = 0x00,
+  ASSIGNMENT,
+  COMPARISON,
+  ARITHMETIC
+}
+
 export class Scope {
   private scopeName: string;
 
+  type = ScopeTypes.BLOCK;
+
   pure = true;
 
-  assignment = false;
-
   recursive = false;
+
+  lazy = false;
 
   constructor(name: string) {
     this.scopeName = name;

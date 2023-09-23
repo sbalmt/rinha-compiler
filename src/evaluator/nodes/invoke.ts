@@ -5,6 +5,7 @@ import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { identifyCache, retrieveCache, storeCache } from '../cache';
+import { LazyCall } from '../lazy';
 import { Scope } from '../scope';
 
 const prepareScope = (
@@ -64,10 +65,24 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   }
 
   const closureScope = prepareScope(scope, closureNode, closureFirstParam, callArgs);
-  const { pure, recursive } = closureNode.data;
+  const { pure, recursive, lazy } = closureNode.data;
 
   if (!pure || !recursive) {
     return Block.consumeNodes(closureScope, closureBlock.right!);
+  }
+
+  if (lazy) {
+    let value = Block.consumeNodes(closureScope, closureBlock.right!);
+
+    if (scope.lazyCall) {
+      return value;
+    }
+
+    while (value instanceof LazyCall) {
+      value = value.invoke();
+    }
+
+    return value;
   }
 
   return consumeFromCache(closureScope, closureBlock);

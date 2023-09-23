@@ -12,6 +12,7 @@ export type Metadata = {
     pure?: boolean;
     recursive?: boolean;
     parameters?: number;
+    lazy?: boolean;
     value?: VarValueType<Metadata> | Scope<Metadata>;
   };
 };

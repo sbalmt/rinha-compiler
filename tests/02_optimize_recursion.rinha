@@ -1,0 +1,9 @@
+let recursion = fn (num) => {
+  if (num < 100000) {
+    recursion(num + 1)
+  } else {
+    num
+  }
+};
+
+print(recursion(0))

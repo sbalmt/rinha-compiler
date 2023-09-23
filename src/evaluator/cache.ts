@@ -1,22 +1,23 @@
 import * as Core from '@xcheme/core';
 
+import { Metadata } from '../core/metadata';
 import { Scope, VarValueType } from './scope';
 
-type CacheType<T extends Core.Types> = {
+type CacheType<T extends Metadata> = {
   [key: string]: VarValueType<T>;
 };
 
-const globalCache: CacheType<Core.Types> = {};
+const globalCache: CacheType<Metadata> = {};
 
-export const storeCache = <T extends Core.Types>(key: string, value: VarValueType<T>): void => {
+export const storeCache = <T extends Metadata>(key: string, value: VarValueType<T>): void => {
   (globalCache as CacheType<T>)[key] = value;
 };
 
-export const retrieveCache = <T extends Core.Types>(key: string): VarValueType<T> => {
+export const retrieveCache = <T extends Metadata>(key: string): VarValueType<T> => {
   return globalCache[key];
 };
 
-export const identifyCache = <T extends Core.Types>(scope: Scope<T>): string | undefined => {
+export const identifyCache = <T extends Metadata>(scope: Scope<T>): string | undefined => {
   const pairs = [];
 
   for (const { identifier, value } of scope) {

@@ -29,8 +29,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   Block.consumeNodes(scope, blockNode.right!);
 
-  node.data.recursive = scope.recursive;
   node.data.pure = scope.pure;
+  node.data.recursive = scope.recursive;
+  node.data.lazy = scope.lazy;
 
   return undefined;
 };

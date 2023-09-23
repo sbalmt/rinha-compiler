@@ -6,9 +6,9 @@ import * as Expression from './expression';
 import { Metadata } from '../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { resolveSymbol } from '../symbols';
-import { Scope } from '../scope';
+import { Scope, ScopeTypes } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhsNode = node.left!;
   const rhsNode = node.right!;
 
@@ -17,14 +17,23 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   const symbol = resolveSymbol(scope, lhsNode);
+
   symbol.data.mutable = true;
   symbol.data.references++;
 
   scope.pure = false;
-  scope.assignment = true;
 
   Expression.consumeNode(scope, lhsNode);
 
-  scope.assignment = false;
   return Expression.consumeNode(scope, rhsNode);
+};
+
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const type = scope.type;
+  scope.type = ScopeTypes.ASSIGNMENT;
+
+  const result = consumeInnerNodes(scope, node);
+  scope.type = type;
+
+  return result;
 };

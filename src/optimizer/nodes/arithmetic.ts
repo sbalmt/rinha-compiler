@@ -7,10 +7,10 @@ import { Metadata } from '../../core/metadata';
 import { convertToString, isNumber } from '../../core/converters';
 import { resolveArithmeticOperation } from '../../core/operations';
 import { ErrorTypes, NodeTypes } from '../../core/types';
+import { Scope, ScopeTypes } from '../scope';
 import { combineNodes } from '../ast';
-import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
@@ -41,4 +41,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   return undefined;
+};
+
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const type = scope.type;
+  scope.type = ScopeTypes.ARITHMETIC;
+
+  const result = consumeInnerNodes(scope, node);
+  scope.type = type;
+
+  return result;
 };

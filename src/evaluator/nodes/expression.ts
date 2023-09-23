@@ -6,12 +6,13 @@ import * as String from './string';
 import * as Boolean from './boolean';
 import * as Closure from './closure';
 import * as Tuple from './tuple';
-import * as Invoke from './invoke';
-import * as Arithmetic from './arithmetic';
-import * as Relational from './relational';
-import * as Equality from './equality';
-import * as Logical from './logical';
 import * as Assignment from './assignment';
+import * as Logical from './logical';
+import * as Equality from './equality';
+import * as Relational from './relational';
+import * as Arithmetic from './arithmetic';
+import * as Invoke from './invoke';
+import * as LazyCall from './lazycall';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
@@ -63,6 +64,9 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
 
     case NodeTypes.INVOKE:
       return Invoke.consumeNode(scope, node);
+
+    case NodeTypes.LAZY_CALL:
+      return LazyCall.consumeNode(scope, node);
 
     default:
       throw `Unexpected expression node type (${node.value}).`;

@@ -1,8 +1,10 @@
 import * as Core from '@xcheme/core';
 
 import { VarValueType } from '../evaluator/scope';
+import { LazyCall } from '../evaluator/lazy';
+import { Metadata } from './metadata';
 
-export const isNumber = <T extends Core.Types>(value: VarValueType<T>): value is number => {
+export const isNumber = <T extends Metadata>(value: VarValueType<T>): value is number => {
   return typeof value === 'number';
 };
 
@@ -14,9 +16,13 @@ export const ensureInt32 = (value: number): number => {
   return value | 0;
 };
 
-export const convertToString = <T extends Core.Types>(value: VarValueType<T>) => {
+export const convertToString = <T extends Metadata>(value: VarValueType<T>) => {
   if (value instanceof Core.Node || value instanceof Function) {
     return '<#closure>';
+  }
+
+  if (value instanceof LazyCall) {
+    return '<#lazy-call>';
   }
 
   if (value instanceof Array) {

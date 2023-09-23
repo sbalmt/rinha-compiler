@@ -1,0 +1,17 @@
+let fib = fn (n) => {
+  let rec = fn (n, k1, k2) => {
+    if (n == 0) {
+      k1
+    } else {
+      if (n == 1) {
+        k2
+      } else {
+        rec(n - 1, k2, k1 + k2)
+      }
+    }
+  };
+
+  rec(n, 0, 1)
+};
+
+print(fib(100000))

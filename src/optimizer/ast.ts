@@ -4,6 +4,10 @@ import { Metadata } from '../core/metadata';
 import { VarValueType } from '../evaluator/scope';
 import { NodeTypes } from '../core/types';
 
+export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Core.SymbolTable<Metadata>) => {
+  return new Core.Node(fragment, value, table);
+};
+
 export const combineNodes = (
   first: Core.Node<Metadata>,
   last: Core.Node<Metadata>,

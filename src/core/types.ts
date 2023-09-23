@@ -48,7 +48,9 @@ export const enum NodeTypes {
 
   CONDITION = 1400,
   PARAMETERS = 1401,
-  BLOCK = 1402
+  BLOCK = 1402,
+
+  LAZY_CALL = 1500
 }
 
 export type ArithmeticNodeTypes =

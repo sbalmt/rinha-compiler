@@ -6,7 +6,7 @@ import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
 import { VarValueType } from '../../evaluator/scope';
-import { Scope } from '../scope';
+import { Scope, ScopeTypes } from '../scope';
 
 type ComparisonNodeTypes =
   | NodeTypes.LOGICAL_OR
@@ -50,7 +50,7 @@ const evaluateOperation = (
   }
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
@@ -63,4 +63,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   return undefined;
+};
+
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const type = scope.type;
+  scope.type = ScopeTypes.COMPARISON;
+
+  const result = consumeInnerNodes(scope, node);
+  scope.type = type;
+
+  return result;
 };

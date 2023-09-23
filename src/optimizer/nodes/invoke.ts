@@ -7,7 +7,8 @@ import { Metadata } from '../../core/metadata';
 import { NodeTypes, SymbolTypes } from '../../core/types';
 import { ErrorTypes } from '../../core/types';
 import { resolveSymbol } from '../symbols';
-import { Scope } from '../scope';
+import { Scope, ScopeTypes } from '../scope';
+import { createNode } from '../ast';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.value === SymbolTypes.BuiltIn;
@@ -68,5 +69,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     }
 
     Expression.consumeNode(scope, callNode);
+
+    if (selfCalling && scope.type === ScopeTypes.BLOCK) {
+      const callNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
+
+      node.swap(callNode);
+      node.set(Core.NodeDirection.Right, callNode);
+
+      scope.lazy = true;
+    }
   }
 };
