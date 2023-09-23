@@ -47,3 +47,10 @@ export const enum NodeTypes {
   PARAMETERS = 1401,
   BLOCK = 1402
 }
+
+export type ArithmeticNodeTypes =
+  | NodeTypes.ADD
+  | NodeTypes.SUBTRACT
+  | NodeTypes.MULTIPLY
+  | NodeTypes.DIVIDE
+  | NodeTypes.MODULO;

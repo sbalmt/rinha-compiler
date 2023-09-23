@@ -1,9 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../core/errors';
-
-import { ErrorTypes } from '../core/types';
-
 export type VarCallableType<T extends Core.Types> = Core.Node<T> | VarCallbackType<T>;
 
 export type VarCallbackType<T extends Core.Types> = (scope: Scope<T>, args: Core.Node<T>) => VarValueType<T>;
@@ -26,10 +22,10 @@ type VarRecordType<T extends Core.Types> = {
 export class Scope<T extends Core.Types> {
   private variables: VarMapType<T> = {};
 
-  private scopeParent: Scope<T> | undefined;
+  private parent: Scope<T> | undefined;
 
   constructor(parent?: Scope<T>) {
-    this.scopeParent = parent;
+    this.parent = parent;
   }
 
   createCustomVariable(identifier: string, callback: VarCallbackType<T>): void {
@@ -49,11 +45,11 @@ export class Scope<T extends Core.Types> {
       return (this.variables[identifier] = value);
     }
 
-    if (this.scopeParent) {
-      return this.scopeParent.updateVariable(node, value);
+    if (this.parent) {
+      return this.parent.updateVariable(node, value);
     }
 
-    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
+    return value;
   }
 
   readVariable(node: Core.Node<T>): VarValueType<T> {
@@ -63,15 +59,11 @@ export class Scope<T extends Core.Types> {
       return this.variables[identifier];
     }
 
-    if (this.scopeParent) {
-      return this.scopeParent.readVariable(node);
+    if (this.parent) {
+      return this.parent.readVariable(node);
     }
 
-    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
-  }
-
-  get parent(): Scope<T> | undefined {
-    return this.scopeParent;
+    return undefined;
   }
 
   *[Symbol.iterator](): Iterator<VarRecordType<T>> {

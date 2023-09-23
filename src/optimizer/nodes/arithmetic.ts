@@ -4,43 +4,18 @@ import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { convertToString, ensureInt32, isNumber } from '../../core/converters';
+import { convertToString, isNumber } from '../../core/converters';
+import { resolveArithmeticOperation } from '../../core/operations';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { combineNodes } from '../ast';
 import { Scope } from '../scope';
-
-type ArithmeticNodeTypes =
-  | NodeTypes.ADD
-  | NodeTypes.SUBTRACT
-  | NodeTypes.MULTIPLY
-  | NodeTypes.DIVIDE
-  | NodeTypes.MODULO;
-
-const evaluateOperation = (lhs: number, rhs: number, operation: ArithmeticNodeTypes) => {
-  switch (operation) {
-    case NodeTypes.ADD:
-      return ensureInt32(lhs) + ensureInt32(rhs);
-
-    case NodeTypes.SUBTRACT:
-      return ensureInt32(lhs) - ensureInt32(rhs);
-
-    case NodeTypes.MULTIPLY:
-      return ensureInt32(lhs) * ensureInt32(rhs);
-
-    case NodeTypes.DIVIDE:
-      return Math.trunc(ensureInt32(lhs) / ensureInt32(rhs));
-
-    case NodeTypes.MODULO:
-      return ensureInt32(lhs) % ensureInt32(rhs);
-  }
-};
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
   if (isNumber(lhs) && isNumber(rhs)) {
-    const evaluatedValue = evaluateOperation(lhs, rhs, node.value);
+    const evaluatedValue = resolveArithmeticOperation(lhs, rhs, node.value);
     const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, evaluatedValue);
 
     node.swap(optimizedNode);
