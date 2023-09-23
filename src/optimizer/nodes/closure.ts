@@ -21,6 +21,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   Block.consumeNodes(scope, blockNode.right!);
 
   node.assign({
+    pure: scope.pure,
     recursive: scope.recursive
   });
 

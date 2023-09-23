@@ -9,6 +9,7 @@ import * as Tuple from './tuple';
 import * as Invoke from './invoke';
 import * as Arithmetic from './arithmetic';
 import * as Comparison from './comparison';
+import * as Assignment from './assignment';
 
 import { Metadata } from '../../core/metadata';
 import { VarValueType } from '../../evaluator/scope';
@@ -18,7 +19,7 @@ import { Scope } from '../scope';
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
-      return Identifier.consumeNode(node);
+      return Identifier.consumeNode(scope, node);
 
     case NodeTypes.INTEGER:
       return Integer.consumeNode(node);
@@ -36,9 +37,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Tuple.consumeNode(scope, node);
 
     case NodeTypes.ASSIGNMENT:
-      consumeNode(scope, node.left!);
-      consumeNode(scope, node.right!);
-      break;
+      return Assignment.consumeNode(scope, node);
 
     case NodeTypes.LOGICAL_OR:
     case NodeTypes.LOGICAL_AND:

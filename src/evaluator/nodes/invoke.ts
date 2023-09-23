@@ -76,8 +76,9 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   }
 
   const closureScope = prepareScope(scope, closureNode, callNode, closureFirstParam, callArgs);
+  const { pure, recursive } = closureNode.data;
 
-  if (!closureNode.data.recursive) {
+  if (!pure || !recursive) {
     return Block.consumeNodes(closureScope, closureBlock.right!);
   }
 

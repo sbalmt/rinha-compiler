@@ -7,7 +7,8 @@ export const enum ErrorTypes {
   INVALID_TUPLE,
   INVALID_CALL,
   MISSING_ARGUMENT,
-  EXTRA_ARGUMENT
+  EXTRA_ARGUMENT,
+  INVALID_ASSIGNMENT
 }
 
 export const enum SymbolTypes {
