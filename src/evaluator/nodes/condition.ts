@@ -14,11 +14,13 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   const failureBlock = successBlock.next;
 
   if (condition !== false) {
-    return Block.consumeNodes(blockScope, successBlock.right!);
-  }
-
-  if (failureBlock) {
-    return Block.consumeNodes(blockScope, failureBlock.right!);
+    if (successBlock.right) {
+      return Block.consumeNodes(blockScope, successBlock.right);
+    }
+  } else if (failureBlock) {
+    if (failureBlock.right) {
+      return Block.consumeNodes(blockScope, failureBlock.right);
+    }
   }
 
   return undefined;

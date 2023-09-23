@@ -21,17 +21,40 @@ export const consumeNode = (scope: Scope, parent: Core.Node<Metadata>, node: Cor
   const failureBlock = successBlock.next!;
 
   if (condition === true) {
-    resolvedNode(parent, successBlock.right!);
-    return true;
+    if (successBlock.right) {
+      resolvedNode(parent, successBlock.right);
+      return true;
+    }
+
+    if (parent.next) {
+      parent.swap(parent.next);
+      return true;
+    }
+
+    return false;
   }
 
   if (condition === false) {
-    resolvedNode(parent, failureBlock.right!);
-    return true;
+    if (failureBlock.right) {
+      resolvedNode(parent, failureBlock.right);
+      return true;
+    }
+
+    if (parent.next) {
+      parent.swap(parent.next);
+      return true;
+    }
+
+    return false;
   }
 
-  Block.consumeNodes(scope, successBlock.right!);
-  Block.consumeNodes(scope, failureBlock.right!);
+  if (successBlock.right) {
+    Block.consumeNodes(scope, successBlock.right);
+  }
+
+  if (failureBlock.right) {
+    Block.consumeNodes(scope, failureBlock.right);
+  }
 
   return false;
 };
