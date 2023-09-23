@@ -1,0 +1,6 @@
+let x = 10;
+let y = 15;
+
+assert(5 * x - y, 35)
+
+print("success")

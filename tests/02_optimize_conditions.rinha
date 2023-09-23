@@ -7,11 +7,13 @@ if (x) {
 } else {
   print("it's false")
   print("stop")
+  assert(false)
 }
 
 if (y) {
   print("it's true")
   print("stop")
+  assert(false)
 } else {
   print("it's false")
   print("continue")
@@ -21,10 +23,12 @@ if (true) {
 
 } else {
   print("never performed")
+  assert(false)
 }
 
 if (false) {
   print("never performed")
+  assert(false)
 } else {
   
 }
@@ -32,6 +36,10 @@ if (false) {
 if (true) {
 
 } else {
+
+}
+
+if (true) {
   
 }
 
