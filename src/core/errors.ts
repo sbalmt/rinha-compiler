@@ -10,6 +10,7 @@ const errorMessages = {
   [ErrorTypes.INVALID_NUMBER]: 'Operand `{0}` at line {1}, column {2} is not a number.',
   [ErrorTypes.INVALID_TUPLE]: 'Argument `{0}` is not a tuple at line {1}, column {2}.',
   [ErrorTypes.INVALID_CALL]: 'Operand `{0}` at line {1}, column {2} is not a function.',
+  [ErrorTypes.EARLY_CALL]: 'Unable to call `{0}` at line {1}, column {2} before its definition.',
   [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for `{0}` at line {1}, column {2}.',
   [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument `{0}` at line {1}, column {2} is not necessary.',
   [ErrorTypes.INVALID_ASSIGNMENT]: 'Invalid assignment to `{0}` at line {1}, column {2}.',

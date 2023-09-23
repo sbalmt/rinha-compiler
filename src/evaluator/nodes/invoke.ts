@@ -57,14 +57,10 @@ const consumeFromCache = (scope: Scope<Metadata>, blockNode: Core.Node<Metadata>
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const callNode = node.left!;
   const callArgs = callNode.next!;
-  const closureNode = Expression.consumeNode(scope, callNode);
+  const closureNode = Expression.consumeNode(scope, callNode) as Core.Node<Metadata>;
 
   if (closureNode instanceof Function) {
     return closureNode(scope, callArgs);
-  }
-
-  if (!(closureNode instanceof Core.Node)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callNode.fragment);
   }
 
   const closureParams = closureNode.right!;

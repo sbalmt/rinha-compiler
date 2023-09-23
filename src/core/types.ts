@@ -6,6 +6,7 @@ export const enum ErrorTypes {
   INVALID_NUMBER,
   INVALID_TUPLE,
   INVALID_CALL,
+  EARLY_CALL,
   MISSING_ARGUMENT,
   EXTRA_ARGUMENT,
   INVALID_ASSIGNMENT,
@@ -13,7 +14,8 @@ export const enum ErrorTypes {
 }
 
 export const enum SymbolTypes {
-  Identifier = 2000
+  Identifier = 2000,
+  BuiltIn = 2001
 }
 
 export const enum NodeTypes {
