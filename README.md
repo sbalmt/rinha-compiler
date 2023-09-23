@@ -33,6 +33,14 @@ docker run --memory=2g --cpus=2 --volume=$(pwd)/files:/var/rinha/ rinha /var/rin
 docker run --volume=$(pwd)/files:/var/rinha/ rinha /var/rinha/extra/math_sqrt.rinha
 ```
 
+## Optimization
+
+Everyone knows using an interpreted language for interpreting another one is slow as hell, so down below are listed some optimizations made in order to make this challenge a bit fair compared to compiled languages.
+
+1. Resolve literal values and expressions.
+2. Remove unreferenced symbols and never called statements (dead code).
+3. Memoization of pure and recursive functions (runtime).
+
 ## License
 
 All the packages and extensions in this project are covered by their respective licenses.
