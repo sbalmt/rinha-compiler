@@ -1,0 +1,6 @@
+let test = fn (input) => {
+  assert(false)
+};
+
+test()
+assert(false)

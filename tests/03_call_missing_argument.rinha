@@ -1,5 +1,0 @@
-let test = fn (input) => {
-  assert(input)
-};
-
-test()

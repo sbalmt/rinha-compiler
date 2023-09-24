@@ -1,0 +1,14 @@
+let generator = fn (num) => {
+  fn (mul) => {
+    let recursion = fn (current) => {
+      if (current < (mul * num)) {
+        recursion(current + 1)
+      } else {
+        current
+      }
+    };
+    recursion(0)
+  }
+};
+
+print(generator(1000)(1000)())

@@ -1,0 +1,9 @@
+let call = fn (x) => {
+    fn (y) => {
+        fn (z) => {
+            x * y + z
+        }
+    }
+};
+
+assert(call(10)(5)(50) == 100)
