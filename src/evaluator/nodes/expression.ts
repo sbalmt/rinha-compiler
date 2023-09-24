@@ -12,7 +12,10 @@ import * as Equality from './equality';
 import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
 import * as Invoke from './invoke';
+import * as FastCall from './fastcall';
 import * as LazyCall from './lazycall';
+import * as TailCall from './tailcall';
+import * as MemoCall from './memocall';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
@@ -65,8 +68,17 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
     case NodeTypes.INVOKE:
       return Invoke.consumeNode(scope, node);
 
+    case NodeTypes.FAST_CALL:
+      return FastCall.consumeNode(scope, node);
+
     case NodeTypes.LAZY_CALL:
       return LazyCall.consumeNode(scope, node);
+
+    case NodeTypes.TAIL_CALL:
+      return TailCall.consumeNode(scope, node);
+
+    case NodeTypes.MEMO_CALL:
+      return MemoCall.consumeNode(scope, node);
 
     default:
       throw `Unexpected expression node type (${node.value}).`;

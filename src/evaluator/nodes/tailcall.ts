@@ -5,6 +5,7 @@ import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { Scope, createCallScope } from '../scope';
+import { LazyCall } from '../lazy';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const closureCall = node.left!;
@@ -12,14 +13,16 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
 
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
-  const closureBlock = closureParameters.next!;
-
-  if (!closureFirstParameter) {
-    return Block.consumeNodes(scope, closureBlock.right!);
-  }
 
   const closureArguments = closureCall.next!;
   const closureScope = createCallScope(scope, closureNode, closureFirstParameter, closureArguments);
+  const closureBlock = closureParameters.next!;
 
-  return Block.consumeNodes(closureScope, closureBlock.right!);
+  let value = Block.consumeNodes(closureScope, closureBlock.right!);
+
+  while (value instanceof LazyCall) {
+    value = value.invoke();
+  }
+
+  return value;
 };

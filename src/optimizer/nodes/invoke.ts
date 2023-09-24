@@ -41,6 +41,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (isBuiltIn(symbol)) {
     Expression.consumeNode(scope, callNode);
     consumeArguments(scope, callNode.next!);
+
+    const fastCallNode = createNode(node.fragment, NodeTypes.FAST_CALL, node.table);
+
+    fastCallNode.set(Core.NodeDirection.Left, node.left);
+    fastCallNode.set(Core.NodeDirection.Right, node.right);
+    fastCallNode.set(Core.NodeDirection.Next, node.next);
+
+    node.swap(fastCallNode);
   } else {
     if (!isCallable(symbol)) {
       throw Errors.getMessage(ErrorTypes.INVALID_CALL, callNode.fragment);
@@ -59,24 +67,43 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
     const argumentsNode = callNode.next!;
     const argumentsCount = consumeArguments(scope, argumentsNode);
+    const { parameters, lazy } = symbol.node!.right!.data;
 
-    if (argumentsCount > symbol.node!.right!.data.parameters!) {
+    if (argumentsCount > parameters!) {
       throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
     }
 
-    if (argumentsCount < symbol.node!.right!.data.parameters!) {
+    if (argumentsCount < parameters!) {
       throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
     }
 
     Expression.consumeNode(scope, callNode);
 
-    if (selfCalling && scope.type === ScopeTypes.BLOCK) {
-      const callNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
+    if (selfCalling) {
+      if (scope.type === ScopeTypes.BLOCK) {
+        const callNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
+
+        node.swap(callNode);
+        node.set(Core.NodeDirection.Right, callNode);
+
+        scope.lazy = true;
+      } else if (scope.pure && parameters! > 0) {
+        const callNode = createNode(node.fragment, NodeTypes.MEMO_CALL, node.table);
+
+        callNode.set(Core.NodeDirection.Left, node.left);
+        callNode.set(Core.NodeDirection.Right, node.right);
+        callNode.set(Core.NodeDirection.Next, node.next);
+
+        node.swap(callNode);
+      }
+    } else if (lazy) {
+      const callNode = createNode(node.fragment, NodeTypes.TAIL_CALL, node.table);
+
+      callNode.set(Core.NodeDirection.Left, node.left);
+      callNode.set(Core.NodeDirection.Right, node.right);
+      callNode.set(Core.NodeDirection.Next, node.next);
 
       node.swap(callNode);
-      node.set(Core.NodeDirection.Right, callNode);
-
-      scope.lazy = true;
     }
   }
 };

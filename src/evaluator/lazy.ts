@@ -16,9 +16,6 @@ export class LazyCall<T extends Metadata> {
   }
 
   invoke() {
-    this.scope.lazyCall = true;
-    const value = Expression.consumeNode(this.scope, this.node);
-    this.scope.lazyCall = false;
-    return value;
+    return Expression.consumeNode(this.scope, this.node);
   }
 }

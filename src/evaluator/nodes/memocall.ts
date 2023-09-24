@@ -4,6 +4,7 @@ import * as Expression from './expression';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
+import { identifyCache, retrieveCache, storeCache } from '../cache';
 import { Scope, createCallScope } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
@@ -12,14 +13,23 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
 
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
-  const closureBlock = closureParameters.next!;
-
-  if (!closureFirstParameter) {
-    return Block.consumeNodes(scope, closureBlock.right!);
-  }
 
   const closureArguments = closureCall.next!;
   const closureScope = createCallScope(scope, closureNode, closureFirstParameter, closureArguments);
+  const closureBlock = closureParameters.next!;
 
-  return Block.consumeNodes(closureScope, closureBlock.right!);
+  const cacheKey = identifyCache(closureScope);
+  if (!cacheKey) {
+    return Block.consumeNodes(closureScope, closureBlock.right!);
+  }
+
+  const cacheResult = retrieveCache(cacheKey);
+  if (cacheResult) {
+    return cacheResult;
+  }
+
+  const value = Block.consumeNodes(closureScope, closureBlock.right!);
+  storeCache(cacheKey, value);
+
+  return value;
 };
