@@ -8,32 +8,24 @@ import { ErrorTypes, NodeTypes } from '../../core/types';
 import { resolveSymbol } from '../symbols';
 import { Scope, ScopeTypes } from '../scope';
 
-export const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
-  const lhsNode = node.left!;
-  const rhsNode = node.right!;
-
-  if (lhsNode.value !== NodeTypes.IDENTIFIER) {
-    throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, lhsNode.fragment);
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  if (node.left!.value !== NodeTypes.IDENTIFIER) {
+    throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, node.left!.fragment);
   }
 
-  const symbol = resolveSymbol(scope, lhsNode);
+  const symbol = resolveSymbol(scope, node.left!);
 
   symbol.data.mutable = true;
   symbol.data.references++;
 
   scope.pure = false;
 
-  Expression.consumeNode(scope, lhsNode);
-
-  return Expression.consumeNode(scope, rhsNode);
-};
-
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const type = scope.type;
   scope.type = ScopeTypes.ASSIGNMENT;
 
-  const result = consumeInnerNodes(scope, node);
+  Expression.consumeNode(scope, node.left!);
+
   scope.type = type;
 
-  return result;
+  return Expression.consumeNode(scope, node.right!);
 };
