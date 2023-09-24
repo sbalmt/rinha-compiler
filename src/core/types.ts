@@ -53,7 +53,8 @@ export const enum NodeTypes {
   FAST_CALL = 1500,
   LAZY_CALL = 1501,
   TAIL_CALL = 1502,
-  MEMO_CALL = 1503
+  MEMO_CALL = 1503,
+  LATE_CALL = 1504,
 }
 
 export type ArithmeticNodeTypes =

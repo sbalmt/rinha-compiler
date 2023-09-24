@@ -16,6 +16,7 @@ import * as FastCall from './fastcall';
 import * as LazyCall from './lazycall';
 import * as TailCall from './tailcall';
 import * as MemoCall from './memocall';
+import * as LateCall from './latecall';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
@@ -79,6 +80,9 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
 
     case NodeTypes.MEMO_CALL:
       return MemoCall.consumeNode(scope, node);
+
+    case NodeTypes.LATE_CALL:
+      return LateCall.consumeNode(scope, node);
 
     default:
       throw `Unexpected expression node type (${node.value}).`;

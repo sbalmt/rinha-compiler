@@ -34,14 +34,31 @@ const consumeArguments = (scope: Scope, node: Core.Node<Metadata>) => {
   return counter;
 };
 
+const isLateCall = (node: Core.Node<Metadata>) => {
+  return node.value !== NodeTypes.IDENTIFIER;
+};
+
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callNode = node.left!;
+  const argumentsNode = callNode.next!;
+  const argumentsCount = consumeArguments(scope, argumentsNode);
+
+  Expression.consumeNode(scope, callNode);
+
+  if (isLateCall(callNode)) {
+    const fastCallNode = createNode(node.fragment, NodeTypes.LATE_CALL, node.table);
+
+    fastCallNode.set(Core.NodeDirection.Left, node.left);
+    fastCallNode.set(Core.NodeDirection.Right, node.right);
+    fastCallNode.set(Core.NodeDirection.Next, node.next);
+
+    node.swap(fastCallNode);
+    return;
+  }
+
   const symbol = resolveSymbol(scope, callNode);
 
   if (isBuiltIn(symbol)) {
-    Expression.consumeNode(scope, callNode);
-    consumeArguments(scope, callNode.next!);
-
     const fastCallNode = createNode(node.fragment, NodeTypes.FAST_CALL, node.table);
 
     fastCallNode.set(Core.NodeDirection.Left, node.left);
@@ -65,8 +82,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       scope.recursive = true;
     }
 
-    const argumentsNode = callNode.next!;
-    const argumentsCount = consumeArguments(scope, argumentsNode);
     const { parameters, lazy } = symbol.node!.right!.data;
 
     if (argumentsCount > parameters!) {
@@ -76,8 +91,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     if (argumentsCount < parameters!) {
       throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
     }
-
-    Expression.consumeNode(scope, callNode);
 
     if (selfCalling) {
       if (scope.type === ScopeTypes.BLOCK) {
