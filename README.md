@@ -24,7 +24,7 @@ docker build -t rinha .
 4. Docker run (For RINHA requirements):
 
 ```
-docker run --memory=2g --cpus=2 --volume=$(pwd)/files:/var/rinha/ rinha /var/rinha/source.rinha
+docker run --memory=2g --cpus=2 --volume=$(pwd)/files/source.rinha:/var/rinha/source.rinha rinha
 ```
 
 5. If you wanna test out of the RINHA requirements:
