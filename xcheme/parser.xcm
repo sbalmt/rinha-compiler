@@ -84,7 +84,7 @@ alias node LET_ASSIGNMENT as place right (T_SYMBOL.EQUAL & EXPR<STMT_BLOCK>);
 alias node LET_BODY as symbol<2000> (append<1000> T_IDENTIFIER & LET_ASSIGNMENT & T_SYMBOL.SEMICOLON);
 
 alias node IF_CONDITION as T_SYMBOL.OPN_PARENTHESIS & append<1400> EXPR<STMT_BLOCK> & T_SYMBOL.CLS_PARENTHESIS;
-alias node IF_BODY as STMT_CONDITION<STMT_BLOCK> & place next scope STMT_BLOCK;
+alias node IF_BODY as IF_CONDITION & place next scope STMT_BLOCK;
 alias node ELSE_BODY as T_KEYWORD.ELSE & place next scope STMT_BLOCK;
 
 alias node<1300> EXPR_STATEMENT as EXPR<STMT_BLOCK>;
