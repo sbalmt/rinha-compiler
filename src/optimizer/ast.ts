@@ -8,6 +8,16 @@ export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Cor
   return new Core.Node(fragment, value, table);
 };
 
+export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes) => {
+  const replacement = createNode(node.fragment, value, node.table);
+
+  replacement.set(Core.NodeDirection.Left, node.left);
+  replacement.set(Core.NodeDirection.Right, node.right);
+  replacement.set(Core.NodeDirection.Next, node.next);
+
+  node.swap(replacement);
+};
+
 export const combineNodes = (
   first: Core.Node<Metadata>,
   last: Core.Node<Metadata>,
