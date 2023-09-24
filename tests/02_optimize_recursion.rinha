@@ -1,9 +1,11 @@
+let limit = 100000;
+
 let recursion = fn (num) => {
-  if (num < 100000) {
+  if (num < limit) {
     recursion(num + 1)
   } else {
     num
   }
 };
 
-print(recursion(0))
+assert(recursion(0) == limit)
