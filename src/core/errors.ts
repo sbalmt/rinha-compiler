@@ -12,7 +12,7 @@ const errorMessages = {
   [ErrorTypes.INVALID_ASSIGNMENT]: 'Invalid assignment to `{0}` at line {1}, column {2}.',
   [ErrorTypes.INVALID_OPERATION]: 'Operation at line {1}, column {2} is not valid.',
   [ErrorTypes.UNSUPPORTED_OPERATION]: 'Operation at line {1}, column {2} is not supported.',
-  [ErrorTypes.EARLY_CALL]: 'Unable to call `{0}` at line {1}, column {2} before its definition.',
+  [ErrorTypes.UNSUPPORTED_CALL]: 'Unable to call `{0}` at line {1}, column {2} before its definition.',
   [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for `{0}` at line {1}, column {2}.',
   [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument `{0}` at line {1}, column {2} is not necessary.',
   [ErrorTypes.ASSERTION_FAILED]: 'Assertion `{0}` at line {1}, column {2} has been failed.'
