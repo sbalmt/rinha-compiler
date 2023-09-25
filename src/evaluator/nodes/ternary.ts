@@ -6,5 +6,5 @@ import { Metadata } from '../../core/metadata';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
-  return Condition.consumeNode(scope, node);
+  return Condition.consumeNode(scope, node.right!);
 };
