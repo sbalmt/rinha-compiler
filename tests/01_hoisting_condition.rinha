@@ -1,6 +1,6 @@
 if (true) {
   let result1 = 2 * hst1;
-  assert(hst1 == 50)
+  assert(result1 == 50)
   let hst1 = 25;
 } else {
   assert(false)
@@ -10,6 +10,6 @@ if (false) {
   assert(false)
 } else {
   let result2 = 2 * hst2;
-  assert(hst2 == 50)
+  assert(result2 == 50)
   let hst2 = 25;
 }

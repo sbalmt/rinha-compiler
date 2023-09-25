@@ -11,8 +11,7 @@ const removeDefinition = (scope: Scope) => {
 };
 
 const replaceDefinition = (scope: Scope, node: Core.Node<Metadata>) => {
-  const lowerNode = node.lowest(Core.NodeDirection.Next) ?? node;
-  lowerNode.set(Core.NodeDirection.Next, scope.currentNode.next);
+  node.set(Core.NodeDirection.Next, scope.currentNode.next);
   scope.previousNode.set(scope.previousDirection, node);
 };
 
