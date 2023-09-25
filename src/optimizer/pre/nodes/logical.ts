@@ -7,6 +7,7 @@ import * as Expression from './expression';
 
 import { ErrorTypes, NodeTypes } from '../../../core/types';
 import { Metadata } from '../../../core/metadata';
+import { isLiteral } from '../../../core/data';
 import { combineNodes } from '../ast';
 import { Scope } from '../../scope';
 
@@ -23,7 +24,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (lhs !== undefined && rhs !== undefined) {
+  if (isLiteral(lhs) && isLiteral(rhs)) {
     if (!Logical.isComparable(lhs)) {
       throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
     }

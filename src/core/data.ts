@@ -4,6 +4,10 @@ import { VarValueType } from '../evaluator/scope';
 import { LazyCall } from '../evaluator/lazy';
 import { Metadata } from './metadata';
 
+export const isLiteral = <T extends Metadata>(value: VarValueType<T>) => {
+  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+};
+
 export const ensureInt32 = (value: number): number => {
   return value | 0;
 };
@@ -15,6 +19,10 @@ export const convertToNumber = (value: string) => {
 export const convertToString = <T extends Metadata>(value: VarValueType<T>) => {
   if (value instanceof Core.Node || value instanceof Function) {
     return '<#closure>';
+  }
+
+  if (value instanceof Core.SymbolRecord) {
+    return '<#reference>';
   }
 
   if (value instanceof LazyCall) {

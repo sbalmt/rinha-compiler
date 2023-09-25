@@ -8,6 +8,7 @@ import * as Expression from './expression';
 
 import { Metadata } from '../../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../../core/types';
+import { isLiteral } from '../../../core/data';
 import { combineNodes } from '../ast';
 import { Scope } from '../../scope';
 
@@ -31,7 +32,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (lhs === undefined || rhs === undefined) {
+  if (!isLiteral(lhs) || !isLiteral(rhs)) {
     return undefined;
   }
 
