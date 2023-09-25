@@ -8,7 +8,7 @@ const errorMessages = {
   [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax `{0}` at line {1}, column {2}.',
   [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier `{0}` at line {1}, column {2} was not defined.',
   [ErrorTypes.INVALID_TUPLE]: 'Argument `{0}` is not a tuple at line {1}, column {2}.',
-  [ErrorTypes.INVALID_CALL]: 'Operand `{0}` at line {1}, column {2} is not a function.',
+  [ErrorTypes.INVALID_CALL]: 'Unable to call `{0}` at line {1}, column {2}.',
   [ErrorTypes.INVALID_ASSIGNMENT]: 'Invalid assignment to `{0}` at line {1}, column {2}.',
   [ErrorTypes.INVALID_OPERATION]: 'Operation at line {1}, column {2} is not valid.',
   [ErrorTypes.UNSUPPORTED_OPERATION]: 'Operation at line {1}, column {2} is not supported.',

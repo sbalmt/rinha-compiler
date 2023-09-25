@@ -1,14 +1,20 @@
 import * as Core from '@xcheme/core';
 
+import * as Errors from '../../../core/errors';
+
 import * as Expression from './expression';
-import * as Identifier from './identifier';
 
 import { Metadata, initNode } from '../../../core/metadata';
-import { NodeTypes, SymbolTypes } from '../../../core/types';
+import { ErrorTypes, NodeTypes, SymbolTypes } from '../../../core/types';
+import { VarValueType } from '../../../evaluator/scope';
 import { Scope } from '../../scope';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.value === SymbolTypes.BuiltIn;
+};
+
+const isCallable = (symbol: VarValueType<Metadata>): symbol is Core.SymbolRecord<Metadata> => {
+  return symbol instanceof Core.SymbolRecord && symbol.data.literal === undefined;
 };
 
 const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -28,7 +34,11 @@ const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
-  const symbol = Identifier.consumeNode(callerNode);
+  const symbol = Expression.consumeNode(scope, callerNode);
+
+  if (!isCallable(symbol)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
+  }
 
   consumeArgumentNodes(scope, callerNode.next!);
 
