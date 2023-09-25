@@ -1,11 +1,8 @@
 import * as Core from '@xcheme/core';
 
 import * as Identifier from './identifier';
-import * as Integer from './integer';
-import * as String from './string';
-import * as Boolean from './boolean';
+import * as Literal from './literal';
 import * as Closure from './closure';
-import * as Tuple from './tuple';
 import * as Invoke from './invoke';
 import * as Arithmetic from './arithmetic';
 import * as Comparison from './comparison';
@@ -22,19 +19,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Identifier.consumeNode(scope, node);
 
     case NodeTypes.INTEGER:
-      return Integer.consumeNode(node);
-
     case NodeTypes.STRING:
-      return String.consumeNode(node);
-
     case NodeTypes.BOOLEAN:
-      return Boolean.consumeNode(node);
+    case NodeTypes.TUPLE:
+      return Literal.consumeNode(node);
 
     case NodeTypes.CLOSURE:
       return Closure.consumeNode(scope, node);
-
-    case NodeTypes.TUPLE:
-      return Tuple.consumeNode(scope, node);
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);

@@ -10,6 +10,7 @@ import { Scope, ScopeTypes } from '../scope';
 
 const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   retry: do {
+    console.log('OPT', node.fragment.data);
     switch (node.value) {
       case NodeTypes.EXPRESSION:
         Expression.consumeNode(scope, node.right!);

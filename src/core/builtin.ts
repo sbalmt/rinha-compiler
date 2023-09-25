@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../core/metadata';
-import { SymbolTypes } from '../core/types';
+import { Metadata } from './metadata';
+import { SymbolTypes } from './types';
 
 const range = new Core.Range(0, 0);
 const location = new Core.Location('built-in', range, range);

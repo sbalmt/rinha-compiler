@@ -26,12 +26,5 @@ export const resolveSymbol = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
   }
 
-  if (!symbol.assigned) {
-    symbol.assign({
-      mutable: false,
-      references: 0
-    });
-  }
-
   return symbol;
 };

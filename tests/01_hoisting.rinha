@@ -1,0 +1,14 @@
+let test = fn (x) => {
+  fn (y) => {
+    x + y + hst1 + hst2
+  }
+
+  let hst2 = 20 + hst3;
+};
+
+let hst1 = 10;
+let result = test(5)(5);
+
+assert(result == 70)
+
+let hst3 = 30;
