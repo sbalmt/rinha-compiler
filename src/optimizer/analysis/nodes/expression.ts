@@ -8,6 +8,7 @@ import * as Closure from './closure';
 import * as Tuple from './tuple';
 import * as Invoke from './invoke';
 import * as Assignment from './assignment';
+import * as Comparison from './comparison';
 import * as Arithmetic from './arithmetic';
 
 import { VarValueType } from '../../../evaluator/scope';
@@ -38,6 +39,16 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);
+
+    case NodeTypes.LOGICAL_OR:
+    case NodeTypes.LOGICAL_AND:
+    case NodeTypes.EQUAL:
+    case NodeTypes.NOT_EQUAL:
+    case NodeTypes.GREATER_THAN:
+    case NodeTypes.LESS_THAN:
+    case NodeTypes.GREATER_THAN_OR_EQUAL:
+    case NodeTypes.LESS_THAN_OR_EQUAL:
+      return Comparison.consumeNode(scope, node);
 
     case NodeTypes.ADD:
     case NodeTypes.SUBTRACT:

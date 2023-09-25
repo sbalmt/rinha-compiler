@@ -7,7 +7,7 @@ import { Metadata } from '../../../core/metadata';
 import { convertToString, isNumber } from '../../../core/converters';
 import { resolveArithmeticOperation } from '../../../core/operations';
 import { ErrorTypes, NodeTypes } from '../../../core/types';
-import { combineNodes } from '../../ast';
+import { combineNodes } from '../ast';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -15,20 +15,20 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const rhs = Expression.consumeNode(scope, node.right!);
 
   if (isNumber(lhs) && isNumber(rhs)) {
-    const evaluatedValue = resolveArithmeticOperation(lhs, rhs, node.value);
-    const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, evaluatedValue);
+    const value = resolveArithmeticOperation(lhs, rhs, node.value);
+    const newNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, value);
 
-    node.swap(optimizedNode);
-    return evaluatedValue;
+    node.swap(newNode);
+    return value;
   }
 
   if (lhs !== undefined && rhs !== undefined) {
     if (node.value === NodeTypes.ADD) {
-      const concatenatedValue = convertToString(lhs) + convertToString(rhs);
-      const optimizedNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, concatenatedValue);
+      const value = convertToString(lhs) + convertToString(rhs);
+      const newNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, value);
 
-      node.swap(optimizedNode);
-      return concatenatedValue;
+      node.swap(newNode);
+      return value;
     }
 
     if (!isNumber(lhs)) {

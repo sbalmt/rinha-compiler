@@ -54,7 +54,7 @@ export const enum NodeTypes {
   LAZY_CALL = 1501,
   TAIL_CALL = 1502,
   MEMO_CALL = 1503,
-  LATE_CALL = 1504,
+  LATE_CALL = 1504
 }
 
 export type ArithmeticNodeTypes =
@@ -63,3 +63,13 @@ export type ArithmeticNodeTypes =
   | NodeTypes.MULTIPLY
   | NodeTypes.DIVIDE
   | NodeTypes.MODULO;
+
+export type ComparisonNodeTypes =
+  | NodeTypes.LOGICAL_OR
+  | NodeTypes.LOGICAL_AND
+  | NodeTypes.EQUAL
+  | NodeTypes.NOT_EQUAL
+  | NodeTypes.GREATER_THAN
+  | NodeTypes.LESS_THAN
+  | NodeTypes.GREATER_THAN_OR_EQUAL
+  | NodeTypes.LESS_THAN_OR_EQUAL;
