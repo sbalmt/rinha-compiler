@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Errors from '../../../core/errors';
+
 import * as Expression from './expression';
 import * as Identifier from './identifier';
 

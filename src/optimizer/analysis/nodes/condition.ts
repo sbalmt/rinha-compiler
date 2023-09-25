@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import * as Block from './block';
 import * as Expression from './expression';
+import * as Block from './block';
 
 import { Metadata } from '../../../core/metadata';
 import { Scope } from '../scope';
