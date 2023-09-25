@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from './metadata';
+import { Metadata, initSymbol } from './metadata';
 import { SymbolTypes } from './types';
 
 const range = new Core.Range(0, 0);
@@ -12,8 +12,18 @@ const assertFragment = new Core.Fragment('assert', 0, 6, location);
 const printFragment = new Core.Fragment('print', 0, 5, location);
 
 export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
-  table.insert(new Core.SymbolRecord(firstFragment, SymbolTypes.BuiltIn));
-  table.insert(new Core.SymbolRecord(secondFragment, SymbolTypes.BuiltIn));
-  table.insert(new Core.SymbolRecord(assertFragment, SymbolTypes.BuiltIn));
-  table.insert(new Core.SymbolRecord(printFragment, SymbolTypes.BuiltIn));
+  table.insert(createBuiltInSymbol(firstFragment));
+  table.insert(createBuiltInSymbol(secondFragment));
+  table.insert(createBuiltInSymbol(assertFragment));
+  table.insert(createBuiltInSymbol(printFragment));
+};
+
+const createBuiltInSymbol = (fragment: Core.Fragment) => {
+  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn);
+
+  initSymbol(symbol, {
+    parameters: 1
+  });
+
+  return symbol;
 };
