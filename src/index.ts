@@ -30,11 +30,7 @@ if (context.node.next) {
   try {
     applyBuiltIn(context.table);
 
-    Analysis.consumeNodes(context.node, {
-      enableHoisting: true,
-      resolveLiterals: true,
-      removeDeadCode: true
-    });
+    Analysis.consumeNodes(context.node);
 
     Optimizer.consumeNodes(context.node.next);
     Evaluator.consumeNodes(context.node.next);

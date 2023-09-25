@@ -1,15 +1,9 @@
 import * as Core from '@xcheme/core';
+
 import { Metadata } from '../../core/metadata';
+import { BaseScope, BaseScopeOptions } from '../../core/scope';
 
-export type Optimizations = {
-  enableHoisting?: boolean;
-  resolveLiterals?: boolean;
-  removeDeadCode?: boolean;
-};
-
-export class Scope {
-  private scopeOptimizations: Optimizations;
-
+export class Scope extends BaseScope {
   anchorNode: Core.Node<Metadata>;
 
   anchorDirection: Core.NodeDirection;
@@ -20,18 +14,13 @@ export class Scope {
 
   currentNode: Core.Node<Metadata>;
 
-  constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, optimizations?: Optimizations) {
+  constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: BaseScopeOptions) {
+    super(options);
+
     this.anchorNode = anchorNode;
     this.anchorDirection = anchorDirection;
     this.previousDirection = anchorDirection;
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
-    this.scopeOptimizations = {
-      ...optimizations
-    };
-  }
-
-  get optimizations() {
-    return this.scopeOptimizations;
   }
 }

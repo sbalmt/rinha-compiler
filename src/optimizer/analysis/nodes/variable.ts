@@ -20,7 +20,7 @@ const hoistDefinition = (scope: Scope) => {
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { removeDeadCode, enableHoisting } = scope.optimizations;
+  const { removeDeadCode, enableHoisting } = scope.options;
   const symbol = node.table.find(node.fragment)!;
   const data = initSymbol(symbol);
 
