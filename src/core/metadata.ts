@@ -9,6 +9,7 @@ export type Metadata = {
     mutable: boolean;
     references: number;
     literal?: VarValueType<Metadata>;
+    follow?: Core.SymbolRecord<Metadata>;
     hoist: boolean;
   };
 

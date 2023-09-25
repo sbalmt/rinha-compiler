@@ -16,6 +16,7 @@ export type VarSingleType<T extends Metadata> =
   | string
   | boolean
   | VarCallableType<T>
+  | Core.SymbolRecord<T>
   | LazyCall<T>;
 
 export type VarTupleType<T extends Metadata> = [VarValueType<T>, VarValueType<T>];

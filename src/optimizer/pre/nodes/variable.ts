@@ -4,6 +4,11 @@ import * as Expression from './expression';
 
 import { Metadata, initSymbol } from '../../../core/metadata';
 import { Scope } from '../../scope';
+import { VarValueType } from '../../../evaluator/scope';
+
+const isReference = (value: VarValueType<Metadata>): value is Core.SymbolRecord<Metadata> => {
+  return value instanceof Core.SymbolRecord;
+};
 
 const hoistDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
@@ -23,9 +28,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const previousDeclarationNode = scope.declarationNode;
   scope.declarationNode = node;
 
-  data.literal = Expression.consumeNode(scope, node.right!);
-
+  const value = Expression.consumeNode(scope, node.right!);
   scope.declarationNode = previousDeclarationNode;
+
+  if (isReference(value)) {
+    data.follow = value;
+  } else {
+    data.literal = value;
+  }
 
   if (data.hoist && enableHoisting) {
     hoistDefinition(scope);
