@@ -23,7 +23,11 @@ export token<auto> T_KEYWORD as map {
 
 export token<250> T_IDENTIFIER as (ALPHA | EXTRA) & opt repeat WORD;
 export token<251> T_INTEGER as '0' | from '1' to '9' & opt repeat DIGIT;
-export token<252> T_STRING as '"' & repeat ('\\' then any else not '"' then any) & '"';
+
+alias token T_SQ_STRING as '\'' & repeat ('\\' then any else not '\'' then any) & '\'';
+alias token T_DQ_STRING as '"' & repeat ('\\' then any else not '"' then any) & '"';
+
+export token<252> T_STRING as T_SQ_STRING | T_DQ_STRING;
 
 // Punctuation patterns
 export token<auto> T_SYMBOL as map {
