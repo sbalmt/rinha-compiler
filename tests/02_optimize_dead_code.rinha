@@ -1,5 +1,6 @@
 let x = 5 * 5;
 let y = 25;
+let x = fn () => 100;
 
 assert(x + y == 50)
 

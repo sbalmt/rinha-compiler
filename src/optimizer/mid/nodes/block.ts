@@ -36,7 +36,7 @@ export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
 
   while (node) {
     if (debug) {
-      console.log('OPT', node.value, node.fragment.data);
+      console.log('MID', node.value, node.fragment.data);
     }
 
     consumeSingleNode(scope, node);

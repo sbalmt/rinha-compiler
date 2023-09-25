@@ -6,6 +6,7 @@ import * as Errors from './core/errors';
 import * as Evaluator from './evaluator';
 import * as PreOptimizer from './optimizer/pre';
 import * as MidOptimizer from './optimizer/mid';
+import * as EndOptimizer from './optimizer/end';
 
 import { consumeSource, consumeTokens } from './utils';
 import { applyBuiltIn } from './core/builtin';
@@ -26,25 +27,18 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
   process.exit(1);
 }
 
-if (context.node.next) {
-  try {
-    applyBuiltIn(context.table);
+try {
+  applyBuiltIn(context.table);
 
-    PreOptimizer.consumeNodes(context.node, {
-      debug: true
-    });
+  const options = {
+    debug: true
+  };
 
-    if (context.node.next) {
-      MidOptimizer.consumeNodes(context.node.next, {
-        debug: true
-      });
-
-      Evaluator.consumeNodes(context.node.next, {
-        debug: true
-      });
-    }
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
+  context.node.next && PreOptimizer.consumeNodes(context.node, options);
+  context.node.next && MidOptimizer.consumeNodes(context.node.next, options);
+  context.node.next && EndOptimizer.consumeNodes(context.node, options);
+  context.node.next && Evaluator.consumeNodes(context.node.next, options);
+} catch (e) {
+  console.error(e);
+  process.exit(1);
 }

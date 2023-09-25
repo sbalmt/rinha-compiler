@@ -29,8 +29,6 @@ const consumeFailureNode = (scope: Scope, node: Core.Node<Metadata>) => {
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const condition = Expression.consumeNode(scope, node.right!);
 
-  console.log(condition);
-
   const successBlock = node.next!;
   const failureBlock = successBlock.next!;
 
