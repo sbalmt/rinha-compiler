@@ -6,7 +6,7 @@ import './lexer';
 // Whitespace and Comments
 skip map {
   ' ', '\t', '\v','\f', '\r', '\n',
-  '/*' & opt repeat (not '*/' then any) & '*/',
+  '/*' & opt repeat (not '*/' then any) & opt '*/',
   '//' & opt repeat (not '\n' then any)
 };
 
