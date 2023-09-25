@@ -15,13 +15,9 @@ const replaceDefinition = (scope: Scope, node: Core.Node<Metadata>) => {
   scope.previousNode.set(scope.previousDirection, node);
 };
 
-const consumeSuccessNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
-  Block.consumeNodes(blockScope, blockScope.currentNode);
-};
-
-const consumeFailureNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
+  blockScope.declarationNode = scope.declarationNode;
   Block.consumeNodes(blockScope, blockScope.currentNode);
 };
 
@@ -45,11 +41,11 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     }
   } else {
     if (successBlock.right) {
-      consumeSuccessNode(scope, successBlock);
+      consumeInnerNode(scope, successBlock);
     }
 
     if (failureBlock && failureBlock.right) {
-      consumeFailureNode(scope, failureBlock);
+      consumeInnerNode(scope, failureBlock);
     }
   }
 

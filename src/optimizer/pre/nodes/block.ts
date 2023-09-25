@@ -15,6 +15,7 @@ const hasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope.options);
+  innerScope.declarationNode = scope.declarationNode;
   return consumeNodes(innerScope, innerScope.currentNode);
 };
 
@@ -39,7 +40,7 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
 export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const { debug } = scope.options;
-  let value;
+  let value = undefined;
 
   while (node) {
     if (debug) {

@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../../core/metadata';
+import { Metadata, initNode } from '../../core/metadata';
 import { VarValueType } from '../../evaluator/scope';
 import { NodeTypes } from '../../core/types';
 
@@ -32,7 +32,7 @@ export const combineNodes = (
 
   const node = new Core.Node(fragment, type, first.table);
 
-  node.assign({
+  initNode(node, {
     value
   });
 

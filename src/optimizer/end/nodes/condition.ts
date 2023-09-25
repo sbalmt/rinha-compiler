@@ -5,12 +5,7 @@ import * as Block from './block';
 import { Metadata } from '../../../core/metadata';
 import { Scope } from '../../scope';
 
-const consumeSuccessNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
-  Block.consumeNodes(blockScope, blockScope.currentNode);
-};
-
-const consumeFailureNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
   Block.consumeNodes(blockScope, blockScope.currentNode);
 };
@@ -20,10 +15,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const failureBlock = successBlock.next!;
 
   if (successBlock.right) {
-    consumeSuccessNode(scope, successBlock);
+    consumeInnerNode(scope, successBlock);
   }
 
   if (failureBlock && failureBlock.right) {
-    consumeFailureNode(scope, failureBlock);
+    consumeInnerNode(scope, failureBlock);
   }
 };

@@ -31,7 +31,7 @@ try {
   applyBuiltIn(context.table);
 
   const options = {
-    debug: true
+    debug: false
   };
 
   context.node.next && PreOptimizer.consumeNodes(context.node, options);

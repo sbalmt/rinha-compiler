@@ -20,7 +20,12 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const symbol = node.table.find(node.fragment)!;
   const data = initSymbol(symbol);
 
+  const previousDeclarationNode = scope.declarationNode;
+  scope.declarationNode = node;
+
   data.literal = Expression.consumeNode(scope, node.right!);
+
+  scope.declarationNode = previousDeclarationNode;
 
   if (data.hoist && enableHoisting) {
     hoistDefinition(scope);

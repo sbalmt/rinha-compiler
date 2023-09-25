@@ -7,7 +7,7 @@ import { Metadata } from '../../../core/metadata';
 import { NodeTypes, SymbolTypes } from '../../../core/types';
 import { ErrorTypes } from '../../../core/types';
 import { resolveSymbol } from '../symbols';
-import { Scope, ScopeTypes } from '../scope';
+import { Scope } from '../scope';
 import { createNode, replaceNode } from '../../pre/ast';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
@@ -49,17 +49,17 @@ const isLateCall = (scope: Scope, node: Core.Node<Metadata>) => {
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const callNode = node.left!;
-  const argumentsNode = callNode.next!;
+  const callerNode = node.left!;
+  const argumentsNode = callerNode.next!;
   const argumentsCount = consumeArguments(scope, argumentsNode);
 
-  Expression.consumeNode(scope, callNode);
+  Expression.consumeNode(scope, callerNode);
 
-  if (isLateCall(scope, callNode)) {
+  if (isLateCall(scope, callerNode)) {
     return;
   }
 
-  const symbol = resolveSymbol(scope, callNode);
+  const symbol = node.table.find(callerNode.fragment)!;
 
   if (isBuiltIn(symbol)) {
     replaceNode(node, NodeTypes.FAST_CALL);
@@ -67,42 +67,37 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   if (!isCallable(symbol)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callNode.fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
   }
-
-  const identifier = callNode.fragment.data;
-  const selfCalling = scope.name === identifier;
 
   if (!isDeclared(symbol)) {
-    throw Errors.getMessage(ErrorTypes.EARLY_CALL, callNode.fragment);
+    throw Errors.getMessage(ErrorTypes.EARLY_CALL, callerNode.fragment);
   }
 
-  if (selfCalling) {
-    scope.recursive = true;
-  }
+  const { tailCall, selfCall, parameters } = node.data;
 
-  const { parameters, lazy } = symbol.node!.right!.data;
+  console.log(callerNode.fragment.data, node.data, callerNode.fragment.data);
 
   if (argumentsCount > parameters!) {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
   }
 
   if (argumentsCount < parameters!) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
+    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
   }
 
-  if (selfCalling) {
-    if (scope.type === ScopeTypes.BLOCK) {
-      const callNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
+  if (selfCall) {
+    if (tailCall) {
+      console.log('LAZY CALL');
+      const callerNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
 
-      node.swap(callNode);
-      node.set(Core.NodeDirection.Right, callNode);
-
-      scope.lazy = true;
+      node.swap(callerNode);
+      node.set(Core.NodeDirection.Right, callerNode);
     } else if (scope.pure && parameters! > 0) {
       replaceNode(node, NodeTypes.MEMO_CALL);
     }
-  } else if (lazy) {
+  } else if (tailCall) {
+    console.log('TAIL CALL');
     replaceNode(node, NodeTypes.TAIL_CALL);
   }
 };
