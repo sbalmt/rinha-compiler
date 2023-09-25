@@ -20,5 +20,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   symbol.data.mutable = true;
 
+  if (scope.scopeNode) {
+    scope.scopeNode.data.pure = false;
+  }
+
   return Expression.consumeNode(scope, node.right!);
 };

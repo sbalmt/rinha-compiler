@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../../core/metadata';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const canResolveLiteral = (symbol: Core.SymbolRecord<Metadata>) => {
   const { literal, mutable } = symbol.data;
@@ -22,5 +22,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return symbol.data.literal;
   }
 
-  return undefined;
+  return node;
 };

@@ -6,9 +6,9 @@ import * as Expression from './expression';
 import { Metadata } from '../../../core/metadata';
 import { NodeTypes, SymbolTypes } from '../../../core/types';
 import { ErrorTypes } from '../../../core/types';
-import { resolveSymbol } from '../symbols';
-import { Scope } from '../scope';
 import { createNode, replaceNode } from '../../pre/ast';
+import { resolveSymbol } from '../symbols';
+import { Scope } from '../../scope';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.value === SymbolTypes.BuiltIn;
@@ -18,11 +18,11 @@ const isCallable = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.node!.right!.value === NodeTypes.CLOSURE;
 };
 
-const isDeclared = (symbol: Core.SymbolRecord<Metadata>): boolean => {
-  return symbol.node!.right!.assigned;
+const hasDefinition = (symbol: Core.SymbolRecord<Metadata>) => {
+  return symbol.value === SymbolTypes.BuiltIn || symbol.node!.right!.assigned;
 };
 
-const consumeArguments = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   let counter = 0;
 
   while (node) {
@@ -51,53 +51,52 @@ const isLateCall = (scope: Scope, node: Core.Node<Metadata>) => {
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
-  const argumentsCount = consumeArguments(scope, argumentsNode);
+  const argumentsCount = consumeArgumentNodes(scope, argumentsNode);
+  const closureNode = Expression.consumeNode(scope, callerNode);
 
-  Expression.consumeNode(scope, callerNode);
+  const symbol = node.table.find(callerNode.fragment)!;
+
+  if (!(closureNode instanceof Core.Node) || !isCallable(symbol)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
+  }
+
+  console.log(closureNode.fragment.data);
+
+  if (!hasDefinition(symbol)) {
+    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_CALL, callerNode.fragment);
+  }
 
   if (isLateCall(scope, callerNode)) {
     return;
   }
-
-  const symbol = node.table.find(callerNode.fragment)!;
 
   if (isBuiltIn(symbol)) {
     replaceNode(node, NodeTypes.FAST_CALL);
     return;
   }
 
-  if (!isCallable(symbol)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
-  }
-
-  if (!isDeclared(symbol)) {
-    throw Errors.getMessage(ErrorTypes.EARLY_CALL, callerNode.fragment);
-  }
-
   const { tailCall, selfCall, parameters } = node.data;
+  const { pure } = closureNode.data;
 
-  console.log(callerNode.fragment.data, node.data, callerNode.fragment.data);
+  console.log('INVOKE', callerNode.fragment.data, pure);
 
-  if (argumentsCount > parameters!) {
+  if (argumentsCount > parameters) {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
   }
 
-  if (argumentsCount < parameters!) {
+  if (argumentsCount < parameters) {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
   }
 
   if (selfCall) {
     if (tailCall) {
-      console.log('LAZY CALL');
       const callerNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
-
       node.swap(callerNode);
       node.set(Core.NodeDirection.Right, callerNode);
-    } else if (scope.pure && parameters! > 0) {
+    } else if (pure && parameters > 0) {
       replaceNode(node, NodeTypes.MEMO_CALL);
     }
   } else if (tailCall) {
-    console.log('TAIL CALL');
     replaceNode(node, NodeTypes.TAIL_CALL);
   }
 };

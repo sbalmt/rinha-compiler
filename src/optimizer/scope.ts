@@ -16,6 +16,8 @@ export class Scope extends BaseScope {
 
   declarationNode?: Core.Node<Metadata>;
 
+  scopeNode?: Core.Node<Metadata>;
+
   constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: BaseScopeOptions) {
     super(options);
 

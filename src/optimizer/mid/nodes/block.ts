@@ -6,7 +6,7 @@ import * as Condition from './condition';
 
 import { Metadata } from '../../../core/metadata';
 import { NodeTypes } from '../../../core/types';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
   switch (node.value) {
@@ -15,11 +15,11 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
       break;
 
     case NodeTypes.VARIABLE:
-      Variable.consumeNode(node, node.right!);
+      Variable.consumeNode(scope, node.right!);
       break;
 
     case NodeTypes.IF_ELSE:
-      Condition.consumeNode(scope, node, node.right!);
+      Condition.consumeNode(scope, node.right!);
       break;
 
     case NodeTypes.BLOCK:
