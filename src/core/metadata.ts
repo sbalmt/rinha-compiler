@@ -15,10 +15,11 @@ export type Metadata = {
   };
 
   node: {
-    pure?: boolean;
+    lazy: boolean;
     tailCall: boolean;
     selfCall: boolean;
     parameters: number;
+    pure: boolean;
     value?: VarValueType<Metadata> | Scope<Metadata>;
   };
 };
@@ -39,9 +40,11 @@ export const initSymbol = (symbol: Core.SymbolRecord<Metadata>, initOptions?: Pa
 export const initNode = (node: Core.Node<Metadata>, initOptions?: Partial<Metadata['node']>) => {
   if (!node.assigned) {
     node.assign({
+      lazy: false,
       tailCall: false,
       selfCall: false,
       parameters: 0,
+      pure: true,
       ...initOptions
     });
   }

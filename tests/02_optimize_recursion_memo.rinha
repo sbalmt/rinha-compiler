@@ -1,0 +1,9 @@
+let recursion = fn (n) => {
+  if (n < 2) {
+    n
+  } else {
+    recursion(n - 1) + recursion(n - 2)
+  }
+};
+
+assert(recursion(46) == 1836311903)
