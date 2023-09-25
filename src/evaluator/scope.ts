@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Expression from './nodes/expression';
 
 import { Metadata } from '../core/metadata';
+import { BaseScope, BaseScopeOptions } from '../core/scope';
 import { LazyCall } from './lazy';
 
 export type VarCallableType<T extends Metadata> = Core.Node<T> | VarCallbackType<T>;
@@ -30,12 +31,14 @@ type VarRecordType<T extends Metadata> = {
   value: VarValueType<T>;
 };
 
-export class Scope<T extends Metadata> {
+export class Scope<T extends Metadata> extends BaseScope {
   private variables: VarMapType<T> = {};
 
   private parent: Scope<T> | undefined;
 
-  constructor(parent?: Scope<T>) {
+  constructor(parent?: Scope<T>, options?: BaseScopeOptions) {
+    super(options);
+
     this.parent = parent;
   }
 
@@ -95,7 +98,7 @@ export const createCallScope = (
 ) => {
   const boundScope = closureNode.data.value as Scope<Metadata>;
   const parametersCount = closureNode.data.parameters!;
-  const scope = new Scope(boundScope);
+  const scope = new Scope(boundScope, boundScope.options);
 
   for (let counter = 0; counter < parametersCount; ++counter) {
     const argumentValue = Expression.consumeNode(parent, argumentNode);

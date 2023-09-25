@@ -9,10 +9,14 @@ import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
+  const { debug } = scope.options;
+
   let result;
 
   do {
-    console.log('EVAL', node.fragment.data);
+    if (debug) {
+      console.log('EVL', node.value, node.fragment.data);
+    }
 
     switch (node.value) {
       case NodeTypes.EXPRESSION:

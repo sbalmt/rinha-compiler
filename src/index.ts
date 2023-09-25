@@ -32,8 +32,13 @@ if (context.node.next) {
 
     Analysis.consumeNodes(context.node);
 
-    Optimizer.consumeNodes(context.node.next);
-    Evaluator.consumeNodes(context.node.next);
+    Optimizer.consumeNodes(context.node.next, {
+      debug: true
+    });
+
+    Evaluator.consumeNodes(context.node.next, {
+      debug: true
+    });
   } catch (e) {
     console.error(e);
     process.exit(1);

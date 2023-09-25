@@ -1,4 +1,5 @@
 export type BaseScopeOptions = {
+  debug?: boolean;
   enableHoisting?: boolean;
   resolveLiterals?: boolean;
   removeDeadCode?: boolean;

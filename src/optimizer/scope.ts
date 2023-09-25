@@ -1,3 +1,5 @@
+import { BaseScope, BaseScopeOptions } from '../core/scope';
+
 export const enum ScopeTypes {
   BLOCK = 0x00,
   ASSIGNMENT,
@@ -5,7 +7,7 @@ export const enum ScopeTypes {
   ARITHMETIC
 }
 
-export class Scope {
+export class Scope extends BaseScope {
   private scopeName: string;
 
   type = ScopeTypes.BLOCK;
@@ -16,7 +18,9 @@ export class Scope {
 
   lazy = false;
 
-  constructor(name: string) {
+  constructor(name: string, options?: BaseScopeOptions) {
+    super(options);
+
     this.scopeName = name;
   }
 
