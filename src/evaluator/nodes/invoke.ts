@@ -8,7 +8,12 @@ import { Scope, createCallScope } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const closureCall = node.left!;
+  const closureArguments = closureCall.next!;
   const closureNode = Expression.consumeNode(scope, closureCall) as Core.Node<Metadata>;
+
+  if (closureNode instanceof Function) {
+    return closureNode(scope, closureArguments);
+  }
 
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
@@ -18,7 +23,6 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
     return Block.consumeNodes(scope, closureBlock.right!);
   }
 
-  const closureArguments = closureCall.next!;
   const closureScope = createCallScope(scope, closureNode, closureFirstParameter, closureArguments);
 
   return Block.consumeNodes(closureScope, closureBlock.right!);
