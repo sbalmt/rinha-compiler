@@ -8,6 +8,7 @@ export type Metadata = {
   record: {
     mutable: boolean;
     references: number;
+    literal?: VarValueType<Metadata>;
     hoist: boolean;
   };
 

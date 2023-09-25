@@ -9,31 +9,39 @@ import { Metadata } from '../../../core/metadata';
 import { NodeTypes } from '../../../core/types';
 import { Scope } from '../scope';
 
+const hasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
+  return scope.previousNode.get(scope.previousDirection) !== node;
+};
+
+const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  switch (node.value) {
+    case NodeTypes.EXPRESSION:
+      return Expression.consumeNode(scope, node.right!);
+
+    case NodeTypes.VARIABLE:
+      return Variable.consumeNode(scope, node.right!);
+
+    case NodeTypes.IF_ELSE:
+      return Condition.consumeNode(scope, node.right!);
+
+    default:
+      throw `Unexpected block node type (${node.value}).`;
+  }
+};
+
 export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   let value;
 
   while (node) {
-    switch (node.value) {
-      case NodeTypes.EXPRESSION:
-        value = Expression.consumeNode(scope, node.right!);
-        break;
+    value = consumeSingleNode(scope, node);
 
-      case NodeTypes.VARIABLE:
-        value = Variable.consumeNode(scope, node.right!);
-        break;
-
-      case NodeTypes.IF_ELSE:
-        value = Condition.consumeNode(scope, node.right!);
-        break;
-
-      default:
-        throw `Unexpected block node type (${node.value}).`;
+    if (hasNodeReplaced(scope, node)) {
+      node = scope.previousNode.get(scope.previousDirection)!;
+    } else {
+      node = node.next!;
+      scope.previousDirection = Core.NodeDirection.Next;
+      scope.previousNode = scope.currentNode;
     }
-
-    node = node.next!;
-
-    scope.previousNode = scope.currentNode;
-    scope.previousDirection = Core.NodeDirection.Next;
 
     scope.currentNode = node;
   }

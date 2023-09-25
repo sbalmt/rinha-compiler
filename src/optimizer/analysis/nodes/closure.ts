@@ -16,7 +16,7 @@ const countParameters = (node: Core.Node<Metadata>): number => {
   return counter;
 };
 
-export const consumeNode = (node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const parametersNode = node.right!;
   const parametersCount = countParameters(parametersNode.right!);
 
@@ -25,7 +25,7 @@ export const consumeNode = (node: Core.Node<Metadata>) => {
   });
 
   const blockNode = parametersNode.next!;
-  const blockScope = new Scope(blockNode, Core.NodeDirection.Right);
+  const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope.optimizations);
 
   return Block.consumeNodes(blockScope, blockScope.currentNode);
 };

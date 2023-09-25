@@ -16,7 +16,7 @@ import { Scope } from '../scope';
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
-      return Identifier.consumeNode(scope, node);
+      return Identifier.consumeNode(node);
 
     case NodeTypes.INTEGER:
     case NodeTypes.STRING:

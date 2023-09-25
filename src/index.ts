@@ -29,7 +29,12 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 if (context.node.next) {
   try {
     applyBuiltIn(context.table);
-    Analysis.consumeNodes(context.node);
+
+    Analysis.consumeNodes(context.node, {
+      enableHoisting: true,
+      removeDeadCode: true
+    });
+
     Optimizer.consumeNodes(context.node.next);
     Evaluator.consumeNodes(context.node.next);
   } catch (e) {

@@ -1,0 +1,6 @@
+let x = 5 * 5;
+let y = 25;
+
+assert(x + y == 50)
+
+print("success")

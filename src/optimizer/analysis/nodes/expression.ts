@@ -8,6 +8,7 @@ import * as Closure from './closure';
 import * as Tuple from './tuple';
 import * as Invoke from './invoke';
 import * as Assignment from './assignment';
+import * as Arithmetic from './arithmetic';
 
 import { VarValueType } from '../../../evaluator/scope';
 import { Metadata } from '../../../core/metadata';
@@ -30,13 +31,20 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Boolean.consumeNode(node);
 
     case NodeTypes.CLOSURE:
-      return Closure.consumeNode(node);
+      return Closure.consumeNode(scope, node);
 
     case NodeTypes.TUPLE:
       return Tuple.consumeNode(scope, node);
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);
+
+    case NodeTypes.ADD:
+    case NodeTypes.SUBTRACT:
+    case NodeTypes.MULTIPLY:
+    case NodeTypes.DIVIDE:
+    case NodeTypes.MODULO:
+      return Arithmetic.consumeNode(scope, node);
 
     case NodeTypes.INVOKE:
       return Invoke.consumeNode(scope, node);

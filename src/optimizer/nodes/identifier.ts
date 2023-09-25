@@ -1,24 +1,19 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
-import { VarValueType } from '../../evaluator/scope';
-import { resolveSymbol } from '../symbols';
-import { Scope, ScopeTypes } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  if (scope.type !== ScopeTypes.ASSIGNMENT) {
-    const symbol = resolveSymbol(scope, node);
+export const consumeNode = (node: Core.Node<Metadata>) => {
+  const symbol = node.table.find(node.fragment)!;
+  const { literal } = symbol.data;
 
-    if (symbol.node && !symbol.data.mutable) {
-      const valueNode = symbol.node.right!;
+  if (literal !== undefined) {
+    const identifierNode = symbol.node!;
+    const valueNode = identifierNode.right!;
 
-      if (valueNode.assigned && valueNode.data.value !== undefined) {
-        node.swap(valueNode.clone());
-        return valueNode.data.value as VarValueType<Metadata>;
-      }
-    }
+    node.swap(valueNode.clone());
+    symbol.data.references--;
 
-    symbol.data.references++;
+    return literal;
   }
 
   return undefined;
