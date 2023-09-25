@@ -56,7 +56,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   Expression.consumeNode(scope, callNode);
 
   if (isLateCall(scope, callNode)) {
-    replaceNode(node, NodeTypes.LATE_CALL);
     return;
   }
 
@@ -89,7 +88,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   if (argumentsCount < parameters!) {
-    console.log("MISSING", argumentsCount, parameters!);
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callNode.fragment);
   }
 
