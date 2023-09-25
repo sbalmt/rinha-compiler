@@ -21,6 +21,6 @@ export class Scope {
     this.anchorDirection = anchorDirection;
     this.previousDirection = previousDirection;
     this.previousNode = anchorNode;
-    this.currentNode = this.previousNode.get(previousDirection)!
+    this.currentNode = this.previousNode.get(previousDirection)!;
   }
 }

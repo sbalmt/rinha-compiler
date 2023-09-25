@@ -13,11 +13,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const failureBlock = successBlock.next!;
 
   if (successBlock.right) {
-    Block.consumeNodes(scope, successBlock.right);
+    const blockScope = new Scope(successBlock, Core.NodeDirection.Right);
+    Block.consumeNodes(blockScope, blockScope.currentNode);
   }
 
   if (failureBlock.right) {
-    Block.consumeNodes(scope, failureBlock.right);
+    const blockScope = new Scope(failureBlock, Core.NodeDirection.Right);
+    Block.consumeNodes(blockScope, blockScope.currentNode);
   }
 
   return undefined;

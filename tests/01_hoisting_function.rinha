@@ -1,0 +1,23 @@
+let hoisting1 = fn (num) => {
+  let rec = fn () => {
+    hst1 * num
+  };
+
+  let hst1 = 2;
+  rec()
+};
+
+assert(hoisting1(25) == 50)
+
+let hoisting2 = fn (num) => {
+  let hst2 = 2;
+  let rec = fn () => {
+    hst2 * num * hst2
+  };
+
+  let hst3 = 2;
+  rec()
+};
+
+assert(hoisting2(20) == 80)
+

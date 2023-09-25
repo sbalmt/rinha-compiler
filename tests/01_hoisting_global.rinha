@@ -1,0 +1,9 @@
+let result = hst1 * 2;
+
+assert(result == 50)
+
+let hoisting = fn (num) => num * hst1;
+
+let hst1 = 25;
+
+assert(hoisting(2) == 50)
