@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Block from './block';
 
 import { Metadata, initNode } from '../../../core/metadata';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const countParameters = (node: Core.Node<Metadata>): number => {
   let counter = 0;

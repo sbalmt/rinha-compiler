@@ -7,7 +7,7 @@ import * as Identifier from './identifier';
 
 import { Metadata } from '../../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../../core/types';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const targetNode = node.left!;

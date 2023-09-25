@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 
 import { Metadata, initNode } from '../../../core/metadata';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const consumeArguments = (scope: Scope, node: Core.Node<Metadata>) => {
   let counter = 0;

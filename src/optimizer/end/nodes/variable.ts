@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata, initSymbol } from '../../../core/metadata';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const removeDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);

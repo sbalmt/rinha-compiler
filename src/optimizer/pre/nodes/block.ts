@@ -7,7 +7,7 @@ import * as Condition from './condition';
 import { VarValueType } from '../../../evaluator/scope';
 import { Metadata } from '../../../core/metadata';
 import { NodeTypes } from '../../../core/types';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const hasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
   return scope.previousNode.get(scope.previousDirection) !== node;

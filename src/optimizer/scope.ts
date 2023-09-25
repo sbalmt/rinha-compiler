@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../../core/metadata';
-import { BaseScope, BaseScopeOptions } from '../../core/scope';
+import { Metadata } from '../core/metadata';
+import { BaseScope, BaseScopeOptions } from '../core/scope';
 
 export class Scope extends BaseScope {
   anchorNode: Core.Node<Metadata>;

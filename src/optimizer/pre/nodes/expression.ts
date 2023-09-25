@@ -16,7 +16,7 @@ import * as Arithmetic from './arithmetic';
 import { VarValueType } from '../../../evaluator/scope';
 import { Metadata } from '../../../core/metadata';
 import { NodeTypes } from '../../../core/types';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {

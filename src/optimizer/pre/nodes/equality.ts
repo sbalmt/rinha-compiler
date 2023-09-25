@@ -8,7 +8,7 @@ import * as Expression from './expression';
 import { ErrorTypes, NodeTypes } from '../../../core/types';
 import { Metadata } from '../../../core/metadata';
 import { combineNodes } from '../ast';
-import { Scope } from '../scope';
+import { Scope } from '../../scope';
 
 const replaceExpression = (lhs: Equality.ValueType, rhs: Equality.ValueType, node: Core.Node<Metadata>) => {
   const value = Equality.evaluate(lhs, rhs, node.value);
