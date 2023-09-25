@@ -4,7 +4,7 @@ import * as FS from 'fs';
 
 import * as Errors from './core/errors';
 import * as Evaluator from './evaluator';
-import * as Analysis from './optimizer/analysis';
+import * as PreOptimizer from './optimizer/pre';
 import * as Optimizer from './optimizer';
 
 import { consumeSource, consumeTokens } from './utils';
@@ -30,7 +30,7 @@ if (context.node.next) {
   try {
     applyBuiltIn(context.table);
 
-    Analysis.consumeNodes(context.node, {
+    PreOptimizer.consumeNodes(context.node, {
       debug: true
     });
 

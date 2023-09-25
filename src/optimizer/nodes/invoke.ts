@@ -8,7 +8,7 @@ import { NodeTypes, SymbolTypes } from '../../core/types';
 import { ErrorTypes } from '../../core/types';
 import { resolveSymbol } from '../symbols';
 import { Scope, ScopeTypes } from '../scope';
-import { createNode, replaceNode } from '../analysis/ast';
+import { createNode, replaceNode } from '../pre/ast';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.value === SymbolTypes.BuiltIn;

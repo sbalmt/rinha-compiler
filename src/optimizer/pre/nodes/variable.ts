@@ -26,7 +26,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   data.literal = Expression.consumeNode(scope, node.right!);
 
-  if (data.literal && removeDeadCode) {
+  if (data.literal !== undefined && removeDeadCode) {
     removeDefinition(scope);
   } else if (data.hoist && enableHoisting) {
     hoistDefinition(scope);
