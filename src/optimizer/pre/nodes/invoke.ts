@@ -28,7 +28,9 @@ const getParameters = (symbol: Core.SymbolRecord<Metadata>) => {
   }
 
   const closureBody = symbol.node?.right;
-  if (closureBody) {
+  // TODO: We always need to know the number of parameters, so move that to another
+  // TODO: optimization step for being able to not check "closureBody.assigned"
+  if (closureBody && closureBody.assigned) {
     return closureBody.data.parameters;
   }
 

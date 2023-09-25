@@ -97,13 +97,11 @@ export const createCallScope = (
   parameterNode: Core.Node<Metadata>,
   argumentNode: Core.Node<Metadata>
 ) => {
-  const boundScope = closureNode.data.value as Scope<Metadata>;
-  const parametersCount = closureNode.data.parameters!;
-  const scope = new Scope(boundScope, boundScope.options);
+  const callScope = closureNode.data.value as Scope<Metadata>;
+  const scope = new Scope(callScope, callScope.options);
 
-  for (let counter = 0; counter < parametersCount; ++counter) {
+  while (parameterNode && argumentNode) {
     const argumentValue = Expression.consumeNode(parent, argumentNode);
-
     scope.createVariable(parameterNode, argumentValue);
 
     parameterNode = parameterNode.next!;

@@ -46,8 +46,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const closureBody = closureNode.right!;
 
-  console.log('CALL', closureBody, callerNode.fragment.data, closureBody.fragment.data);
-
   const { tailCall, selfCall, parameters } = node.data;
   const { lazy, pure } = closureBody.data;
 

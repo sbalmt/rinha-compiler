@@ -1,3 +1,4 @@
+// WARNING: It only fails when hoisting is disabled.
 test()
 
 let test = fn () => {
