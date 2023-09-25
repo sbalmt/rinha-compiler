@@ -4,7 +4,7 @@ import * as Identifier from './identifier';
 import * as Literal from './literal';
 import * as Closure from './closure';
 import * as Invoke from './invoke';
-import * as Condition from './condition';
+import * as Ternary from './ternary';
 import * as Assignment from './assignment';
 
 import { Metadata } from '../../../core/metadata';
@@ -27,7 +27,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Closure.consumeNode(scope, node);
 
     case NodeTypes.TERNARY:
-      Condition.consumeNode(scope, node.right!);
+      Ternary.consumeNode(scope, node);
       break;
 
     case NodeTypes.ASSIGNMENT:

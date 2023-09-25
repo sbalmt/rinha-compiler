@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Identifier from './identifier';
 import * as Literals from './literal';
 import * as Closure from './closure';
-import * as Condition from './condition';
+import * as Ternary from './ternary';
 import * as Assignment from './assignment';
 import * as Logical from './logical';
 import * as Equality from './equality';
@@ -34,7 +34,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       return Closure.consumeNode(scope, node);
 
     case NodeTypes.TERNARY:
-      return Condition.consumeNode(scope, node.right!);
+      return Ternary.consumeNode(scope, node);
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);

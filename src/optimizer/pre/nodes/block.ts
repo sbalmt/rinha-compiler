@@ -25,7 +25,8 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
       return Expression.consumeNode(scope, node.right!);
 
     case NodeTypes.VARIABLE:
-      return Variable.consumeNode(scope, node.right!);
+      Variable.consumeNode(scope, node.right!);
+      break;
 
     case NodeTypes.IF_ELSE:
       Condition.consumeNode(scope, node.right!);
