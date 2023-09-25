@@ -11,7 +11,7 @@ import { createNode, replaceNode } from '../../pre/ast';
 import { Scope } from '../../scope';
 
 const isClosure = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
-  return node instanceof Core.Node && node.right !== undefined;
+  return node instanceof Core.Node && node.right?.value === NodeTypes.CLOSURE;
 };
 
 const applyLazyCallNode = (node: Core.Node<Metadata>) => {
@@ -38,11 +38,15 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const argumentsCount = consumeArgumentNodes(scope, argumentsNode);
   const closureNode = Expression.consumeNode(scope, callerNode);
 
+  // TODO: If closureNode is a know expression (literal/reference) replace the call instead.
+
   if (!isClosure(closureNode)) {
     return undefined;
   }
 
   const closureBody = closureNode.right!;
+
+  console.log('CALL', closureBody, callerNode.fragment.data, closureBody.fragment.data);
 
   const { tailCall, selfCall, parameters } = node.data;
   const { lazy, pure } = closureBody.data;
