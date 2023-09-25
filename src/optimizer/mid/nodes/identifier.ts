@@ -22,6 +22,16 @@ const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
   return symbol.node;
 };
 
+const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
+  const identifierNode = symbol.node!;
+  const valueNode = identifierNode.right!;
+
+  node.swap(valueNode.clone());
+  symbol.data.references--;
+
+  return symbol.data.literal;
+};
+
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { resolveReferences } = scope.options;
   const symbol = node.table.find(node.fragment)!;
@@ -32,13 +42,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   if (literal !== undefined && resolveReferences) {
-    const identifierNode = symbol.node!;
-    const valueNode = identifierNode.right!;
-
-    node.swap(valueNode.clone());
-    symbol.data.references--;
-
-    return literal;
+    return applyLiteralNode(symbol, node);
   }
 
   return followReferences(symbol) ?? node;
