@@ -3,6 +3,7 @@ import { Metadata } from '../../core/metadata';
 
 export type Optimizations = {
   enableHoisting?: boolean;
+  resolveLiterals?: boolean;
   removeDeadCode?: boolean;
 };
 

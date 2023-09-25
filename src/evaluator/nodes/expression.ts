@@ -23,6 +23,8 @@ import { NodeTypes } from '../../core/types';
 import { Scope, VarValueType } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+  console.log('EVAL', node.fragment.data);
+  
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);

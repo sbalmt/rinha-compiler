@@ -9,15 +9,19 @@ import { combineNodes } from '../ast';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const { resolveLiterals } = scope.optimizations;
+
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (lhs !== undefined && rhs !== undefined) {
-    const value = resolveComparisonOperation(lhs, rhs, node.value);
-    const newNode = combineNodes(node.left!, node.right!, NodeTypes.BOOLEAN, value);
+  if (resolveLiterals) {
+    if (lhs !== undefined && rhs !== undefined) {
+      const value = resolveComparisonOperation(lhs, rhs, node.value);
+      const newNode = combineNodes(node.left!, node.right!, NodeTypes.BOOLEAN, value);
 
-    node.swap(newNode);
-    return value;
+      node.swap(newNode);
+      return value;
+    }
   }
 
   return undefined;

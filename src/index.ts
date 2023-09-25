@@ -32,6 +32,7 @@ if (context.node.next) {
 
     Analysis.consumeNodes(context.node, {
       enableHoisting: true,
+      resolveLiterals: true,
       removeDeadCode: true
     });
 

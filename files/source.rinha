@@ -1,1 +1,6 @@
 // Sample file
+
+let x = 5 * 30;
+let y = 10;
+
+print(x + y)

@@ -11,32 +11,36 @@ import { combineNodes } from '../ast';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const { resolveLiterals } = scope.optimizations;
+
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (isNumber(lhs) && isNumber(rhs)) {
-    const value = resolveArithmeticOperation(lhs, rhs, node.value);
-    const newNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, value);
-
-    node.swap(newNode);
-    return value;
-  }
-
-  if (lhs !== undefined && rhs !== undefined) {
-    if (node.value === NodeTypes.ADD) {
-      const value = convertToString(lhs) + convertToString(rhs);
-      const newNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, value);
+  if (resolveLiterals) {
+    if (isNumber(lhs) && isNumber(rhs)) {
+      const value = resolveArithmeticOperation(lhs, rhs, node.value);
+      const newNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, value);
 
       node.swap(newNode);
       return value;
     }
 
-    if (!isNumber(lhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.left!.fragment);
-    }
+    if (lhs !== undefined && rhs !== undefined) {
+      if (node.value === NodeTypes.ADD) {
+        const value = convertToString(lhs) + convertToString(rhs);
+        const newNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, value);
 
-    if (!isNumber(rhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.right!.fragment);
+        node.swap(newNode);
+        return value;
+      }
+
+      if (!isNumber(lhs)) {
+        throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.left!.fragment);
+      }
+
+      if (!isNumber(rhs)) {
+        throw Errors.getMessage(ErrorTypes.INVALID_NUMBER, node.right!.fragment);
+      }
     }
   }
 

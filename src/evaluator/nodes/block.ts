@@ -12,6 +12,8 @@ export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>) 
   let result;
 
   do {
+    console.log('EVAL', node.fragment.data);
+
     switch (node.value) {
       case NodeTypes.EXPRESSION:
         result = Expression.consumeNode(scope, node.right!);
