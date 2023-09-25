@@ -4,7 +4,7 @@ import * as Errors from '../core/errors';
 import * as Expression from './nodes/expression';
 
 import { Metadata } from '../core/metadata';
-import { convertToString } from '../core/converters';
+import { convertToString } from '../core/data';
 import { ErrorTypes } from '../core/types';
 import { Scope } from './scope';
 

@@ -7,13 +7,14 @@ const errorMessages = {
   [ErrorTypes.UNEXPECTED_TOKEN]: 'Unexpected token `{0}` at line {1}, column {2}.',
   [ErrorTypes.UNEXPECTED_SYNTAX]: 'Unexpected syntax `{0}` at line {1}, column {2}.',
   [ErrorTypes.UNDEFINED_IDENTIFIER]: 'Identifier `{0}` at line {1}, column {2} was not defined.',
-  [ErrorTypes.INVALID_NUMBER]: 'Operand `{0}` at line {1}, column {2} is not a number.',
   [ErrorTypes.INVALID_TUPLE]: 'Argument `{0}` is not a tuple at line {1}, column {2}.',
   [ErrorTypes.INVALID_CALL]: 'Operand `{0}` at line {1}, column {2} is not a function.',
+  [ErrorTypes.INVALID_ASSIGNMENT]: 'Invalid assignment to `{0}` at line {1}, column {2}.',
+  [ErrorTypes.INVALID_OPERATION]: 'Comparison of `{0}` at line {1}, column {2} is not valid.',
+  [ErrorTypes.UNSUPPORTED_OPERATION]: 'Comparison of different types at line {1}, column {2} is not supported.',
   [ErrorTypes.EARLY_CALL]: 'Unable to call `{0}` at line {1}, column {2} before its definition.',
   [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for `{0}` at line {1}, column {2}.',
   [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument `{0}` at line {1}, column {2} is not necessary.',
-  [ErrorTypes.INVALID_ASSIGNMENT]: 'Invalid assignment to `{0}` at line {1}, column {2}.',
   [ErrorTypes.ASSERTION_FAILED]: 'Assertion `{0}` at line {1}, column {2} has been failed.'
 };
 

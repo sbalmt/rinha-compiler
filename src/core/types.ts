@@ -3,13 +3,14 @@ export const enum ErrorTypes {
   UNEXPECTED_TOKEN,
   UNEXPECTED_SYNTAX,
   UNDEFINED_IDENTIFIER,
-  INVALID_NUMBER,
   INVALID_TUPLE,
   INVALID_CALL,
+  INVALID_ASSIGNMENT,
+  INVALID_OPERATION,
+  UNSUPPORTED_OPERATION,
   EARLY_CALL,
   MISSING_ARGUMENT,
   EXTRA_ARGUMENT,
-  INVALID_ASSIGNMENT,
   ASSERTION_FAILED
 }
 
@@ -56,20 +57,3 @@ export const enum NodeTypes {
   MEMO_CALL = 1503,
   LATE_CALL = 1504
 }
-
-export type ArithmeticNodeTypes =
-  | NodeTypes.ADD
-  | NodeTypes.SUBTRACT
-  | NodeTypes.MULTIPLY
-  | NodeTypes.DIVIDE
-  | NodeTypes.MODULO;
-
-export type ComparisonNodeTypes =
-  | NodeTypes.LOGICAL_OR
-  | NodeTypes.LOGICAL_AND
-  | NodeTypes.EQUAL
-  | NodeTypes.NOT_EQUAL
-  | NodeTypes.GREATER_THAN
-  | NodeTypes.LESS_THAN
-  | NodeTypes.GREATER_THAN_OR_EQUAL
-  | NodeTypes.LESS_THAN_OR_EQUAL;

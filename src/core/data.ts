@@ -4,16 +4,12 @@ import { VarValueType } from '../evaluator/scope';
 import { LazyCall } from '../evaluator/lazy';
 import { Metadata } from './metadata';
 
-export const isNumber = <T extends Metadata>(value: VarValueType<T>): value is number => {
-  return typeof value === 'number';
+export const ensureInt32 = (value: number): number => {
+  return value | 0;
 };
 
 export const convertToNumber = (value: string) => {
   return parseInt(value, 10);
-};
-
-export const ensureInt32 = (value: number): number => {
-  return value | 0;
 };
 
 export const convertToString = <T extends Metadata>(value: VarValueType<T>) => {

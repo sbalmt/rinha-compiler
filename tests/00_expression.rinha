@@ -1,3 +1,10 @@
+// --- Concat ---
+
+assert(1 + "2" == "12")
+assert("1" + 2 == "12")
+
+// --- Arithmetic ---
+
 assert(1 + 9 == 10)
 
 assert(1 - 9 == 0 - 8)
@@ -9,6 +16,28 @@ assert(9 / 2 == 4)
 
 assert(15 % 3 == 0)
 assert(15 % 6 == 3)
+
+// --- Relational ---
+
+assert(1 >= 1)
+assert(1 <= 2)
+assert(2 > 1)
+assert(1 < 2)
+
+// --- Equality ---
+
+assert(true == true)
+assert(1000 == 1000)
+assert("ab" == "ab")
+
+assert(true != false)
+assert(1001 != 1000)
+assert("ab" != "cd")
+
+// --- Logical ---
+
+assert(true && true)
+assert(false || true)
 
 // --- Precedence ---
 
