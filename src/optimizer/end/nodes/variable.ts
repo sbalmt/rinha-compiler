@@ -9,7 +9,7 @@ const removeDefinition = (scope: Scope) => {
 
 const canRemoveDefinition = (data: Metadata['record']) => {
   const { literal, references, mutable } = data;
-  return (literal !== undefined || references === 0) && !mutable;
+  return literal !== undefined && references === 0 && !mutable;
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
