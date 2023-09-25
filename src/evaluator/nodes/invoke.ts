@@ -5,11 +5,16 @@ import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { Scope, createCallScope } from '../scope';
+import { isLiteral } from '../../core/data';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const closureCall = node.left!;
   const closureArguments = closureCall.next!;
   const closureNode = Expression.consumeNode(scope, closureCall) as Core.Node<Metadata>;
+
+  if (isLiteral(closureNode)) {
+    return closureNode;
+  }
 
   if (closureNode instanceof Function) {
     return closureNode(scope, closureArguments);

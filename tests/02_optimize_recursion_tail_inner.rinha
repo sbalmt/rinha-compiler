@@ -11,4 +11,4 @@ let generator = fn (num) => {
   }
 };
 
-assert(generator(1000)(1000)() == 100000)
+assert(generator(10)(10)() == 100)

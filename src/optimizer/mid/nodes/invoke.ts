@@ -14,6 +14,12 @@ const isClosure = (node: VarValueType<Metadata>): node is Core.Node<Metadata> =>
   return node instanceof Core.Node && node.right !== undefined;
 };
 
+const applyLazyCallNode = (node: Core.Node<Metadata>) => {
+  const callerNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
+  node.swap(callerNode);
+  node.set(Core.NodeDirection.Right, callerNode);
+};
+
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   let counter = 0;
 
@@ -51,10 +57,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (selfCall) {
     if (tailCall) {
+      applyLazyCallNode(node);
       closureBody.data.lazy = true;
-      const callerNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
-      node.swap(callerNode);
-      node.set(Core.NodeDirection.Right, callerNode);
     } else if (pure && parameters > 0) {
       replaceNode(node, NodeTypes.MEMO_CALL);
     }
