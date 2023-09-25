@@ -4,8 +4,8 @@ import * as Variable from './variable';
 import * as Expression from './expression';
 import * as Condition from './condition';
 
-import { Metadata } from '../../core/metadata';
-import { NodeTypes } from '../../core/types';
+import { Metadata } from '../../../core/metadata';
+import { NodeTypes } from '../../../core/types';
 import { Scope } from '../scope';
 
 const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {

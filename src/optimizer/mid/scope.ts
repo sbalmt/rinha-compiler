@@ -1,4 +1,4 @@
-import { BaseScope, BaseScopeOptions } from '../core/scope';
+import { BaseScope, BaseScopeOptions } from '../../core/scope';
 
 export const enum ScopeTypes {
   BLOCK = 0x00,

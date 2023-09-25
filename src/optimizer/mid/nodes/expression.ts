@@ -6,9 +6,9 @@ import * as Closure from './closure';
 import * as Invoke from './invoke';
 import * as Assignment from './assignment';
 
-import { Metadata } from '../../core/metadata';
-import { VarValueType } from '../../evaluator/scope';
-import { NodeTypes } from '../../core/types';
+import { Metadata } from '../../../core/metadata';
+import { VarValueType } from '../../../evaluator/scope';
+import { NodeTypes } from '../../../core/types';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {

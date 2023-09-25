@@ -1,14 +1,14 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../core/errors';
+import * as Errors from '../../../core/errors';
 import * as Expression from './expression';
 
-import { Metadata } from '../../core/metadata';
-import { NodeTypes, SymbolTypes } from '../../core/types';
-import { ErrorTypes } from '../../core/types';
+import { Metadata } from '../../../core/metadata';
+import { NodeTypes, SymbolTypes } from '../../../core/types';
+import { ErrorTypes } from '../../../core/types';
 import { resolveSymbol } from '../symbols';
 import { Scope, ScopeTypes } from '../scope';
-import { createNode, replaceNode } from '../pre/ast';
+import { createNode, replaceNode } from '../../pre/ast';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>): boolean => {
   return symbol.value === SymbolTypes.BuiltIn;

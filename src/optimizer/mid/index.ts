@@ -2,8 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Block from './nodes/block';
 
-import { Metadata } from '../core/metadata';
-import { BaseScopeOptions } from '../core/scope';
+import { Metadata } from '../../core/metadata';
+import { BaseScopeOptions } from '../../core/scope';
 import { Scope } from './scope';
 
 export const consumeNodes = (node: Core.Node<Metadata>, options?: BaseScopeOptions) => {

@@ -5,7 +5,7 @@ import * as FS from 'fs';
 import * as Errors from './core/errors';
 import * as Evaluator from './evaluator';
 import * as PreOptimizer from './optimizer/pre';
-import * as Optimizer from './optimizer';
+import * as MidOptimizer from './optimizer/mid';
 
 import { consumeSource, consumeTokens } from './utils';
 import { applyBuiltIn } from './core/builtin';
@@ -35,7 +35,7 @@ if (context.node.next) {
     });
 
     if (context.node.next) {
-      Optimizer.consumeNodes(context.node.next, {
+      MidOptimizer.consumeNodes(context.node.next, {
         debug: true
       });
 

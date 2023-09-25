@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../core/errors';
+import * as Errors from '../../core/errors';
 
-import { Metadata } from '../core/metadata';
-import { ErrorTypes } from '../core/types';
+import { Metadata } from '../../core/metadata';
+import { ErrorTypes } from '../../core/types';
 import { Scope } from './scope';
 
 const isShadowing = (scope: Scope, identifier: string) => {

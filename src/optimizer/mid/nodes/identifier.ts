@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../../core/metadata';
+import { Metadata } from '../../../core/metadata';
 
 export const consumeNode = (node: Core.Node<Metadata>) => {
   const symbol = node.table.find(node.fragment)!;
