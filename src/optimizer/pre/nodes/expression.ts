@@ -6,6 +6,7 @@ import * as String from './string';
 import * as Boolean from './boolean';
 import * as Closure from './closure';
 import * as Tuple from './tuple';
+import * as Condition from './condition';
 import * as Invoke from './invoke';
 import * as Assignment from './assignment';
 import * as Logical from './logical';
@@ -37,6 +38,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
 
     case NodeTypes.TUPLE:
       return Tuple.consumeNode(scope, node);
+
+    case NodeTypes.TERNARY:
+      Condition.consumeNode(scope, node.right!);
+      break;
 
     case NodeTypes.ASSIGNMENT:
       return Assignment.consumeNode(scope, node);

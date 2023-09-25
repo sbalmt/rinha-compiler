@@ -48,6 +48,4 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       consumeInnerNode(scope, failureBlock);
     }
   }
-
-  return undefined;
 };

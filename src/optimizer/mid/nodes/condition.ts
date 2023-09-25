@@ -19,6 +19,4 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (failureBlock && failureBlock.right) {
     Block.consumeNodes(scope, failureBlock.right);
   }
-
-  return false;
 };

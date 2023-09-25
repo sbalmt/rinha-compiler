@@ -39,6 +39,11 @@ assert("ab" != "cd")
 assert(true && true)
 assert(false || true)
 
+// --- Ternary ---
+
+let x = if (true) { 1 } else { 2 };
+assert(x == 1)
+
 // --- Precedence ---
 
 assert(1 + 5 * 2 - 1 == 10)

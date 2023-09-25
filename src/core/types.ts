@@ -26,6 +26,7 @@ export const enum NodeTypes {
   BOOLEAN = 1103,
   CLOSURE = 1104,
   TUPLE = 1105,
+  TERNARY = 1106,
 
   ASSIGNMENT = 1200,
   LOGICAL_OR = 1201,

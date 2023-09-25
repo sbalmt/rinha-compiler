@@ -9,7 +9,7 @@ import { Metadata } from '../../../core/metadata';
 import { NodeTypes } from '../../../core/types';
 import { Scope } from '../../scope';
 
-const hasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
+const wasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
   return scope.previousNode.get(scope.previousDirection) !== node;
 };
 
@@ -28,7 +28,8 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
       return Variable.consumeNode(scope, node.right!);
 
     case NodeTypes.IF_ELSE:
-      return Condition.consumeNode(scope, node.right!);
+      Condition.consumeNode(scope, node.right!);
+      break;
 
     case NodeTypes.BLOCK:
       return consumeInnerNode(scope, node);
@@ -36,6 +37,8 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
     default:
       throw `Unexpected block node type (${node.value}).`;
   }
+
+  return undefined;
 };
 
 export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
@@ -49,7 +52,7 @@ export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueT
 
     value = consumeSingleNode(scope, node);
 
-    if (hasNodeReplaced(scope, node)) {
+    if (wasNodeReplaced(scope, node)) {
       node = scope.previousNode.get(scope.previousDirection)!;
     } else {
       node = node.next!;
