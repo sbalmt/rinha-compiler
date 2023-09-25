@@ -10,7 +10,8 @@ import { Scope, ScopeTypes } from '../scope';
 
 const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   const { debug } = scope.options;
-  retry: do {
+
+  do {
     if (debug) {
       console.log('OPT', node.value, node.fragment.data);
     }
@@ -25,9 +26,11 @@ const consumeInnerNodes = (scope: Scope, node: Core.Node<Metadata>) => {
         break;
 
       case NodeTypes.IF_ELSE:
-        if (Condition.consumeNode(scope, node, node.right!)) {
-          continue retry;
-        }
+        Condition.consumeNode(scope, node, node.right!);
+        break;
+
+      case NodeTypes.BLOCK:
+        consumeInnerNodes(scope, node.right!);
         break;
 
       default:

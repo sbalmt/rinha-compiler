@@ -6,9 +6,9 @@ import * as Condition from './condition';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes } from '../../core/types';
-import { Scope } from '../scope';
+import { Scope, VarValueType } from '../scope';
 
-export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
+export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   const { debug } = scope.options;
 
   let result;
@@ -29,6 +29,10 @@ export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>) 
 
       case NodeTypes.IF_ELSE:
         result = Condition.consumeNode(scope, node.right!);
+        break;
+
+      case NodeTypes.BLOCK:
+        result = consumeNodes(scope, node.right!);
         break;
 
       default:

@@ -30,15 +30,19 @@ if (context.node.next) {
   try {
     applyBuiltIn(context.table);
 
-    Analysis.consumeNodes(context.node);
-
-    Optimizer.consumeNodes(context.node.next, {
+    Analysis.consumeNodes(context.node, {
       debug: true
     });
 
-    Evaluator.consumeNodes(context.node.next, {
-      debug: true
-    });
+    if (context.node.next) {
+      Optimizer.consumeNodes(context.node.next, {
+        debug: true
+      });
+
+      Evaluator.consumeNodes(context.node.next, {
+        debug: true
+      });
+    }
   } catch (e) {
     console.error(e);
     process.exit(1);
