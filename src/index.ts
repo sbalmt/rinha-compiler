@@ -31,7 +31,11 @@ try {
   applyBuiltIn(context.table);
 
   const options = {
-    debug: true
+    debug: false
+    // enableHoisting: false,
+    // resolveReferences: false,
+    // resolveLiterals: false,
+    // removeDeadCode: false
   };
 
   context.node.next && PreOptimizer.consumeNodes(context.node, options);
