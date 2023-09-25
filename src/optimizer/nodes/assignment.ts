@@ -13,11 +13,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, node.left!.fragment);
   }
 
-  const symbol = resolveSymbol(scope, node.left!);
-
-  symbol.data.mutable = true;
-  symbol.data.references++;
-
   scope.pure = false;
 
   const type = scope.type;

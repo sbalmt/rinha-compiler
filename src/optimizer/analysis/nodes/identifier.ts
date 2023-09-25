@@ -17,4 +17,6 @@ export const consumeNode = (node: Core.Node<Metadata>) => {
   });
 
   data.references++;
+
+  return symbol;
 };
