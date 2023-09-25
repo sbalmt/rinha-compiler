@@ -14,7 +14,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (Arithmetic.isComparable(lhs) && Arithmetic.isComparable(rhs)) {
+  if (Arithmetic.isPerformable(lhs) && Arithmetic.isPerformable(rhs)) {
     return Arithmetic.evaluate(lhs, rhs, node.value);
   }
 

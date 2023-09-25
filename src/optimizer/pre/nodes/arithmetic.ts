@@ -35,7 +35,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return undefined;
   }
 
-  if (Arithmetic.isComparable(lhs) && Arithmetic.isComparable(rhs)) {
+  if (Arithmetic.isPerformable(lhs) && Arithmetic.isPerformable(rhs)) {
     return resolveLiterals ? replaceMathExpression(lhs, rhs, node) : undefined;
   }
 

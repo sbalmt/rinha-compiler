@@ -14,7 +14,7 @@ export const isCompatible = (lhs: ValueType, rhs: ValueType) => {
   return typeof lhs === typeof rhs;
 };
 
-export const isComparable = (value: unknown): value is ValueType => {
+export const isPerformable = (value: unknown): value is ValueType => {
   return typeof value === 'number';
 };
 
