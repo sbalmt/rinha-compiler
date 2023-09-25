@@ -16,7 +16,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, targetNode.fragment);
   }
 
-  const symbol = Identifier.consumeNode(targetNode);
+  const symbol = Identifier.consumeNode(scope, targetNode);
 
   symbol.data.mutable = true;
 
