@@ -7,17 +7,11 @@ import { NodeTypes } from '../../core/types';
 import { ErrorTypes } from '../../core/types';
 import { Metadata } from '../../core/metadata';
 import { VarValueType } from '../../evaluator/scope';
-import { createNode, replaceNode } from '../pre/ast';
+import { replaceNode } from '../pre/ast';
 import { Scope } from '../scope';
 
 const isClosure = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
   return node instanceof Core.Node && node.right?.value === NodeTypes.CLOSURE;
-};
-
-const applyLazyCallNode = (node: Core.Node<Metadata>) => {
-  const callerNode = createNode(node.fragment, NodeTypes.LAZY_CALL, node.table);
-  node.swap(callerNode);
-  node.set(Core.NodeDirection.Right, callerNode);
 };
 
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -59,7 +53,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (selfCall) {
     if (tailCall) {
-      applyLazyCallNode(node);
+      replaceNode(node, NodeTypes.LAZY_CALL);
       closureBody.data.lazy = true;
     } else if (pure && parameters > 0) {
       replaceNode(node, NodeTypes.MEMO_CALL);

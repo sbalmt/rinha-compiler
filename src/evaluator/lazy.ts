@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Expression from './nodes/expression';
+import * as Invoke from './nodes/invoke';
 
 import { Metadata } from '../core/metadata';
 import { Scope } from './scope';
@@ -16,6 +16,6 @@ export class LazyCall<T extends Metadata> {
   }
 
   invoke() {
-    return Expression.consumeNode(this.scope, this.node);
+    return Invoke.consumeNode(this.scope, this.node);
   }
 }
