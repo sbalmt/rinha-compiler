@@ -11,6 +11,7 @@ export type Consumers = {
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, blockConsumer: AstConsumer) => {
   const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
+  blockScope.declarationNode = scope.declarationNode;
   return blockConsumer(blockScope, blockScope.currentNode);
 };
 

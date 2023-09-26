@@ -5,5 +5,11 @@ import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) => {
-  return expressionConsumer(scope, node.right!);
+  const previousDeclarationNode = scope.declarationNode;
+  scope.declarationNode = node;
+
+  const value = expressionConsumer(scope, node.right!);
+  scope.declarationNode = previousDeclarationNode;
+
+  return value;
 };

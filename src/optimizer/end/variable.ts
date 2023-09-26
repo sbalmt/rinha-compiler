@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import * as Variable from '../ast/variable';
+
 import * as Expression from './expression';
 
 import { Metadata, initSymbol } from '../../core/metadata';
@@ -34,7 +36,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return;
   }
 
-  Expression.consumeNode(scope, node.right!);
+  Variable.consumeNode(scope, node, Expression.consumeNode);
 
   if (data.hoist && enableHoisting) {
     hoistDefinition(scope);
