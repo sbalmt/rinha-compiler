@@ -24,22 +24,24 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
 
-  if (isLiteral(lhs) && isLiteral(rhs)) {
-    if (!Equality.isComparable(lhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
-    }
+  if (!isLiteral(lhs) || !isLiteral(rhs)) {
+    return undefined;
+  }
 
-    if (!Equality.isComparable(rhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
-    }
+  if (!Equality.isComparable(lhs)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
+  }
 
-    if (!Equality.isCompatible(lhs, rhs)) {
-      throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
-    }
+  if (!Equality.isComparable(rhs)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
+  }
 
-    if (resolveLiterals) {
-      return replaceExpression(lhs, rhs, node);
-    }
+  if (!Equality.isCompatible(lhs, rhs)) {
+    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
+  }
+
+  if (resolveLiterals) {
+    return replaceExpression(lhs, rhs, node);
   }
 
   return undefined;
