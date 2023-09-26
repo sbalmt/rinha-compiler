@@ -1,0 +1,4 @@
+let generator = fn (input) => fn () => input;
+
+assert(generator(5)() == 5)
+assert(generator(fn () => 10)()() == 10)
