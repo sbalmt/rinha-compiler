@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Variable from './variable';
+import * as Expression from './expression';
 import * as Condition from './condition';
 
 import { Metadata } from '../../../core/metadata';
@@ -18,6 +19,10 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
 const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
   switch (node.value) {
+    case NodeTypes.EXPRESSION:
+      Expression.consumeNode(scope, node.right!);
+      break;
+
     case NodeTypes.VARIABLE:
       Variable.consumeNode(scope, node.right!);
       break;
