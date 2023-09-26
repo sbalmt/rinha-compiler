@@ -22,12 +22,6 @@ const isTailCallInvocation = (node: Core.Node<Metadata>) => {
 };
 
 const getParametersCount = (symbol: Core.SymbolRecord<Metadata>) => {
-  const { parameters } = symbol.data;
-
-  if (parameters !== undefined) {
-    return parameters;
-  }
-
   const closureNode = symbol.node;
   const closureBody = closureNode?.right;
 
@@ -49,6 +43,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
   const symbol = Expression.consumeNode(scope, callerNode);
 
+  // TODO: Not all functions have symbol, let's fix that!
   if (!isCallable(symbol)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
   }
@@ -56,9 +51,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
+    parameters: getParametersCount(symbol),
     tailCall: isTailCallInvocation(scope.currentNode),
-    selfCall: isRecursiveInvocation(scope, callerNode),
-    parameters: getParametersCount(symbol)
+    selfCall: isRecursiveInvocation(scope, callerNode)
   });
 
   return Expression.consumeNode(scope, callerNode);

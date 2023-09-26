@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata, initSymbol } from './metadata';
+import { Metadata, NodeMetadata, initNode, initSymbol } from './metadata';
 import { NodeTypes, SymbolTypes } from './types';
 
 const range = new Core.Range(0, 0);
@@ -12,19 +12,21 @@ const assertFragment = new Core.Fragment('assert', 0, 6, location);
 const printFragment = new Core.Fragment('print', 0, 5, location);
 
 export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
-  createBuiltInSymbol(firstFragment, table);
-  createBuiltInSymbol(secondFragment, table);
-  createBuiltInSymbol(assertFragment, table);
-  createBuiltInSymbol(printFragment, table);
+  insertBuiltIn(firstFragment, table, { parameters: 1 });
+  insertBuiltIn(secondFragment, table, { parameters: 1 });
+  insertBuiltIn(assertFragment, table, { parameters: 1 });
+  insertBuiltIn(printFragment, table, { parameters: 1, pure: false });
 };
 
-const createBuiltInSymbol = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>) => {
-  const node = new Core.Node(fragment, NodeTypes.CLOSURE, table);
-  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, node);
+const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>, options?: Partial<NodeMetadata>) => {
+  const identifierNode = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
+  const closureNode = new Core.Node(fragment, NodeTypes.BUILT_IN, table);
+  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, identifierNode);
 
-  initSymbol(symbol, {
-    parameters: 1
-  });
+  identifierNode.set(Core.NodeDirection.Right, closureNode);
+
+  initNode(closureNode, options);
+  initSymbol(symbol);
 
   table.insert(symbol);
 

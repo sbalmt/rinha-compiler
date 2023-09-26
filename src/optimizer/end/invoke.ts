@@ -10,8 +10,20 @@ import { VarValueType } from '../../evaluator/scope';
 import { replaceNode } from '../../core/ast';
 import { Scope } from '../scope';
 
-const isClosure = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
-  return node instanceof Core.Node && node.right?.value === NodeTypes.CLOSURE;
+const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+  return node instanceof Core.Node;
+};
+
+const isBuiltInClosure = (node: Core.Node<Metadata>) => {
+  return node.value === NodeTypes.BUILT_IN;
+};
+
+const isUserDefinedClosure = (node: Core.Node<Metadata>) => {
+  return node.value === NodeTypes.CLOSURE;
+};
+
+const isOptimizable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+  return isCallable(node) && (isBuiltInClosure(node.right!) || isUserDefinedClosure(node.right!));
 };
 
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -32,9 +44,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const argumentsCount = consumeArgumentNodes(scope, argumentsNode);
   const closureNode = Expression.consumeNode(scope, callerNode);
 
-  // TODO: If closureNode is a know expression (literal/reference) replace the call instead.
-
-  if (!isClosure(closureNode)) {
+  // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
+  if (!isOptimizable(closureNode)) {
     return undefined;
   }
 
@@ -51,7 +62,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
   }
 
-  if (selfCall) {
+  if (isBuiltInClosure(closureNode)) {
+    replaceNode(closureNode, NodeTypes.FAST_CALL);
+  } else if (selfCall) {
     if (tailCall) {
       replaceNode(node, NodeTypes.LAZY_CALL);
       closureBody.data.lazy = true;
