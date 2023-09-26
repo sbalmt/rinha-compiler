@@ -64,15 +64,23 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (isBuiltInClosure(closureNode)) {
     replaceNode(closureNode, NodeTypes.FAST_CALL);
-  } else if (selfCall) {
-    if (tailCall) {
-      replaceNode(node, NodeTypes.LAZY_CALL);
-      closureBody.data.lazy = true;
-    } else if (pure && parameters > 0) {
-      replaceNode(node, NodeTypes.MEMO_CALL);
-    }
-  } else if (tailCall && lazy) {
+    return undefined;
+  }
+
+  if (!selfCall && tailCall && lazy) {
     replaceNode(node, NodeTypes.TAIL_CALL);
+    return undefined;
+  }
+
+  if (selfCall && tailCall) {
+    replaceNode(node, NodeTypes.LAZY_CALL);
+    closureBody.data.lazy = true;
+    return undefined;
+  }
+
+  if (selfCall && pure && parameters > 0) {
+    replaceNode(node, NodeTypes.MEMO_CALL);
+    return undefined;
   }
 
   return undefined;
