@@ -16,7 +16,7 @@ export const parseString = (string: string): string => {
 export const serializeString = (string: string) => {
   return (
     '"' +
-    string.replace(/(\n\r\t)/g, (match) => {
+    string.replace(/[\n\r\t]/g, (match) => {
       switch (match) {
         case '\r':
           return '\\r';
