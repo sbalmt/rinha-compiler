@@ -21,13 +21,14 @@ const isTailCallInvocation = (node: Core.Node<Metadata>) => {
   return node.right!.value === NodeTypes.INVOKE;
 };
 
-const getParameters = (symbol: Core.SymbolRecord<Metadata>) => {
+const countParameters = (symbol: Core.SymbolRecord<Metadata>) => {
   const { parameters } = symbol.data;
   if (parameters !== undefined) {
     return parameters;
   }
 
   const closureBody = symbol.node?.right;
+
   // TODO: We always need to know the number of parameters, so move that to another
   // TODO: optimization step for being able to not check "closureBody.assigned"
   if (closureBody && closureBody.assigned) {
@@ -57,7 +58,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   initNode(node, {
     tailCall: isTailCallInvocation(scope.currentNode),
     selfCall: isRecursiveInvocation(scope, callerNode),
-    parameters: getParameters(symbol)
+    parameters: countParameters(symbol)
   });
 
   return Expression.consumeNode(scope, callerNode);

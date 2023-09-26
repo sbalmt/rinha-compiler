@@ -25,4 +25,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   } else {
     data.follow = value;
   }
+
+  return undefined;
 };

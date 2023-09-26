@@ -1,68 +1,19 @@
 import * as Core from '@xcheme/core';
 
+import * as Block from '../../ast/block';
+
 import * as Variable from './variable';
 import * as Expression from './expression';
 import * as Condition from './condition';
 
 import { VarValueType } from '../../../evaluator/scope';
 import { Metadata } from '../../../core/metadata';
-import { NodeTypes } from '../../../core/types';
 import { Scope } from '../../scope';
 
-const wasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
-  return scope.previousNode.get(scope.previousDirection) !== node;
-};
-
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const innerScope = new Scope(node, Core.NodeDirection.Right, scope.options);
-  innerScope.declarationNode = scope.declarationNode;
-  return consumeNodes(innerScope, innerScope.currentNode);
-};
-
-const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  switch (node.value) {
-    case NodeTypes.EXPRESSION:
-      return Expression.consumeNode(scope, node.right!);
-
-    case NodeTypes.VARIABLE:
-      Variable.consumeNode(scope, node.right!);
-      break;
-
-    case NodeTypes.IF_ELSE:
-      Condition.consumeNode(scope, node.right!);
-      break;
-
-    case NodeTypes.BLOCK:
-      return consumeInnerNode(scope, node);
-
-    default:
-      throw `[PRE]: Unexpected block node type (${node.value}).`;
-  }
-
-  return undefined;
-};
-
 export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const { debug } = scope.options;
-  let value = undefined;
-
-  while (node) {
-    if (debug) {
-      console.log('PRE', node.value, node.fragment.data);
-    }
-
-    value = consumeSingleNode(scope, node);
-
-    if (wasNodeReplaced(scope, node)) {
-      node = scope.previousNode.get(scope.previousDirection)!;
-    } else {
-      node = node.next!;
-      scope.previousDirection = Core.NodeDirection.Next;
-      scope.previousNode = scope.currentNode;
-    }
-
-    scope.currentNode = node;
-  }
-
-  return value;
+  return Block.consumeNodes(scope, node, {
+    expressionConsumer: Expression.consumeNode,
+    variableConsumer: Variable.consumeNode,
+    conditionConsumer: Condition.consumeNode
+  });
 };

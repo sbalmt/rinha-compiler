@@ -70,10 +70,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Invoke.consumeNode(scope, node);
 
     default:
-      node.left && consumeNode(scope, node.left);
-      node.right && consumeNode(scope, node.right);
-      node.next && consumeNode(scope, node.next);
+      throw `[PRE]: Unexpected expression node type (${node.value}).`;
   }
-
-  return undefined;
 };

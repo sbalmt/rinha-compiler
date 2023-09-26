@@ -1,45 +1,19 @@
 import * as Core from '@xcheme/core';
 
+import * as Block from '../../ast/block';
+
 import * as Variable from './variable';
 import * as Expression from './expression';
 import * as Condition from './condition';
 
+import { VarValueType } from '../../../evaluator/scope';
 import { Metadata } from '../../../core/metadata';
-import { NodeTypes } from '../../../core/types';
 import { Scope } from '../../scope';
 
-const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  switch (node.value) {
-    case NodeTypes.EXPRESSION:
-      Expression.consumeNode(scope, node.right!);
-      break;
-
-    case NodeTypes.VARIABLE:
-      Variable.consumeNode(scope, node.right!);
-      break;
-
-    case NodeTypes.IF_ELSE:
-      Condition.consumeNode(scope, node.right!);
-      break;
-
-    case NodeTypes.BLOCK:
-      consumeNodes(scope, node.right!);
-      break;
-
-    default:
-      throw `[MID]: Unexpected block node type (${node.value}).`;
-  }
-};
-
-export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { debug } = scope.options;
-
-  while (node) {
-    if (debug) {
-      console.log('MID', node.value, node.fragment.data);
-    }
-
-    consumeSingleNode(scope, node);
-    node = node.next!;
-  }
+export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+  return Block.consumeNodes(scope, node, {
+    expressionConsumer: Expression.consumeNode,
+    variableConsumer: Variable.consumeNode,
+    conditionConsumer: Condition.consumeNode
+  });
 };

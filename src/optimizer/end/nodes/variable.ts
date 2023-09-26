@@ -39,4 +39,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (data.hoist && enableHoisting) {
     hoistDefinition(scope);
   }
+
+  return undefined;
 };
