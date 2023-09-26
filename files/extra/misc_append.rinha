@@ -1,0 +1,9 @@
+let loop = fn (num, acc, append) => {
+    if (num == 0) {
+      acc
+    } else {
+      loop(num - 1, acc + append, if (num % 3 == 0) { 0 } else { 1 })
+   }
+};
+
+print(loop(1000000, "0", 1))
