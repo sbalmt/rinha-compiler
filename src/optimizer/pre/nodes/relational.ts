@@ -7,8 +7,8 @@ import * as Expression from './expression';
 
 import { ErrorTypes, NodeTypes } from '../../../core/types';
 import { Metadata } from '../../../core/metadata';
+import { combineNodes } from '../../../core/ast';
 import { isLiteral } from '../../../core/data';
-import { combineNodes } from '../ast';
 import { Scope } from '../../scope';
 
 const replaceExpression = (lhs: Relational.ValueType, rhs: Relational.ValueType, node: Core.Node<Metadata>) => {

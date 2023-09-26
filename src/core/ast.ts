@@ -1,8 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata, initNode } from '../../core/metadata';
-import { VarValueType } from '../../evaluator/scope';
-import { NodeTypes } from '../../core/types';
+import { Metadata, initNode } from './metadata';
+import { VarValueType } from '../evaluator/scope';
+import { NodeTypes } from './types';
 
 export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Core.SymbolTable<Metadata>) => {
   return new Core.Node(fragment, value, table);

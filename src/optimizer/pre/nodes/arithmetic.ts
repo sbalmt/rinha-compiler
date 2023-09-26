@@ -8,8 +8,8 @@ import * as Expression from './expression';
 
 import { Metadata } from '../../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../../core/types';
+import { combineNodes } from '../../../core/ast';
 import { isLiteral } from '../../../core/data';
-import { combineNodes } from '../ast';
 import { Scope } from '../../scope';
 
 const replaceMathExpression = (lhs: Arithmetic.ValueType, rhs: Arithmetic.ValueType, node: Core.Node<Metadata>) => {

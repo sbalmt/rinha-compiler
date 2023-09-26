@@ -7,7 +7,7 @@ import { NodeTypes } from '../../core/types';
 import { ErrorTypes } from '../../core/types';
 import { Metadata } from '../../core/metadata';
 import { VarValueType } from '../../evaluator/scope';
-import { replaceNode } from '../pre/ast';
+import { replaceNode } from '../../core/ast';
 import { Scope } from '../scope';
 
 const isClosure = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
