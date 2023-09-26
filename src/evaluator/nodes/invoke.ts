@@ -25,7 +25,8 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   const closureBlock = closureParameters.next!;
 
   if (!closureFirstParameter) {
-    return Block.consumeNodes(scope, closureBlock.right!);
+    const callScope = closureNode.data.value as Scope<Metadata>;
+    return Block.consumeNodes(callScope, closureBlock.right!);
   }
 
   const closureScope = createCallScope(scope, closureNode, closureFirstParameter, closureArguments);
