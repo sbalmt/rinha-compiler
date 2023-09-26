@@ -12,7 +12,7 @@ const formatString = (string: string) => {
 
 const getExtraDetails = (node: Core.Node<Metadata>) => {
   if (node.value === NodeTypes.IDENTIFIER) {
-    const symbol = node.table.get(node.fragment);
+    const symbol = node.table.find(node.fragment);
     const { references, mutable } = symbol!.data;
 
     return `[RC: ${references ?? '?'}, IM: ${mutable ? 'F' : 'T'}]`;
