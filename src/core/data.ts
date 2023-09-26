@@ -5,7 +5,7 @@ import { LazyCall } from '../evaluator/lazy';
 import { Metadata } from './metadata';
 
 export const isLiteral = <T extends Metadata>(value: VarValueType<T>) => {
-  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value instanceof Array;
 };
 
 export const ensureInt32 = (value: number): number => {
