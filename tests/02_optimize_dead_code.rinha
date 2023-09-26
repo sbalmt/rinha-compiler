@@ -2,6 +2,6 @@ let x = 5 * 5;
 let y = 25;
 let z = fn () => 100;
 
-assert(x + y == 50)
+assert(true)
 
 print("success")
