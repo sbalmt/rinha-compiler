@@ -46,14 +46,9 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>, consumers: C
 };
 
 export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): VarValueType<Metadata> => {
-  const { debug } = scope.options;
   let value = undefined;
 
   while (node) {
-    if (debug) {
-      console.log('OPT', node.value, node.fragment.data);
-    }
-
     value = consumeSingleNode(scope, node, consumers);
 
     if (wasNodeReplaced(scope, node)) {

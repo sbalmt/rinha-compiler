@@ -1,9 +1,5 @@
 export type BaseScopeOptions = {
   debug?: boolean;
-  enableHoisting?: boolean;
-  resolveReferences?: boolean;
-  resolveLiterals?: boolean;
-  removeDeadCode?: boolean;
 };
 
 export class BaseScope {
@@ -11,10 +7,7 @@ export class BaseScope {
 
   constructor(options?: BaseScopeOptions) {
     this.scopeOptions = {
-      enableHoisting: true,
-      resolveReferences: true,
-      resolveLiterals: true,
-      removeDeadCode: true,
+      debug: false,
       ...options
     };
   }

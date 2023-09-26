@@ -9,6 +9,7 @@ import * as MidOptimizer from './optimizer/mid';
 import * as EndOptimizer from './optimizer/end';
 
 import { consumeSource, consumeTokens } from './utils';
+import { ScopeScopeOptions } from './optimizer/scope';
 import { applyBuiltIn } from './core/builtin';
 import { ErrorTypes } from './core/types';
 
@@ -28,20 +29,24 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 }
 
 try {
-  applyBuiltIn(context.table);
-
-  const options = {
-    debug: false
+  const options: ScopeScopeOptions = {
+    debug: false,
+    debugPreOptimization: false,
+    debugMidOptimization: false,
+    debugEndOptimization: false
     // enableHoisting: false,
     // resolveReferences: false,
     // resolveLiterals: false,
     // removeDeadCode: false
   };
 
-  context.node.next && PreOptimizer.consumeNodes(context.node, options);
-  context.node.next && MidOptimizer.consumeNodes(context.node.next, options);
-  context.node.next && EndOptimizer.consumeNodes(context.node, options);
-  context.node.next && Evaluator.consumeNodes(context.node.next, options);
+  applyBuiltIn(context.table);
+
+  PreOptimizer.consumeNodes(context.node, options);
+  MidOptimizer.consumeNodes(context.node, options);
+  EndOptimizer.consumeNodes(context.node, options);
+
+  Evaluator.consumeNodes(context.node, options);
 } catch (e) {
   console.error(e);
   process.exit(1);

@@ -8,9 +8,11 @@ import { applyBuiltIn } from './builtin';
 import { Scope } from './scope';
 
 export const consumeNodes = (node: Core.Node<Metadata>, options?: BaseScopeOptions) => {
-  const scope = new Scope(undefined, options);
+  if (node.next) {
+    const scope = new Scope(undefined, options);
 
-  applyBuiltIn(scope);
+    applyBuiltIn(scope);
 
-  Block.consumeNodes(scope, node);
+    Block.consumeNodes(scope, node.next);
+  }
 };

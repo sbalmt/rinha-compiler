@@ -3,11 +3,17 @@ import * as Core from '@xcheme/core';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
-import { BaseScopeOptions } from '../../core/scope';
-import { Scope } from '../scope';
+import { printNodes } from '../../core/nodes';
+import { Scope, ScopeScopeOptions } from '../scope';
 
-export const consumeNodes = (node: Core.Node<Metadata>, options?: BaseScopeOptions) => {
+export const consumeNodes = (node: Core.Node<Metadata>, options?: ScopeScopeOptions) => {
   const scope = new Scope(node, Core.NodeDirection.Next, options);
 
-  Block.consumeNodes(scope, scope.currentNode);
+  if (scope.currentNode) {
+    Block.consumeNodes(scope, scope.currentNode);
+
+    if (options?.debugEndOptimization) {
+      printNodes(node);
+    }
+  }
 };
