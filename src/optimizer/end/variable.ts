@@ -4,16 +4,16 @@ import * as Variable from '../ast/variable';
 
 import * as Expression from './expression';
 
-import { Metadata, initSymbol } from '../../core/metadata';
+import { Metadata } from '../../core/metadata';
 import { Scope } from '../scope';
 
 const removeDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
 };
 
-const canRemoveDefinition = (data: Metadata['record']) => {
-  const { literal, references, mutable } = data;
-  return literal !== undefined && references === 0 && !mutable;
+const canRemoveDefinition = (symbol: Core.SymbolRecord<Metadata>) => {
+  const { literal, references, mutable } = symbol.data;
+  return (literal !== undefined || references <= 0) && !mutable;
 };
 
 const hoistDefinition = (scope: Scope) => {
@@ -29,11 +29,11 @@ const hoistDefinition = (scope: Scope) => {
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { enableHoisting, removeDeadCode } = scope.options;
   const symbol = node.table.find(node.fragment)!;
-  const data = initSymbol(symbol);
+  const data = symbol.data;
 
-  if (canRemoveDefinition(data) && removeDeadCode) {
+  if (canRemoveDefinition(symbol) && removeDeadCode) {
     removeDefinition(scope);
-    return;
+    return undefined;
   }
 
   Variable.consumeNode(scope, node, Expression.consumeNode);

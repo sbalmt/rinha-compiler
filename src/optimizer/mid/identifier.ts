@@ -5,29 +5,34 @@ import { replaceNode, replaceSymbol } from '../../core/ast';
 import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
-  while (true) {
-    const { mutable, follow } = symbol.data;
+const followReferences = (symbol: Core.SymbolRecord<Metadata>): Core.SymbolRecord<Metadata> | undefined => {
+  let eligible = symbol;
+  let previous;
 
-    if (mutable || !follow) {
+  for (let current = symbol; current; current = current.data.follow!) {
+    if (current.data.mutable) {
       break;
     }
 
-    symbol.data.references--;
-    symbol = follow;
+    if (previous) {
+      previous.data.references--;
+    }
+
+    previous = eligible;
+    eligible = current;
   }
 
-  return symbol;
+  return eligible;
 };
 
 const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
-  const followedSymbol = followReferences(symbol);
+  const reference = followReferences(symbol);
 
-  if (followedSymbol !== symbol) {
-    const identifierNode = followedSymbol.node!;
+  if (reference && reference !== symbol) {
+    const identifierNode = reference.node!;
 
     replaceNode(node, NodeTypes.IDENTIFIER, identifierNode);
-    replaceSymbol(symbol, followedSymbol.value, node);
+    replaceSymbol(symbol, reference.value, node);
   }
 
   return symbol;
