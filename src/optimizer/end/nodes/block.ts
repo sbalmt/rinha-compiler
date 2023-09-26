@@ -34,6 +34,9 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
     case NodeTypes.BLOCK:
       consumeInnerNode(scope, node);
       break;
+
+    default:
+      throw `[END]: Unexpected block node type (${node.value}).`;
   }
 };
 

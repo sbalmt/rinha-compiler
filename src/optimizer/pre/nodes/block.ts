@@ -36,7 +36,7 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
       return consumeInnerNode(scope, node);
 
     default:
-      throw `Unexpected block node type (${node.value}).`;
+      throw `[PRE]: Unexpected block node type (${node.value}).`;
   }
 
   return undefined;

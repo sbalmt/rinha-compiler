@@ -27,7 +27,7 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
       break;
 
     default:
-      throw `Unexpected block node type (${node.value}).`;
+      throw `[MID]: Unexpected block node type (${node.value}).`;
   }
 };
 

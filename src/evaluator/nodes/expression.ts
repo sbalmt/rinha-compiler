@@ -76,6 +76,6 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
       return MemoCall.consumeNode(scope, node);
 
     default:
-      throw `Unexpected expression node type (${node.value}).`;
+      throw `[EVL]: Unexpected expression node type (${node.value}).`;
   }
 };
