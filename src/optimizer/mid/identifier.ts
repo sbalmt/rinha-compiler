@@ -1,7 +1,8 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
-import { SymbolTypes } from '../../core/types';
+import { NodeTypes, SymbolTypes } from '../../core/types';
+import { createNode } from '../pre/ast';
 import { Scope } from '../scope';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>) => {
@@ -9,7 +10,7 @@ const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>) => {
 };
 
 const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
-  do {
+  while (true) {
     const { mutable, follow } = symbol.data;
 
     if (mutable || !follow || isBuiltIn(follow)) {
@@ -17,7 +18,21 @@ const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
     }
 
     symbol = follow;
-  } while (true);
+  }
+
+  return symbol;
+};
+
+const applyFollowedReference = (
+  followedSymbol: Core.SymbolRecord<Metadata>,
+  symbol: Core.SymbolRecord<Metadata>,
+  node: Core.Node<Metadata>
+) => {
+  const identifierNode = followedSymbol.node!;
+  const referenceNode = createNode(identifierNode.fragment, NodeTypes.IDENTIFIER, node.table);
+
+  node.swap(referenceNode);
+  symbol.data.follow = undefined;
 
   return symbol;
 };
@@ -37,13 +52,19 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const symbol = node.table.find(node.fragment)!;
   const { mutable, literal } = symbol.data;
 
-  if (mutable) {
+  if (mutable || !resolveReferences) {
     return symbol;
   }
 
-  if (literal !== undefined && resolveReferences) {
+  if (literal !== undefined) {
     return applyLiteralNode(symbol, node);
   }
 
-  return followReferences(symbol);
+  const followedSymbol = followReferences(symbol);
+
+  if (followedSymbol !== symbol) {
+    return applyFollowedReference(followedSymbol, symbol, node);
+  }
+
+  return symbol;
 };
