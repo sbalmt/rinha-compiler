@@ -30,9 +30,8 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
 
   if (reference && reference !== symbol) {
     const identifierNode = reference.node!;
-
     replaceNode(node, NodeTypes.IDENTIFIER, identifierNode);
-    replaceSymbol(symbol, reference.value, node);
+    return replaceSymbol(symbol, reference.value, node);
   }
 
   return symbol;

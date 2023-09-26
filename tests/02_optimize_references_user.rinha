@@ -1,0 +1,8 @@
+let x = fn (n) => n * 10;
+let y = x;
+let z = y;
+let a = z;
+
+assert(a(10) == 100)
+
+print("success")

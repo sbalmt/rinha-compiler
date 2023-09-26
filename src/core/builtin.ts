@@ -19,7 +19,7 @@ export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
 };
 
 const createBuiltInSymbol = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>) => {
-  const node = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
+  const node = new Core.Node(fragment, NodeTypes.CLOSURE, table);
   const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, node);
 
   initSymbol(symbol, {

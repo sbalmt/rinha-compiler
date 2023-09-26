@@ -1,0 +1,8 @@
+let x = print;
+let y = x;
+let z = y;
+let a = z;
+
+assert(a(10) == 10)
+
+print("success")
