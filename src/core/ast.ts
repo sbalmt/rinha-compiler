@@ -2,20 +2,30 @@ import * as Core from '@xcheme/core';
 
 import { Metadata, initNode } from './metadata';
 import { VarValueType } from '../evaluator/scope';
-import { NodeTypes } from './types';
+import { NodeTypes, SymbolTypes } from './types';
 
 export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Core.SymbolTable<Metadata>) => {
   return new Core.Node(fragment, value, table);
 };
 
-export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes) => {
-  const replacement = createNode(node.fragment, value, node.table);
+export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, fragment?: Core.Fragment) => {
+  const replacement = createNode(fragment ?? node.fragment, value, node.table);
 
   replacement.set(Core.NodeDirection.Left, node.left);
   replacement.set(Core.NodeDirection.Right, node.right);
   replacement.set(Core.NodeDirection.Next, node.next);
 
   node.swap(replacement);
+};
+
+export const replaceSymbol = (symbol: Core.SymbolRecord<Metadata>, value: SymbolTypes, node: Core.Node<Metadata>) => {
+  const replacement = new Core.SymbolRecord(symbol.fragment, value, node, symbol.table);
+
+  if (symbol.assigned) {
+    replacement.assign(symbol.data);
+  }
+
+  symbol.swap(replacement);
 };
 
 export const combineNodes = (

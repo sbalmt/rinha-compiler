@@ -1,38 +1,34 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
-import { NodeTypes, SymbolTypes } from '../../core/types';
-import { createNode } from '../pre/ast';
+import { replaceNode, replaceSymbol } from '../../core/ast';
+import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
-
-const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>) => {
-  return symbol.value === SymbolTypes.BuiltIn;
-};
 
 const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
   while (true) {
     const { mutable, follow } = symbol.data;
 
-    if (mutable || !follow || isBuiltIn(follow)) {
+    if (mutable || !follow) {
       break;
     }
 
+    symbol.data.references--;
     symbol = follow;
   }
 
   return symbol;
 };
 
-const applyFollowedReference = (
-  followedSymbol: Core.SymbolRecord<Metadata>,
-  symbol: Core.SymbolRecord<Metadata>,
-  node: Core.Node<Metadata>
-) => {
-  const identifierNode = followedSymbol.node!;
-  const referenceNode = createNode(identifierNode.fragment, NodeTypes.IDENTIFIER, node.table);
+const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
+  const followedSymbol = followReferences(symbol);
 
-  node.swap(referenceNode);
-  symbol.data.follow = undefined;
+  if (followedSymbol !== symbol) {
+    const identifierNode = followedSymbol.node!;
+
+    replaceNode(node, NodeTypes.IDENTIFIER, identifierNode.fragment);
+    replaceSymbol(symbol, followedSymbol.value, node);
+  }
 
   return symbol;
 };
@@ -60,11 +56,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return applyLiteralNode(symbol, node);
   }
 
-  const followedSymbol = followReferences(symbol);
-
-  if (followedSymbol !== symbol) {
-    return applyFollowedReference(followedSymbol, symbol, node);
-  }
-
-  return symbol;
+  return applyReferenceNode(symbol, node);
 };
