@@ -10,18 +10,7 @@ const isReference = (value: VarValueType<Metadata>): value is Core.SymbolRecord<
   return value instanceof Core.SymbolRecord;
 };
 
-const hoistDefinition = (scope: Scope) => {
-  scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
-
-  scope.currentNode.set(Core.NodeDirection.Next, scope.anchorNode.get(scope.anchorDirection));
-  scope.anchorNode.set(scope.anchorDirection, scope.currentNode);
-
-  scope.anchorDirection = Core.NodeDirection.Next;
-  scope.anchorNode = scope.currentNode;
-};
-
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { enableHoisting } = scope.options;
   const symbol = node.table.find(node.fragment)!;
   const data = initSymbol(symbol);
 
@@ -31,13 +20,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const value = Expression.consumeNode(scope, node.right!);
   scope.declarationNode = previousDeclarationNode;
 
-  if (isReference(value)) {
-    data.follow = value;
-  } else {
+  if (!isReference(value)) {
     data.literal = value;
-  }
-
-  if (data.hoist && enableHoisting) {
-    hoistDefinition(scope);
+  } else {
+    data.follow = value;
   }
 };
