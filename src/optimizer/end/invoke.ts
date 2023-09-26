@@ -46,8 +46,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const closureBody = closureNode.right!;
 
-  const { tailCall, selfCall, parameters } = node.data;
-  const { lazy, pure } = closureBody.data;
+  const { lazy, pure, parameters } = closureBody.data;
+  const { tailCall, selfCall } = node.data;
 
   if (argumentsCount > parameters) {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
@@ -67,4 +67,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   } else if (tailCall && lazy) {
     replaceNode(node, NodeTypes.TAIL_CALL);
   }
+
+  return undefined;
 };

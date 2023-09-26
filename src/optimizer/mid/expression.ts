@@ -5,17 +5,18 @@ import * as Assignment from '../ast/assignment';
 import * as Literal from '../ast/literal';
 import * as Ternary from '../ast/ternary';
 import * as Closure from '../ast/closure';
-import * as Invoke from '../ast/invoke';
 
 import * as Block from './block';
 import * as Condition from './condition';
 import * as Identifier from './identifier';
+import * as Invoke from './invoke';
 
 import { Metadata } from '../../core/metadata';
+import { VarValueType } from '../../evaluator/scope';
 import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);
@@ -51,7 +52,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       return Binary.consumeNode(scope, node, consumeNode);
 
     case NodeTypes.INVOKE:
-      return Invoke.consumeNode(scope, node, consumeNode);
+      return Invoke.consumeNode(scope, node);
 
     default:
       throw `Unable to optimize expression node type (${node.value}).`;

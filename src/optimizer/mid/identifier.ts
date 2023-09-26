@@ -19,7 +19,7 @@ const followReferences = (symbol: Core.SymbolRecord<Metadata>) => {
     symbol = follow;
   } while (true);
 
-  return symbol.node;
+  return symbol;
 };
 
 const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
@@ -38,12 +38,12 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { mutable, literal } = symbol.data;
 
   if (mutable) {
-    return node;
+    return symbol;
   }
 
   if (literal !== undefined && resolveReferences) {
     return applyLiteralNode(symbol, node);
   }
 
-  return followReferences(symbol) ?? node;
+  return followReferences(symbol);
 };

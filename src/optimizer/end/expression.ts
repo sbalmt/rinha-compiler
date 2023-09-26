@@ -12,10 +12,11 @@ import * as Identifier from './identifier';
 import * as Invoke from './invoke';
 
 import { Metadata } from '../../core/metadata';
+import { VarValueType } from '../../evaluator/scope';
 import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);

@@ -1,13 +1,13 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../../core/errors';
+import * as Errors from '../../core/errors';
 
 import * as Expression from './expression';
 
-import { Metadata, initNode } from '../../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../../core/types';
-import { VarValueType } from '../../../evaluator/scope';
-import { Scope } from '../../scope';
+import { Metadata, initNode } from '../../core/metadata';
+import { ErrorTypes, NodeTypes } from '../../core/types';
+import { VarValueType } from '../../evaluator/scope';
+import { Scope } from '../scope';
 
 const isCallable = (symbol: VarValueType<Metadata>): symbol is Core.SymbolRecord<Metadata> => {
   return symbol instanceof Core.SymbolRecord && symbol.data.literal === undefined;
@@ -21,21 +21,21 @@ const isTailCallInvocation = (node: Core.Node<Metadata>) => {
   return node.right!.value === NodeTypes.INVOKE;
 };
 
-const countParameters = (symbol: Core.SymbolRecord<Metadata>) => {
+const getParametersCount = (symbol: Core.SymbolRecord<Metadata>) => {
   const { parameters } = symbol.data;
+
   if (parameters !== undefined) {
     return parameters;
   }
 
-  const closureBody = symbol.node?.right;
+  const closureNode = symbol.node;
+  const closureBody = closureNode?.right;
 
-  // TODO: We always need to know the number of parameters, so move that to another
-  // TODO: optimization step for being able to not check "closureBody.assigned"
   if (closureBody && closureBody.assigned) {
     return closureBody.data.parameters;
   }
 
-  return 0;
+  return -1;
 };
 
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -58,7 +58,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   initNode(node, {
     tailCall: isTailCallInvocation(scope.currentNode),
     selfCall: isRecursiveInvocation(scope, callerNode),
-    parameters: countParameters(symbol)
+    parameters: getParametersCount(symbol)
   });
 
   return Expression.consumeNode(scope, callerNode);

@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import * as Invoke from '../../ast/invoke';
 import * as Identifier from './identifier';
 import * as Integer from './integer';
 import * as String from './string';
@@ -7,7 +8,6 @@ import * as Boolean from './boolean';
 import * as Closure from './closure';
 import * as Tuple from './tuple';
 import * as Ternary from './ternary';
-import * as Invoke from './invoke';
 import * as Assignment from './assignment';
 import * as Logical from './logical';
 import * as Equality from './equality';
@@ -67,9 +67,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Arithmetic.consumeNode(scope, node);
 
     case NodeTypes.INVOKE:
-      return Invoke.consumeNode(scope, node);
+      return Invoke.consumeNode(scope, node, consumeNode);
 
     default:
-      throw `[PRE]: Unexpected expression node type (${node.value}).`;
+      throw `Unable to optimize expression node type (${node.value}).`;
   }
 };
