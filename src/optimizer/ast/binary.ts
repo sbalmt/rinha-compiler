@@ -5,11 +5,11 @@ import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) => {
-  const lhsNode = node.left!;
-  const rhsNode = node.right!;
+  const leftHandSideNode = node.left!;
+  const rightHandSideNode = node.right!;
 
-  expressionConsumer(scope, lhsNode);
-  expressionConsumer(scope, rhsNode);
+  expressionConsumer(scope, leftHandSideNode);
+  expressionConsumer(scope, rightHandSideNode);
 
   return undefined;
 };
