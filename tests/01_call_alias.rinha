@@ -1,5 +1,5 @@
-let test = fn () => 10;
+let test = fn (num) => num * 10;
 let alias1 = test;
 let alias2 = alias1;
 
-assert(alias2() == 10)
+assert(alias2(10) == 100)

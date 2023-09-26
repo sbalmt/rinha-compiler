@@ -1,5 +1,0 @@
-let original = fn (multiplier) => 10 * multiplier;
-let reference = original;
-let nestedReference = reference;
-
-assert(nestedReference(5) == 50)
