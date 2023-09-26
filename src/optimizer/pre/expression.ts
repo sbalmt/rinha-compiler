@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Invoke from '../../ast/invoke';
+import * as Invoke from '../ast/invoke';
 import * as Identifier from './identifier';
 import * as Integer from './integer';
 import * as String from './string';
@@ -14,10 +14,10 @@ import * as Equality from './equality';
 import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
 
-import { VarValueType } from '../../../evaluator/scope';
-import { Metadata } from '../../../core/metadata';
-import { NodeTypes } from '../../../core/types';
-import { Scope } from '../../scope';
+import { VarValueType } from '../../evaluator/scope';
+import { Metadata } from '../../core/metadata';
+import { NodeTypes } from '../../core/types';
+import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
   switch (node.value) {

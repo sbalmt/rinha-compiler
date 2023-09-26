@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Block from './nodes/block';
+import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { printNodes } from '../../core/nodes';

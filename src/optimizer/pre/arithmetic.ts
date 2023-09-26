@@ -1,16 +1,16 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../../core/errors';
-import * as Arithmetic from '../../../core/arithmetic';
-import * as Concat from '../../../core/concat';
+import * as Errors from '../../core/errors';
+import * as Arithmetic from '../../core/arithmetic';
+import * as Concat from '../../core/concat';
 
 import * as Expression from './expression';
 
-import { Metadata } from '../../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../../core/types';
-import { combineNodes } from '../../../core/ast';
-import { isLiteral } from '../../../core/data';
-import { Scope } from '../../scope';
+import { Metadata } from '../../core/metadata';
+import { ErrorTypes, NodeTypes } from '../../core/types';
+import { combineNodes } from '../../core/ast';
+import { isLiteral } from '../../core/data';
+import { Scope } from '../scope';
 
 const replaceMathExpression = (lhs: Arithmetic.ValueType, rhs: Arithmetic.ValueType, node: Core.Node<Metadata>) => {
   const value = Arithmetic.evaluate(lhs, rhs, node.value);

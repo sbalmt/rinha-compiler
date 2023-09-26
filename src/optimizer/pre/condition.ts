@@ -3,8 +3,8 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 import * as Block from './block';
 
-import { Metadata } from '../../../core/metadata';
-import { Scope } from '../../scope';
+import { Metadata } from '../../core/metadata';
+import { Scope } from '../scope';
 
 const removeDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
