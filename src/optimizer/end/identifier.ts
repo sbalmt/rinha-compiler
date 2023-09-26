@@ -12,5 +12,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return literal;
   }
 
-  return node;
+  return symbol.node;
 };
