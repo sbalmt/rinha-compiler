@@ -30,5 +30,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   blockScope.declarationNode = scope.declarationNode;
   blockScope.scopeNode = node;
 
-  return Block.consumeNodes(blockScope, blockScope.currentNode);
+  Block.consumeNodes(blockScope, blockScope.currentNode);
+
+  return undefined;
 };

@@ -26,7 +26,7 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
   if (followedSymbol !== symbol) {
     const identifierNode = followedSymbol.node!;
 
-    replaceNode(node, NodeTypes.IDENTIFIER, identifierNode.fragment);
+    replaceNode(node, NodeTypes.IDENTIFIER, identifierNode);
     replaceSymbol(symbol, followedSymbol.value, node);
   }
 
