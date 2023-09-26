@@ -14,6 +14,7 @@ export const consumeNodes = (node: Core.Node<Metadata>, options?: ScopeScopeOpti
 
     if (options?.debugMidOptimization) {
       printNodes(node);
+      console.log('');
     }
   }
 };
