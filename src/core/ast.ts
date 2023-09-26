@@ -8,12 +8,18 @@ export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Cor
   return new Core.Node(fragment, value, table);
 };
 
-export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, fragment?: Core.Fragment) => {
-  const replacement = createNode(fragment ?? node.fragment, value, node.table);
+export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, base?: Core.Node<Metadata>) => {
+  const replacement = createNode(base?.fragment ?? node.fragment, value, base?.table ?? node.table);
 
   replacement.set(Core.NodeDirection.Left, node.left);
   replacement.set(Core.NodeDirection.Right, node.right);
   replacement.set(Core.NodeDirection.Next, node.next);
+
+  if (base?.assigned) {
+    replacement.assign(base.data);
+  } else if (node.assigned) {
+    replacement.assign(node.data);
+  }
 
   node.swap(replacement);
 };
