@@ -1,19 +1,19 @@
 import * as Core from '@xcheme/core';
 
-import * as Binary from '../../ast/binary';
-import * as Assignment from '../../ast/assignment';
-import * as Literal from '../../ast/literal';
-import * as Ternary from '../../ast/ternary';
-import * as Closure from '../../ast/closure';
-import * as Invoke from '../../ast/invoke';
+import * as Binary from '../ast/binary';
+import * as Assignment from '../ast/assignment';
+import * as Literal from '../ast/literal';
+import * as Ternary from '../ast/ternary';
+import * as Closure from '../ast/closure';
 
 import * as Block from './block';
 import * as Condition from './condition';
 import * as Identifier from './identifier';
+import * as Invoke from './invoke';
 
-import { Metadata } from '../../../core/metadata';
-import { NodeTypes } from '../../../core/types';
-import { Scope } from '../../scope';
+import { Metadata } from '../../core/metadata';
+import { NodeTypes } from '../../core/types';
+import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   switch (node.value) {
@@ -51,7 +51,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       return Binary.consumeNode(scope, node, consumeNode);
 
     case NodeTypes.INVOKE:
-      return Invoke.consumeNode(scope, node, consumeNode);
+      return Invoke.consumeNode(scope, node);
 
     default:
       throw `Unable to optimize expression node type (${node.value}).`;

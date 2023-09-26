@@ -1,8 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../../../core/metadata';
-import { SymbolTypes } from '../../../core/types';
-import { Scope } from '../../scope';
+import { Metadata } from '../../core/metadata';
+import { SymbolTypes } from '../../core/types';
+import { Scope } from '../scope';
 
 const isBuiltIn = (symbol: Core.SymbolRecord<Metadata>) => {
   return symbol.value === SymbolTypes.BuiltIn;
