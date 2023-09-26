@@ -48,6 +48,10 @@ export class Scope extends BaseScope {
     this.currentNode = anchorNode.get(anchorDirection)!;
   }
 
+  isShadowing(node: Core.Node<Metadata>) {
+    return this.declarationNode?.fragment.data === node.fragment.data;
+  }
+
   get options(): ScopeScopeOptions {
     return super.options as ScopeScopeOptions;
   }

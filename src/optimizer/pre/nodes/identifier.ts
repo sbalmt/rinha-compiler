@@ -6,12 +6,8 @@ import { Metadata, initSymbol } from '../../../core/metadata';
 import { ErrorTypes } from '../../../core/types';
 import { Scope } from '../../scope';
 
-const isShadowing = (scope: Scope, node: Core.Node<Metadata>) => {
-  return scope.declarationNode?.fragment.data === node.fragment.data;
-};
-
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const table = isShadowing(scope, node) ? node.table.parent! : node.table;
+  const table = scope.isShadowing(node) ? node.table.parent! : node.table;
   const symbol = table.find(node.fragment);
 
   if (!symbol) {
