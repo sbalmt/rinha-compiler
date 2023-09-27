@@ -30,23 +30,20 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 
 try {
   const options: ScopeScopeOptions = {
-    debug: false,
-    // debugPreOptimization: true,
-    // debugMidOptimization: true,
-    // debugEndOptimization: true
     // enableHoisting: false,
-    // resolveReferences: false,
-    // resolveLiterals: false,
-    // removeDeadCode: false
+    // constantFolding: false,
+    // constantPropagation: false,
+    // enableMemoization: false,
+    // enableTailCall: false
   };
 
   applyBuiltIn(context.table);
 
-  PreOptimizer.consumeNodes(context.node, options);
-  MidOptimizer.consumeNodes(context.node, options);
-  EndOptimizer.consumeNodes(context.node, options);
+  PreOptimizer.consumeNodes(context.node, { ...options, debug: false });
+  MidOptimizer.consumeNodes(context.node, { ...options, debug: false });
+  EndOptimizer.consumeNodes(context.node, { ...options, debug: false });
 
-  Evaluator.consumeNodes(context.node, options);
+  Evaluator.consumeNodes(context.node, { debug: false });
 } catch (e) {
   console.error(e);
   process.exit(1);
