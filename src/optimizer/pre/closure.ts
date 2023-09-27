@@ -21,13 +21,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const parametersCount = countParameters(parametersNode.right!);
 
   initNode(node, {
-    minParams: parametersCount
+    minParams: parametersCount,
+    anonymous: scope.isAnonymous()
   });
 
   const blockNode = parametersNode.next!;
   const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope.options);
 
-  blockScope.declarationNode = scope.declarationNode;
   blockScope.scopeNode = node;
 
   Block.consumeNodes(blockScope, blockScope.currentNode);

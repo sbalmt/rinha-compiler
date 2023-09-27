@@ -9,6 +9,10 @@ import { ErrorTypes, NodeTypes } from '../../core/types';
 import { VarValueType } from '../../evaluator/scope';
 import { Scope } from '../scope';
 
+const isAnonymous = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+  return node instanceof Core.Node && node.value === NodeTypes.CLOSURE;
+};
+
 const isCallable = (symbol: VarValueType<Metadata>): symbol is Core.SymbolRecord<Metadata> => {
   return symbol instanceof Core.SymbolRecord && symbol.data.literal === undefined;
 };
@@ -21,7 +25,7 @@ const isTailCallInvocation = (node: Core.Node<Metadata>) => {
   return node.right!.value === NodeTypes.INVOKE;
 };
 
-const getParametersCount = (symbol: Core.SymbolRecord<Metadata>) => {
+const getParametersCountFromSymbol = (symbol: Core.SymbolRecord<Metadata>) => {
   const closureNode = symbol.node;
   const closureBody = closureNode?.right;
 
@@ -30,6 +34,17 @@ const getParametersCount = (symbol: Core.SymbolRecord<Metadata>) => {
   }
 
   return -1;
+};
+
+const getParametersCountFromClosure = (node: Core.Node<Metadata>) => {
+  return node.data.minParams;
+};
+
+const getParametersCount = (nodeOrSymbol: Core.SymbolRecord<Metadata> | Core.Node<Metadata>) => {
+  if (isAnonymous(nodeOrSymbol)) {
+    return getParametersCountFromClosure(nodeOrSymbol);
+  }
+  return getParametersCountFromSymbol(nodeOrSymbol);
 };
 
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -41,10 +56,9 @@ const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
-  const closureSymbol = Expression.consumeNode(scope, callerNode);
+  const closureNodeOrSymbol = Expression.consumeNode(scope, callerNode);
 
-  // TODO: Not all functions have symbol, let's fix that!
-  if (!isCallable(closureSymbol)) {
+  if (!isAnonymous(closureNodeOrSymbol) && !isCallable(closureNodeOrSymbol)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
   }
 
@@ -52,7 +66,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   initNode(node, {
     selfCall: isRecursiveInvocation(scope, callerNode),
-    minParams: getParametersCount(closureSymbol),
+    minParams: getParametersCount(closureNodeOrSymbol),
     tailCall: isTailCallInvocation(scope.currentNode)
   });
 

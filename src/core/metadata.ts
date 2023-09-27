@@ -8,6 +8,7 @@ export type NodeMetadata = {
   selfCall: boolean;
   minParams: number;
   maxParams: number;
+  anonymous: boolean;
   pure: boolean;
   value?: VarValueType<Metadata> | Scope<Metadata>;
 };
@@ -48,6 +49,7 @@ export const initNode = (node: Core.Node<Metadata>, initOptions?: Partial<NodeMe
       lazy: false,
       tailCall: false,
       selfCall: false,
+      anonymous: false,
       pure: true,
       ...initOptions,
       minParams,
