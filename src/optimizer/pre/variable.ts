@@ -17,10 +17,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const value = Variable.consumeNode(scope, node, Expression.consumeNode);
   const data = initSymbol(symbol);
 
-  if (isReference(value)) {
-    data.follow = value.data.symbol;
-  } else {
+  if (!isReference(value)) {
     data.literal = value;
+  } else if (value.assigned) {
+    data.follow = value.data.symbol;
   }
 
   return undefined;

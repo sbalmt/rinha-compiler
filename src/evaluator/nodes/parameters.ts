@@ -14,7 +14,7 @@ export const consumeNodes = (
   parameterNode: Core.Node<Metadata>,
   argumentNode: Core.Node<Metadata>
 ) => {
-  const closureScope = closureNode.data.value as Scope<Metadata>;
+  const closureScope = closureNode.data.scope!;
   const callScope = new Scope(closureScope, closureScope.options);
 
   while (parameterNode && argumentNode) {

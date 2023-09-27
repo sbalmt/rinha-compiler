@@ -29,22 +29,16 @@ const consumeSingleNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): V
       return consumeInnerNode(scope, node.right!);
 
     default:
-      throw `[EVL]: Unexpected block node type (${node.value}).`;
+      throw `Unexpected block node type (${node.value}).`;
   }
 
   return undefined;
 };
 
 export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const { debug } = scope.options;
-
   let value;
 
   while (node) {
-    if (debug) {
-      console.log('EVL', node.value, node.fragment.data);
-    }
-
     value = consumeSingleNode(scope, node);
     node = node.next!;
   }

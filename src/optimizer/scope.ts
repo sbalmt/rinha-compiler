@@ -4,13 +4,11 @@ import { Metadata } from '../core/metadata';
 import { BaseScope, BaseScopeOptions } from '../core/scope';
 
 export type ScopeScopeOptions = BaseScopeOptions & {
-  debugPreOptimization?: boolean;
-  debugMidOptimization?: boolean;
-  debugEndOptimization?: boolean;
-
   enableHoisting?: boolean;
-  constantPropagation?: boolean;
   constantFolding?: boolean;
+  constantPropagation?: boolean;
+  enableMemoization?: boolean;
+  enableTailCall?: boolean;
 };
 
 export class Scope extends BaseScope {
@@ -30,12 +28,11 @@ export class Scope extends BaseScope {
 
   constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: ScopeScopeOptions) {
     super({
-      debugPreOptimization: false,
-      debugMidOptimization: false,
-      debugEndOptimization: false,
       enableHoisting: true,
-      constantPropagation: true,
       constantFolding: true,
+      constantPropagation: true,
+      enableMemoization: true,
+      enableTailCall: true,
       ...options
     });
 

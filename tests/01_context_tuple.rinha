@@ -1,0 +1,19 @@
+// This function produces:
+// (("a","b"),("c", ("d","efg")))
+
+let f1 = fn (c) => {
+  let e = fn () => "e";
+  let f2 = ("a", "b"); 
+
+  fn (d) => {
+    (f2, (c, (d, e() + "fg")))
+  }
+};
+
+let f3 = f1("c");
+
+assert(first(first(f3("d"))) == "a")
+assert(second(first(f3("d"))) == "b")
+assert(first(second(f3("d"))) == "c")
+assert(first(second(second(f3("d")))) == "d")
+assert(second(second(second(f3("d")))) == "efg")

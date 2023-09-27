@@ -33,15 +33,15 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const rhs = Expression.consumeNode(scope, node.right!);
 
   if (!isLiteral(lhs) || !isLiteral(rhs)) {
-    return undefined;
+    return node;
   }
 
   if (Arithmetic.isPerformable(lhs) && Arithmetic.isPerformable(rhs)) {
-    return constantFolding ? replaceMathExpression(lhs, rhs, node) : undefined;
+    return constantFolding ? replaceMathExpression(lhs, rhs, node) : node;
   }
 
   if (node.value === NodeTypes.ADD && Concat.isPerformable(lhs) && Concat.isPerformable(rhs)) {
-    return constantFolding ? replaceConcatExpression(lhs, rhs, node) : undefined;
+    return constantFolding ? replaceConcatExpression(lhs, rhs, node) : node;
   }
 
   if (!Concat.isPerformable(lhs)) {

@@ -4,8 +4,8 @@ import * as Errors from '../core/errors';
 import * as Expression from './nodes/expression';
 
 import { Metadata } from '../core/metadata';
-import { convertToString } from '../core/data';
 import { ErrorTypes, NodeTypes } from '../core/types';
+import { convertToString } from '../core/data';
 import { Scope } from './scope';
 
 export const applyBuiltIn = (scope: Scope<Metadata>): void => {
@@ -52,6 +52,8 @@ const assertFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
 
 const printFn = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const result = Expression.consumeNode(scope, node);
+
   console.log(convertToString(result));
+
   return result;
 };

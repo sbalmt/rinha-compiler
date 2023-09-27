@@ -12,7 +12,7 @@ export const consumeNodes = (node: Core.Node<Metadata>, options?: ScopeScopeOpti
   if (scope.currentNode) {
     Block.consumeNodes(scope, scope.currentNode);
 
-    if (options?.debugMidOptimization) {
+    if (options?.debug) {
       printNodes(node);
       console.log('');
     }

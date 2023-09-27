@@ -39,6 +39,8 @@ const consumeArgumentNodes = (scope: Scope, argumentNode: Core.Node<Metadata>) =
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const { enableTailCall, enableMemoization } = scope.options;
+
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
   const argumentsCount = consumeArgumentNodes(scope, argumentsNode);
@@ -68,18 +70,24 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   if (!selfCall && tailCall && lazy) {
-    replaceNode(node, NodeTypes.TAIL_CALL);
+    if (enableTailCall) {
+      replaceNode(node, NodeTypes.TAIL_CALL);
+    }
     return undefined;
   }
 
   if (selfCall && tailCall) {
-    replaceNode(node, NodeTypes.LAZY_CALL);
-    closureBody.data.lazy = true;
+    if (enableTailCall) {
+      replaceNode(node, NodeTypes.LAZY_CALL);
+      closureBody.data.lazy = true;
+    }
     return undefined;
   }
 
   if (selfCall && pure && minParams > 0) {
-    replaceNode(node, NodeTypes.MEMO_CALL);
+    if (enableMemoization) {
+      replaceNode(node, NodeTypes.MEMO_CALL);
+    }
     return undefined;
   }
 
