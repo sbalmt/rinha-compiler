@@ -27,11 +27,12 @@ const hoistDefinition = (scope: Scope) => {
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { enableHoisting, constantPropagation } = scope.options;
+  const { enableHoisting, constantFolding, constantPropagation } = scope.options;
+
   const symbol = node.table.find(node.fragment)!;
   const data = symbol.data;
 
-  if (constantPropagation && canRemoveDefinition(symbol)) {
+  if ((constantFolding || constantPropagation) && canRemoveDefinition(symbol)) {
     removeDefinition(scope);
     return undefined;
   }
