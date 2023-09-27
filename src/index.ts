@@ -31,9 +31,9 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 try {
   const options: ScopeScopeOptions = {
     debug: false,
-    debugPreOptimization: false,
-    debugMidOptimization: false,
-    debugEndOptimization: false
+    // debugPreOptimization: true,
+    // debugMidOptimization: true,
+    // debugEndOptimization: true
     // enableHoisting: false,
     // resolveReferences: false,
     // resolveLiterals: false,

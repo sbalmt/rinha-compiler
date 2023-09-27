@@ -20,7 +20,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const parametersNode = node.right!;
   const parametersCount = countParameters(parametersNode.right!);
 
-  initNode(node, {
+  const data = initNode(node, {
     minParams: parametersCount,
     anonymous: scope.isAnonymous()
   });
@@ -31,6 +31,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   blockScope.scopeNode = node;
 
   Block.consumeNodes(blockScope, blockScope.currentNode);
+
+  if (!data.anonymous) {
+    return undefined;
+  }
 
   return node;
 };

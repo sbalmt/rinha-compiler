@@ -8,6 +8,10 @@ import { Metadata, initSymbol } from '../../core/metadata';
 import { VarValueType } from '../../evaluator/scope';
 import { Scope } from '../scope';
 
+const isAnonymous = (value: VarValueType<Metadata>): value is Core.Node<Metadata> => {
+  return value instanceof Core.Node;
+};
+
 const isReference = (value: VarValueType<Metadata>): value is Core.SymbolRecord<Metadata> => {
   return value instanceof Core.SymbolRecord;
 };
@@ -19,7 +23,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (!isReference(value)) {
     data.literal = value;
-  } else {
+  } else if (!isAnonymous(value)) {
     data.follow = value;
   }
 

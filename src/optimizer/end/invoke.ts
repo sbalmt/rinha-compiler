@@ -46,11 +46,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
   if (!isOptimizable(closureNode)) {
-    /*if (closureNode instanceof Core.Node) {
-      console.log(closureNode.value, closureNode.fragment.data, closureNode.assigned && closureNode.data);
-    } else {
-      console.log(callerNode.value, callerNode.fragment.data, callerNode.assigned && callerNode.data);
-    }*/
     return undefined;
   }
 
