@@ -11,8 +11,8 @@ import { ErrorTypes, NodeTypes } from '../../core/types';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
-const isCallable = (node: Core.Node<Metadata>) => {
-  return node.value === NodeTypes.CLOSURE;
+const isCallable = (node: Core.Node<Metadata> | undefined) => {
+  return node?.value === NodeTypes.CLOSURE;
 };
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
@@ -31,7 +31,7 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   }
 
   if (!isCallable(closureNode)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, closureNode.fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? callerNode).fragment);
   }
 
   const closureParameters = closureNode.right!;

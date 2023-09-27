@@ -51,10 +51,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const table = scope.isShadowing(node) ? node.table.parent! : node.table;
   const symbol = table.find(node.fragment)!;
 
-  const { resolveReferences } = scope.options;
+  const { constantPropagation } = scope.options;
   const { mutable, literal } = symbol.data;
 
-  if (mutable || !resolveReferences) {
+  if (mutable || !constantPropagation) {
     return symbol;
   }
 

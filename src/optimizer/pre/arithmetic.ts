@@ -27,7 +27,7 @@ const replaceConcatExpression = (lhs: Concat.ValueType, rhs: Concat.ValueType, n
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { resolveLiterals } = scope.options;
+  const { constantFolding } = scope.options;
 
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
@@ -37,11 +37,11 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   if (Arithmetic.isPerformable(lhs) && Arithmetic.isPerformable(rhs)) {
-    return resolveLiterals ? replaceMathExpression(lhs, rhs, node) : undefined;
+    return constantFolding ? replaceMathExpression(lhs, rhs, node) : undefined;
   }
 
   if (node.value === NodeTypes.ADD && Concat.isPerformable(lhs) && Concat.isPerformable(rhs)) {
-    return resolveLiterals ? replaceConcatExpression(lhs, rhs, node) : undefined;
+    return constantFolding ? replaceConcatExpression(lhs, rhs, node) : undefined;
   }
 
   if (!Concat.isPerformable(lhs)) {

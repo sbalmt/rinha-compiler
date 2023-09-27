@@ -19,7 +19,7 @@ const replaceExpression = (lhs: Relational.ValueType, rhs: Relational.ValueType,
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { resolveLiterals } = scope.options;
+  const { constantFolding } = scope.options;
 
   const lhs = Expression.consumeNode(scope, node.left!);
   const rhs = Expression.consumeNode(scope, node.right!);
@@ -40,7 +40,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
   }
 
-  if (resolveLiterals) {
+  if (constantFolding) {
     return replaceExpression(lhs, rhs, node);
   }
 

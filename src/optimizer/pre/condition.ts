@@ -22,19 +22,19 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { removeDeadCode } = scope.options;
+  const { constantPropagation } = scope.options;
   const condition = Expression.consumeNode(scope, node.right!);
 
   const successBlock = node.next!;
   const failureBlock = successBlock.next!;
 
-  if (removeDeadCode && condition === true) {
+  if (constantPropagation && condition === true) {
     if (successBlock.right) {
       replaceDefinition(scope, successBlock);
     } else {
       removeDefinition(scope);
     }
-  } else if (removeDeadCode && condition === false) {
+  } else if (constantPropagation && condition === false) {
     if (failureBlock && failureBlock.right) {
       replaceDefinition(scope, failureBlock);
     } else {

@@ -9,9 +9,8 @@ export type ScopeScopeOptions = BaseScopeOptions & {
   debugEndOptimization?: boolean;
 
   enableHoisting?: boolean;
-  resolveReferences?: boolean;
-  resolveLiterals?: boolean;
-  removeDeadCode?: boolean;
+  constantPropagation?: boolean;
+  constantFolding?: boolean;
 };
 
 export class Scope extends BaseScope {
@@ -35,9 +34,8 @@ export class Scope extends BaseScope {
       debugMidOptimization: false,
       debugEndOptimization: false,
       enableHoisting: true,
-      resolveReferences: true,
-      resolveLiterals: true,
-      removeDeadCode: true,
+      constantPropagation: true,
+      constantFolding: true,
       ...options
     });
 
