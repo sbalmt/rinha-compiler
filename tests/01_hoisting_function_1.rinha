@@ -4,7 +4,6 @@ let hoisting1 = fn (num) => {
   })()
 
   let hst1 = 2;
-  rec()
 };
 
 assert(hoisting1(25) == 50)
