@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Expression from './nodes/expression';
-
 import { Metadata } from '../core/metadata';
 import { BaseScope, BaseScopeOptions } from '../core/scope';
 import { LazyCall } from './lazy';
@@ -90,23 +88,3 @@ export class Scope<T extends Metadata> extends BaseScope {
     }
   }
 }
-
-export const createCallScope = (
-  parent: Scope<Metadata>,
-  closureNode: Core.Node<Metadata>,
-  parameterNode: Core.Node<Metadata>,
-  argumentNode: Core.Node<Metadata>
-) => {
-  const callScope = closureNode.data.value as Scope<Metadata>;
-  const scope = new Scope(callScope, callScope.options);
-
-  while (parameterNode && argumentNode) {
-    const argumentValue = Expression.consumeNode(parent, argumentNode);
-    scope.createVariable(parameterNode, argumentValue);
-
-    parameterNode = parameterNode.next!;
-    argumentNode = argumentNode.next!;
-  }
-
-  return scope;
-};

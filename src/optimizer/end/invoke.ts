@@ -22,16 +22,16 @@ const isUserDefinedClosure = (node: Core.Node<Metadata>) => {
   return node.value === NodeTypes.CLOSURE;
 };
 
-const isOptimizable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
-  return isCallable(node) && (isBuiltInClosure(node.right!) || isUserDefinedClosure(node.right!));
+const isOptimizable = (callerNode: VarValueType<Metadata>): callerNode is Core.Node<Metadata> => {
+  return isCallable(callerNode) && (isBuiltInClosure(callerNode.right!) || isUserDefinedClosure(callerNode.right!));
 };
 
-const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeArgumentNodes = (scope: Scope, argumentNode: Core.Node<Metadata>) => {
   let counter = 0;
 
-  while (node) {
-    Expression.consumeNode(scope, node);
-    node = node.next!;
+  while (argumentNode) {
+    Expression.consumeNode(scope, argumentNode);
+    argumentNode = argumentNode.next!;
     counter++;
   }
 
@@ -46,6 +46,11 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
   if (!isOptimizable(closureNode)) {
+    if (closureNode instanceof Core.Node) {
+      console.log(closureNode.value, closureNode.fragment.data, closureNode.assigned && closureNode.data);
+    } else {
+      console.log(callerNode.value, callerNode.fragment.data, callerNode.assigned && callerNode.data);
+    }
     return undefined;
   }
 
@@ -55,7 +60,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { tailCall, selfCall } = node.data;
 
   if (argumentsCount > parameters) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, argumentsNode.fragment);
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
   }
 
   if (argumentsCount < parameters) {

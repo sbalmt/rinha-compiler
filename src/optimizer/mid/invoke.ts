@@ -41,17 +41,17 @@ const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
-  const symbol = Expression.consumeNode(scope, callerNode);
+  const closureSymbol = Expression.consumeNode(scope, callerNode);
 
   // TODO: Not all functions have symbol, let's fix that!
-  if (!isCallable(symbol)) {
+  if (!isCallable(closureSymbol)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
   }
 
   consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
-    parameters: getParametersCount(symbol),
+    parameters: getParametersCount(closureSymbol),
     tailCall: isTailCallInvocation(scope.currentNode),
     selfCall: isRecursiveInvocation(scope, callerNode)
   });
