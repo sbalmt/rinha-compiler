@@ -1,2 +1,2 @@
 assert(first((fn() => "first", fn() => "second"))() == "first")
-assert(first((fn() => "first", fn() => "second"))() == "second")
+assert(second((fn() => "first", fn() => "second"))() == "second")
