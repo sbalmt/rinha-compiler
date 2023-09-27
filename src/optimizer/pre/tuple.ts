@@ -7,9 +7,9 @@ import { VarTupleType } from '../../evaluator/scope';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const first = Expression.consumeNode(scope, node.right!);
-  const second = Expression.consumeNode(scope, node.right!.next!);
-  const value = [first, second] as VarTupleType<Metadata>;
+  const firstValue = Expression.consumeNode(scope, node.right!);
+  const secondValue = Expression.consumeNode(scope, node.right!.next!);
+  const value = [firstValue, secondValue] as VarTupleType<Metadata>;
 
   initNode(node, {
     value

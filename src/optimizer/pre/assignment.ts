@@ -10,19 +10,21 @@ import { ErrorTypes, NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const targetNode = node.left!;
+  const lhsNode = node.left!;
+  const rhsNode = node.right!;
 
-  if (targetNode.value !== NodeTypes.IDENTIFIER) {
-    throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, targetNode.fragment);
+  if (lhsNode.value !== NodeTypes.IDENTIFIER) {
+    throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, lhsNode.fragment);
   }
 
-  const symbol = Identifier.consumeNode(scope, targetNode);
+  const targetNode = Identifier.consumeNode(scope, lhsNode);
+  const { symbol } = targetNode.data;
 
-  symbol.data.mutable = true;
+  symbol!.data.mutable = true;
 
   if (scope.scopeNode) {
     scope.scopeNode.data.pure = false;
   }
 
-  return Expression.consumeNode(scope, node.right!);
+  return Expression.consumeNode(scope, rhsNode);
 };
