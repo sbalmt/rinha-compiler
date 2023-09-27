@@ -1,8 +1,0 @@
-let test = fn (input) => {
-  fn (first, second) => {
-    assert(false)
-  }
-};
-
-test(10)(20)
-assert(false)

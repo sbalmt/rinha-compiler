@@ -1,0 +1,8 @@
+let sum = fn (n, m) => n + m;
+
+let test = fn (callback) => fn (arg) => {
+  callback(arg)
+  assert(false, "This function must never been called.")
+};
+
+test(sum)(10)

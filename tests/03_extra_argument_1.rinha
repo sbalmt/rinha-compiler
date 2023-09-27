@@ -1,0 +1,3 @@
+let test = fn () => assert(false, "This function must never been called.");
+
+test("extra")

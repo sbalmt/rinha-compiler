@@ -1,0 +1,3 @@
+print(true, "extra")
+
+assert(false, "This assertion must never been called.")

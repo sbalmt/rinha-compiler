@@ -1,0 +1,6 @@
+let test = fn (callee, arg) => {
+  callee()
+  assert(false, "This function must never been called.")
+};
+
+test(print, "hey")

@@ -14,7 +14,7 @@ const printFragment = new Core.Fragment('print', 0, 5, location);
 export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
   insertBuiltIn(firstFragment, table, { parameters: 1 });
   insertBuiltIn(secondFragment, table, { parameters: 1 });
-  insertBuiltIn(assertFragment, table, { parameters: 1 });
+  insertBuiltIn(assertFragment, table, { parameters: 2 });
   insertBuiltIn(printFragment, table, { parameters: 1, pure: false });
 };
 

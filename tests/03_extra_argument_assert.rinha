@@ -1,0 +1,2 @@
+assert(true, "error message", "extra")
+assert(false, "This assertion must never been called.")

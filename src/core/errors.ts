@@ -13,12 +13,12 @@ const errorMessages = {
   [ErrorTypes.INVALID_OPERATION]: 'Operation at line {1}, column {2} is not valid.',
   [ErrorTypes.UNSUPPORTED_OPERATION]: 'Operation at line {1}, column {2} is not supported.',
   [ErrorTypes.UNSUPPORTED_CALL]: 'Unable to call `{0}` at line {1}, column {2} before its definition.',
-  [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument for `{0}` at line {1}, column {2}.',
-  [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument for `{0}` at line {1}, column {2} is not necessary.',
+  [ErrorTypes.MISSING_ARGUMENT]: 'Missing argument at line {1}, column {2}.',
+  [ErrorTypes.EXTRA_ARGUMENT]: 'Extra argument at line {1}, column {2} is not necessary.',
   [ErrorTypes.ASSERTION_FAILED]: 'Assertion `{0}` at line {1}, column {2} has been failed.'
 };
 
-const buildMessage = (message: string, fragment: Core.Fragment) => {
+export const formatMessage = (message: string, fragment: Core.Fragment) => {
   const location = fragment.location;
 
   return message.replace(/(\{[0-2]\})/g, (match: string): string => {
@@ -44,7 +44,7 @@ export const getMessage = (value: number, fragment: Core.Fragment) => {
     throw `Error message (code: ${value}) doesn't found.`;
   }
 
-  return buildMessage(message, fragment);
+  return formatMessage(message, fragment);
 };
 
 export const printLogs = (logs: Core.LogList): void => {

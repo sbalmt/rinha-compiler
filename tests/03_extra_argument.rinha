@@ -1,5 +1,0 @@
-let test = fn () => {
-  assert(false)
-};
-
-test("extra")
