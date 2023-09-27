@@ -7,6 +7,8 @@ import { ErrorTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const { enableHoisting } = scope.options;
+
   const table = scope.isShadowing(node) ? node.table.parent! : node.table;
   const symbol = table.find(node.fragment);
 
@@ -21,6 +23,10 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const data = initSymbol(symbol, {
     hoist: true
   });
+
+  if (data.hoist && !enableHoisting) {
+    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
+  }
 
   data.references++;
 
