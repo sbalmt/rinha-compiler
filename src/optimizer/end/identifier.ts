@@ -6,7 +6,7 @@ import { Scope } from '../scope';
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { constantFolding } = scope.options;
 
-  const table = scope.isShadowing(node) ? node.table.parent! : node.table;
+  const table = scope.isMatchingDeclaration(node) ? node.table.parent! : node.table;
   const symbol = table.find(node.fragment)!;
 
   const { mutable, literal } = symbol.data;

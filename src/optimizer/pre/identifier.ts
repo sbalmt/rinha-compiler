@@ -3,13 +3,21 @@ import * as Core from '@xcheme/core';
 import * as Errors from '../../core/errors';
 
 import { Metadata, initNode, initSymbol } from '../../core/metadata';
-import { ErrorTypes } from '../../core/types';
+import { ErrorTypes, SymbolTypes } from '../../core/types';
 import { Scope } from '../scope';
+
+const canHoist = (symbol: Core.SymbolRecord<Metadata>) => {
+  return symbol.value === SymbolTypes.Identifier;
+};
+
+const isNotRecursive = (scope: Scope, node: Core.Node<Metadata>) => {
+  return !scope.isMatchingDeclaration(node);
+};
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { enableHoisting } = scope.options;
 
-  const table = scope.isShadowing(node) ? node.table.parent! : node.table;
+  const table = scope.isMatchingDeclaration(node) ? node.table.parent! : node.table;
   const symbol = table.find(node.fragment);
 
   if (!symbol) {
@@ -21,7 +29,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   });
 
   const data = initSymbol(symbol, {
-    hoist: true
+    hoist: isNotRecursive(scope, node) && canHoist(symbol)
   });
 
   if (data.hoist && !enableHoisting) {

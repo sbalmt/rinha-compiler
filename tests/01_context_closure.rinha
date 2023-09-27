@@ -1,9 +1,9 @@
+let extra = 9;
+
 let generator = fn (base) => {
-  let closure = fn (num) => num * multiplier + extra / base;
   let multiplier = 10;
+  let closure = fn (num) => num * multiplier + extra / base;
   closure
 };
-
-let extra = 9;
 
 assert(generator(2)(5) == 54)

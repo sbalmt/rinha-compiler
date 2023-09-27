@@ -43,11 +43,7 @@ export class Scope extends BaseScope {
     this.currentNode = anchorNode.get(anchorDirection)!;
   }
 
-  isAnonymous() {
-    return this.declarationNode === undefined;
-  }
-
-  isShadowing(node: Core.Node<Metadata>) {
+  isMatchingDeclaration(node: Core.Node<Metadata>) {
     return this.declarationNode?.fragment.data === node.fragment.data;
   }
 
