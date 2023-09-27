@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Identifier from './identifier';
 import * as Literals from './literal';
+import * as Tuple from './tuple';
 import * as Closure from './closure';
 import * as Ternary from './ternary';
 import * as Assignment from './assignment';
@@ -27,8 +28,10 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
     case NodeTypes.INTEGER:
     case NodeTypes.STRING:
     case NodeTypes.BOOLEAN:
-    case NodeTypes.TUPLE:
       return Literals.consumeNode(node);
+
+    case NodeTypes.TUPLE:
+      return Tuple.consumeNode(scope, node);
 
     case NodeTypes.CLOSURE:
       return Closure.consumeNode(scope, node);

@@ -1,0 +1,2 @@
+assert(first((fn() => "first", fn() => "second"))() == "first")
+assert(first((fn() => "first", fn() => "second"))() == "second")
