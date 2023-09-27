@@ -1,0 +1,2 @@
+(fn (arg) => assert(arg == false))(false)
+(fn (arg) => assert(arg))(true)
