@@ -6,7 +6,8 @@ export type NodeMetadata = {
   lazy: boolean;
   tailCall: boolean;
   selfCall: boolean;
-  parameters: number;
+  minParams: number;
+  maxParams: number;
   pure: boolean;
   value?: VarValueType<Metadata> | Scope<Metadata>;
 };
@@ -40,13 +41,17 @@ export const initSymbol = (symbol: Core.SymbolRecord<Metadata>, initOptions?: Pa
 
 export const initNode = (node: Core.Node<Metadata>, initOptions?: Partial<NodeMetadata>) => {
   if (!node.assigned) {
+    const minParams = initOptions?.minParams ?? 0;
+    const maxParams = initOptions?.maxParams ?? minParams;
+
     node.assign({
       lazy: false,
       tailCall: false,
       selfCall: false,
-      parameters: 0,
       pure: true,
-      ...initOptions
+      ...initOptions,
+      minParams,
+      maxParams
     });
   }
 

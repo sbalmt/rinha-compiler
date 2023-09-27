@@ -56,15 +56,15 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const closureBody = closureNode.right!;
 
-  const { lazy, pure, parameters } = closureBody.data;
+  const { lazy, pure, minParams, maxParams } = closureBody.data;
   const { tailCall, selfCall } = node.data;
 
-  if (argumentsCount > parameters) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
+  if (argumentsCount < minParams) {
+    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
   }
 
-  if (argumentsCount < parameters) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
+  if (argumentsCount > maxParams) {
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
   }
 
   if (isBuiltInClosure(closureNode)) {
@@ -83,7 +83,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     return undefined;
   }
 
-  if (selfCall && pure && parameters > 0) {
+  if (selfCall && pure && minParams > 0) {
     replaceNode(node, NodeTypes.MEMO_CALL);
     return undefined;
   }

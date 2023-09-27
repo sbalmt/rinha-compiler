@@ -12,10 +12,10 @@ const assertFragment = new Core.Fragment('assert', 0, 6, location);
 const printFragment = new Core.Fragment('print', 0, 5, location);
 
 export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
-  insertBuiltIn(firstFragment, table, { parameters: 1 });
-  insertBuiltIn(secondFragment, table, { parameters: 1 });
-  insertBuiltIn(assertFragment, table, { parameters: 2 });
-  insertBuiltIn(printFragment, table, { parameters: 1, pure: false });
+  insertBuiltIn(firstFragment, table, { minParams: 1 });
+  insertBuiltIn(secondFragment, table, { minParams: 1 });
+  insertBuiltIn(assertFragment, table, { minParams: 1, maxParams: 2 });
+  insertBuiltIn(printFragment, table, { minParams: 1, pure: false });
 };
 
 const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>, options?: Partial<NodeMetadata>) => {

@@ -21,7 +21,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const parametersCount = countParameters(parametersNode.right!);
 
   initNode(node, {
-    parameters: parametersCount
+    minParams: parametersCount
   });
 
   const blockNode = parametersNode.next!;

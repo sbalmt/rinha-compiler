@@ -26,7 +26,7 @@ const getParametersCount = (symbol: Core.SymbolRecord<Metadata>) => {
   const closureBody = closureNode?.right;
 
   if (closureBody && closureBody.assigned) {
-    return closureBody.data.parameters;
+    return closureBody.data.minParams;
   }
 
   return -1;
@@ -51,9 +51,9 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
-    parameters: getParametersCount(closureSymbol),
-    tailCall: isTailCallInvocation(scope.currentNode),
-    selfCall: isRecursiveInvocation(scope, callerNode)
+    selfCall: isRecursiveInvocation(scope, callerNode),
+    minParams: getParametersCount(closureSymbol),
+    tailCall: isTailCallInvocation(scope.currentNode)
   });
 
   return Expression.consumeNode(scope, callerNode);
