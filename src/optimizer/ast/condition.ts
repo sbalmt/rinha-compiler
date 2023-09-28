@@ -31,5 +31,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, consumers: 
     consumeInnerNode(scope, failureBlock, consumers.blockConsumer);
   }
 
-  return undefined;
+  return node;
 };
