@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Literal from '../ast/literal';
 import * as Closure from '../ast/closure';
+import * as Tuple from '../ast/tuple';
 import * as Ternary from '../ast/ternary';
 import * as Assignment from '../ast/assignment';
 import * as Binary from '../ast/binary';
@@ -9,7 +10,6 @@ import * as Binary from '../ast/binary';
 import * as Block from './block';
 import * as Condition from './condition';
 import * as Identifier from './identifier';
-import * as Tuple from './tuple';
 import * as Invoke from './invoke';
 
 import { Metadata } from '../../core/metadata';
@@ -31,7 +31,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueTy
       return Closure.consumeNode(scope, node, Block.consumeNodes);
 
     case NodeTypes.TUPLE:
-      return Tuple.consumeNode(scope, node);
+      return Tuple.consumeNode(scope, node, consumeNode);
 
     case NodeTypes.TERNARY:
       return Ternary.consumeNode(scope, node, Condition.consumeNode);

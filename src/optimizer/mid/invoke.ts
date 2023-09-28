@@ -14,7 +14,7 @@ const isAnonymous = (node: VarValueType<Metadata>): node is Core.Node<Metadata> 
 };
 
 const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
-  return node instanceof Core.Node && node.data.symbol!.data.literal === undefined;
+  return node instanceof Core.Node && node.data.symbol?.data.literal === undefined;
 };
 
 const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -50,5 +50,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     minParams
   });
 
-  return Expression.consumeNode(scope, callerNode);
+  Expression.consumeNode(scope, callerNode);
+
+  return node;
 };

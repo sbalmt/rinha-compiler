@@ -11,7 +11,7 @@ import { replaceNode } from '../../core/ast';
 import { Scope } from '../scope';
 
 const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
-  return node instanceof Core.Node;
+  return node instanceof Core.Node && node.right instanceof Core.Node;
 };
 
 const isBuiltInClosure = (node: Core.Node<Metadata>) => {
@@ -48,7 +48,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
   if (!isOptimizable(closureNode)) {
-    return undefined;
+    return node;
   }
 
   const closureBody = closureNode.right!;
@@ -66,14 +66,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if (isBuiltInClosure(closureNode)) {
     replaceNode(closureNode, NodeTypes.FAST_CALL);
-    return undefined;
+    return node;
   }
 
   if (!selfCall && tailCall && lazy) {
     if (enableTailCall) {
       replaceNode(node, NodeTypes.TAIL_CALL);
     }
-    return undefined;
+    return node;
   }
 
   if (selfCall && tailCall) {
@@ -81,15 +81,15 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
       replaceNode(node, NodeTypes.LAZY_CALL);
       closureBody.data.lazy = true;
     }
-    return undefined;
+    return node;
   }
 
   if (selfCall && pure && minParams > 0) {
     if (enableMemoization) {
       replaceNode(node, NodeTypes.MEMO_CALL);
     }
-    return undefined;
+    return node;
   }
 
-  return undefined;
+  return node;
 };
