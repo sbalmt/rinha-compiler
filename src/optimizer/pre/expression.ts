@@ -1,6 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Invoke from '../ast/invoke';
 import * as Identifier from './identifier';
 import * as Integer from './integer';
 import * as String from './string';
@@ -13,6 +12,7 @@ import * as Logical from './logical';
 import * as Equality from './equality';
 import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
+import * as Invoke from '../ast/invoke';
 
 import { VarValueType } from '../../evaluator/scope';
 import { Metadata } from '../../core/metadata';

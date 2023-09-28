@@ -31,10 +31,10 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
   if (reference && reference !== symbol) {
     const identifierNode = reference.node!;
     replaceNode(node, NodeTypes.IDENTIFIER, identifierNode);
-    return replaceSymbol(symbol, reference.value, node);
+    replaceSymbol(symbol, reference.value, node);
   }
 
-  return symbol;
+  return node;
 };
 
 const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
@@ -50,13 +50,11 @@ const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<M
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { constantFolding, constantPropagation } = scope.options;
 
-  const table = scope.isMatchingDeclaration(node) ? node.table.parent! : node.table;
-  const symbol = table.find(node.fragment)!;
-
+  const symbol = node.data.symbol!;
   const { mutable, literal } = symbol.data;
 
   if (mutable || (!constantFolding && !constantPropagation)) {
-    return symbol;
+    return node;
   }
 
   if (literal !== undefined) {

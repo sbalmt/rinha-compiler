@@ -11,5 +11,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, expressionC
   expressionConsumer(scope, leftHandSideNode);
   expressionConsumer(scope, rightHandSideNode);
 
-  return undefined;
+  return node;
 };

@@ -11,6 +11,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const second = Expression.consumeNode(scope, node.right!.next!);
   const value = [first, second] as VarTupleType<Metadata>;
 
+  node.set(Core.NodeDirection.Right, undefined);
+
   initNode(node, {
     value
   });

@@ -13,8 +13,8 @@ const isAnonymous = (node: VarValueType<Metadata>): node is Core.Node<Metadata> 
   return node instanceof Core.Node && node.value === NodeTypes.CLOSURE;
 };
 
-const isCallable = (symbol: VarValueType<Metadata>): symbol is Core.SymbolRecord<Metadata> => {
-  return symbol instanceof Core.SymbolRecord && symbol.data.literal === undefined;
+const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+  return node instanceof Core.Node && node.data.symbol!.data.literal === undefined;
 };
 
 const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -23,28 +23,6 @@ const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
 
 const isTailCallInvocation = (node: Core.Node<Metadata>) => {
   return node.right!.value === NodeTypes.INVOKE;
-};
-
-const getParametersCountFromSymbol = (symbol: Core.SymbolRecord<Metadata>) => {
-  const closureNode = symbol.node;
-  const closureBody = closureNode?.right;
-
-  if (closureBody && closureBody.assigned) {
-    return closureBody.data.minParams;
-  }
-
-  return -1;
-};
-
-const getParametersCountFromClosure = (node: Core.Node<Metadata>) => {
-  return node.data.minParams;
-};
-
-const getParametersCount = (nodeOrSymbol: Core.SymbolRecord<Metadata> | Core.Node<Metadata>) => {
-  if (isAnonymous(nodeOrSymbol)) {
-    return getParametersCountFromClosure(nodeOrSymbol);
-  }
-  return getParametersCountFromSymbol(nodeOrSymbol);
 };
 
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
@@ -56,18 +34,20 @@ const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const callerNode = node.left!;
-  const closureNodeOrSymbol = Expression.consumeNode(scope, callerNode);
+  const closureNode = Expression.consumeNode(scope, callerNode);
 
-  if (!isAnonymous(closureNodeOrSymbol) && !isCallable(closureNodeOrSymbol)) {
+  if (!isAnonymous(closureNode) && !isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
   }
+
+  const { minParams } = closureNode.data;
 
   consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
+    tailCall: isTailCallInvocation(scope.currentNode),
     selfCall: isRecursiveInvocation(scope, callerNode),
-    minParams: getParametersCount(closureNodeOrSymbol),
-    tailCall: isTailCallInvocation(scope.currentNode)
+    minParams
   });
 
   return Expression.consumeNode(scope, callerNode);
