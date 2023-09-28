@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import * as Closure from '../ast/closure';
+
 import * as Block from './block';
 
 import { Metadata, initNode } from '../../core/metadata';
@@ -24,13 +26,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     minParams: parametersCount
   });
 
-  const blockNode = parametersNode.next!;
-  const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope.options);
-
-  blockScope.declarationNode = scope.declarationNode;
-  blockScope.scopeNode = node;
-
-  Block.consumeNodes(blockScope, blockScope.currentNode);
-
-  return node;
+  return Closure.consumeNode(scope, node, Block.consumeNodes);
 };
