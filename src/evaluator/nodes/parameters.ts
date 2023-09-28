@@ -16,21 +16,28 @@ export const consumeNodes = (
 ) => {
   const closureScope = closureNode.data.scope!;
   const callScope = new Scope(closureScope, closureScope.options);
+  const { minParams, maxParams } = closureNode.data;
+
+  let argumentsCount = 0;
 
   while (parameterNode && argumentNode) {
     const argumentValue = Expression.consumeNode(scope, argumentNode);
-    callScope.createVariable(parameterNode, argumentValue);
+    const identifier = parameterNode.fragment.data;
+
+    callScope.createVariable(identifier, argumentValue);
 
     parameterNode = parameterNode.next!;
     argumentNode = argumentNode.next!;
+
+    argumentsCount++;
   }
 
-  if (argumentNode && !parameterNode) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, closureNode.fragment);
-  }
-
-  if (!parameterNode && parameterNode) {
+  if (argumentsCount < minParams) {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, closureNode.fragment);
+  }
+
+  if (argumentsCount > maxParams) {
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, closureNode.fragment);
   }
 
   return callScope;

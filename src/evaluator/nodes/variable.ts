@@ -7,6 +7,7 @@ import { Scope } from '../scope';
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
   const value = Expression.consumeNode(scope, node.right!);
+  const identifier = node.fragment.data;
 
-  scope.createVariable(node, value);
+  scope.createVariable(identifier, value);
 };

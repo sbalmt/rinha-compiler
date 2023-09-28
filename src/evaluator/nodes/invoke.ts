@@ -9,10 +9,10 @@ import * as Block from './block';
 import { Metadata } from '../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { isLiteral } from '../../core/data';
-import { Scope } from '../scope';
+import { Scope, VarCallbackType } from '../scope';
 
 const isCallable = (node: Core.Node<Metadata> | undefined) => {
-  return node?.value === NodeTypes.CLOSURE;
+  return node instanceof Core.Node && (node?.value === NodeTypes.CLOSURE || node?.value === NodeTypes.BUILT_IN);
 };
 
 export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
@@ -24,20 +24,20 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
     return closureNode;
   }
 
-  const argumentsNode = callerNode.next!;
-
-  if (closureNode instanceof Function) {
-    return closureNode(scope, argumentsNode);
-  }
-
   if (!isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? callerNode).fragment);
   }
 
+  const argumentsNode = callerNode.next!;
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
   const closureBlock = closureParameters.next!;
   const closureScope = Parameters.consumeNodes(scope, closureNode, closureFirstParameter, argumentsNode);
+
+  if (closureNode.value === NodeTypes.BUILT_IN) {
+    const { value } = closureNode.data;
+    return (value as VarCallbackType<Metadata>)(closureScope, callerNode);
+  }
 
   return Block.consumeNodes(closureScope, closureBlock.right!);
 };

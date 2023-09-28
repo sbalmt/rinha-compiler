@@ -6,29 +6,48 @@ import { NodeTypes, SymbolTypes } from './types';
 const range = new Core.Range(0, 0);
 const location = new Core.Location('built-in', range, range);
 
-const firstFragment = new Core.Fragment('first', 0, 5, location);
-const secondFragment = new Core.Fragment('second', 0, 6, location);
-const assertFragment = new Core.Fragment('assert', 0, 6, location);
-const printFragment = new Core.Fragment('print', 0, 5, location);
-
 export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
-  insertBuiltIn(firstFragment, table, { minParams: 1 });
-  insertBuiltIn(secondFragment, table, { minParams: 1 });
-  insertBuiltIn(assertFragment, table, { minParams: 1, maxParams: 2 });
-  insertBuiltIn(printFragment, table, { minParams: 1, pure: false });
+  insertBuiltIn(createFragment('first'), table, { minParams: 1 });
+  insertBuiltIn(createFragment('second'), table, { minParams: 1 });
+  insertBuiltIn(createFragment('assert'), table, { minParams: 1, maxParams: 2 });
+  insertBuiltIn(createFragment('print'), table, { minParams: 1, pure: false });
+};
+
+const createFragment = (identifier: string) => {
+  return new Core.Fragment(identifier, 0, identifier.length, location);
+};
+
+const createParameterNode = (identifier: string, table: Core.SymbolTable<Metadata>) => {
+  return new Core.Node(createFragment(identifier), NodeTypes.IDENTIFIER, table);
 };
 
 const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>, options?: Partial<NodeMetadata>) => {
+  const current = table.find(fragment);
+
+  if (current) {
+    return current;
+  }
+
   const identifierNode = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
   const closureNode = new Core.Node(fragment, NodeTypes.BUILT_IN, table);
+  const closureParameters = new Core.Node(fragment, NodeTypes.PARAMETERS, table);
   const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, identifierNode);
 
   identifierNode.set(Core.NodeDirection.Right, closureNode);
-
-  initNode(closureNode, options);
-  initSymbol(symbol);
+  closureNode.set(Core.NodeDirection.Right, closureParameters);
 
   table.insert(symbol);
+
+  initSymbol(symbol);
+
+  const data = initNode(closureNode, options);
+  let parameterDirection = Core.NodeDirection.Right;
+
+  for (let index = 0; index < data.maxParams; ++index) {
+    const parameterNode = createParameterNode(`arg${index}`, table);
+    closureParameters.set(parameterDirection, parameterNode);
+    parameterDirection = Core.NodeDirection.Next;
+  }
 
   return symbol;
 };

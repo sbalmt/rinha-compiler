@@ -11,7 +11,7 @@ export const consumeNodes = (node: Core.Node<Metadata>, options?: BaseScopeOptio
   if (node.next) {
     const scope = new Scope(undefined, options);
 
-    applyBuiltIn(scope);
+    applyBuiltIn(scope, node.table);
 
     Block.consumeNodes(scope, node.next);
   }

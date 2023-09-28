@@ -6,7 +6,7 @@ import { LazyCall } from './lazy';
 
 export type VarCallableType<T extends Metadata> = Core.Node<T> | VarCallbackType<T>;
 
-export type VarCallbackType<T extends Metadata> = (scope: Scope<T>, args: Core.Node<T>) => VarValueType<T>;
+export type VarCallbackType<T extends Metadata> = (scope: Scope<T>, callee: Core.Node<T>) => VarValueType<T>;
 
 export type VarSingleType<T extends Metadata> =
   | undefined
@@ -41,39 +41,29 @@ export class Scope<T extends Metadata> extends BaseScope {
     this.parent = parent;
   }
 
-  createCustomVariable(identifier: string, callback: VarCallbackType<T>): void {
-    this.variables[identifier] = callback;
-  }
-
-  createVariable(node: Core.Node<T>, value: VarValueType<T>): void {
-    const identifier = node.fragment.data;
-
+  createVariable(identifier: string, value: VarValueType<T>): void {
     this.variables[identifier] = value;
   }
 
-  updateVariable(node: Core.Node<T>, value: VarValueType<T>): VarValueType<T> {
-    const identifier = node.fragment.data;
-
+  updateVariable(identifier: string, value: VarValueType<T>): VarValueType<T> {
     if (identifier in this.variables) {
       return (this.variables[identifier] = value);
     }
 
     if (this.parent) {
-      return this.parent.updateVariable(node, value);
+      return this.parent.updateVariable(identifier, value);
     }
 
     return value;
   }
 
-  readVariable(node: Core.Node<T>): VarValueType<T> {
-    const identifier = node.fragment.data;
-
+  readVariable(identifier: string): VarValueType<T> {
     if (identifier in this.variables) {
       return this.variables[identifier];
     }
 
     if (this.parent) {
-      return this.parent.readVariable(node);
+      return this.parent.readVariable(identifier);
     }
 
     return undefined;
