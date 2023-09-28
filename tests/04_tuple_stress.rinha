@@ -1,0 +1,9 @@
+let floodFill = fn (x, a, b) => {
+  if(x > 0) {
+    (a, floodFill(x - 1, b, x * (a + b + 1) % 9))
+  } else {
+    (a, b)
+  }
+};
+
+assert(first(floodFill(1000, 0, 0)) == 0)
