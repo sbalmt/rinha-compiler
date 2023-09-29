@@ -24,7 +24,7 @@ export class Scope extends BaseScope {
 
   declarationNode?: Core.Node<Metadata>;
 
-  scopeNode?: Core.Node<Metadata>;
+  closureNode?: Core.Node<Metadata>;
 
   constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: ScopeOptions) {
     super({
