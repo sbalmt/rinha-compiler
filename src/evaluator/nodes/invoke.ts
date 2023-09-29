@@ -8,11 +8,10 @@ import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
 import { CallbackTypes, ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
-import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
 const isCallable = (node: Core.Node<Metadata> | undefined) => {
-  return node instanceof Core.Node && (node?.value === NodeTypes.CLOSURE || node?.value === NodeTypes.BUILT_IN);
+  return node instanceof Core.Node && (node.value === NodeTypes.CLOSURE || node.value === NodeTypes.BUILT_IN);
 };
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
@@ -36,8 +35,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
   );
 
   if (closureNode.value === NodeTypes.BUILT_IN) {
-    const { value } = closureNode.data;
-    return (value as CallbackTypes)(closureScope, callerNode);
+    return (closureNode.data.value as CallbackTypes)(closureScope, callerNode);
   }
 
   return Block.consumeNodes(closureScope, closureBlock.right!);
