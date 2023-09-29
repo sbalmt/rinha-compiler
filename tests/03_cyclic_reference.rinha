@@ -1,0 +1,2 @@
+let alias = reference;
+let reference = alias;

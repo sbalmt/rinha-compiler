@@ -6,13 +6,18 @@ import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const followReferences = (symbol: Core.SymbolRecord<Metadata>): Core.SymbolRecord<Metadata> | undefined => {
-  let eligible = symbol;
+  const followed = new WeakSet();
+
+  let current = symbol;
+  let eligible = current;
   let previous;
 
-  for (let current = symbol; current; current = current.data.follow!) {
-    if (current.data.mutable) {
+  while ((current = current.data.follow!)) {
+    if (current.data.mutable || followed.has(current)) {
       break;
     }
+
+    followed.add(current);
 
     if (previous) {
       previous.data.references--;
