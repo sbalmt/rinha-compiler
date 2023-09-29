@@ -38,10 +38,10 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
 };
 
 const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
-  const identifierNode = symbol.node!;
-  const valueNode = identifierNode.right!;
+  const declarationNode = symbol.node!;
+  const valueNode = declarationNode.right!;
 
-  node.swap(valueNode.clone());
+  replaceNode(node, valueNode.value, valueNode);
   symbol.data.references--;
 
   return symbol.data.literal;
