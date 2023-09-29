@@ -8,7 +8,7 @@ import { printNodes } from '../../core/nodes';
 import { Scope, ScopeOptions } from '../scope';
 
 export const consumeNodes = (node: Core.Node<Metadata>, options?: ScopeOptions) => {
-  const scope = new Scope(node, Core.NodeDirection.Next, options);
+  const scope = new Scope(node, Core.NodeDirection.Next, undefined, options);
 
   if (scope.currentNode) {
     const iterable = Block.consumeNodes(scope, scope.currentNode);

@@ -8,9 +8,8 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, blockConsu
   const parametersNode = node.right!;
 
   const blockNode = parametersNode.next!;
-  const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope.options);
+  const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope);
 
-  blockScope.declarationNode = scope.declarationNode;
   blockScope.closureNode = node;
 
   yield blockConsumer(blockScope, blockScope.currentNode);

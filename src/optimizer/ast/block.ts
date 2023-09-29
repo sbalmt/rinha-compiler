@@ -16,8 +16,7 @@ const wasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
 };
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) => {
-  const innerScope = new Scope(node, Core.NodeDirection.Right, scope.options);
-  innerScope.declarationNode = scope.declarationNode;
+  const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
   return consumeNodes(innerScope, innerScope.currentNode, consumers);
 };
 

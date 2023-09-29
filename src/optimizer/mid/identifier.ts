@@ -38,8 +38,8 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
 };
 
 const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
-  const declarationNode = symbol.node!;
-  const valueNode = declarationNode.right!;
+  const referenceNode = symbol.node!;
+  const valueNode = referenceNode.right!;
 
   replaceNode(node, valueNode.value, valueNode);
   symbol.data.references--;

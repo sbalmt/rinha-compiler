@@ -26,14 +26,19 @@ export class Scope extends BaseScope {
 
   closureNode?: Core.Node<Metadata>;
 
-  constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: ScopeOptions) {
+  constructor(
+    anchorNode: Core.Node<Metadata>,
+    anchorDirection: Core.NodeDirection,
+    parentScope?: Scope,
+    options?: ScopeOptions
+  ) {
     super({
       enableHoisting: true,
       constantFolding: true,
       constantPropagation: true,
       enableMemoization: true,
       enableTailCall: true,
-      ...options
+      ...(options ?? parentScope?.options)
     });
 
     this.anchorNode = anchorNode;
@@ -41,6 +46,11 @@ export class Scope extends BaseScope {
     this.previousDirection = anchorDirection;
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
+
+    if (parentScope) {
+      this.declarationNode = parentScope.declarationNode;
+      this.closureNode = parentScope.closureNode;
+    }
   }
 
   isMatchingDeclaration(node: Core.Node<Metadata>) {

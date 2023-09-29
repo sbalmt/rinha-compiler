@@ -8,12 +8,8 @@ import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
-
-  blockScope.declarationNode = scope.declarationNode;
-  blockScope.closureNode = scope.closureNode;
-
-  return Block.consumeNodes(blockScope, blockScope.currentNode);
+  const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
+  return Block.consumeNodes(innerScope, innerScope.currentNode);
 };
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
