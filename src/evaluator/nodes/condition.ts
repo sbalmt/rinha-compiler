@@ -7,22 +7,24 @@ import { Metadata } from '../../core/metadata';
 import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
+const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  if (node.right) {
+    const blockScope = new Scope(scope, scope.options);
+    return Block.consumeNodes(blockScope, node.right);
+  }
+
+  return undefined;
+};
+
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const condition = yield Expression.consumeNode(scope, node.right!);
-  const blockScope = new Scope(scope, scope.options);
 
   const successBlock = node.next!;
   const failureBlock = successBlock.next;
 
   if (condition !== false) {
-    if (successBlock.right) {
-      return Block.consumeNodes(blockScope, successBlock.right);
-    }
+    return consumeInnerNode(scope, successBlock);
   } else if (failureBlock) {
-    if (failureBlock.right) {
-      return Block.consumeNodes(blockScope, failureBlock.right);
-    }
+    return consumeInnerNode(scope, failureBlock);
   }
-
-  return undefined;
 }

@@ -1,17 +1,17 @@
-import { ValueTypes } from '../core/types';
 import { BaseScope, BaseScopeOptions } from '../core/scope';
+import { ValueTypes } from '../core/types';
 
-type VarMapType = {
+type VariablesMap = {
   [identifier: string]: ValueTypes;
 };
 
-type VarRecordType = {
+type VariableEntry = {
   identifier: string;
   value: ValueTypes;
 };
 
 export class Scope extends BaseScope {
-  private variables: VarMapType = {};
+  private variables: VariablesMap = {};
 
   private parent: Scope | undefined;
 
@@ -49,7 +49,7 @@ export class Scope extends BaseScope {
     return undefined;
   }
 
-  *[Symbol.iterator](): Iterator<VarRecordType> {
+  *[Symbol.iterator](): Iterator<VariableEntry> {
     for (const identifier in this.variables) {
       yield {
         identifier,

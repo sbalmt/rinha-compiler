@@ -13,30 +13,31 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   return consumeNodes(innerScope, node);
 };
 
-const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  switch (node.value) {
-    case NodeTypes.EXPRESSION:
-      return Expression.consumeNode(scope, node.right!);
-
-    case NodeTypes.VARIABLE:
-      return Variable.consumeNode(scope, node.right!);
-
-    case NodeTypes.IF_ELSE:
-      return Condition.consumeNode(scope, node.right!);
-
-    case NodeTypes.BLOCK:
-      return consumeInnerNode(scope, node.right!);
-
-    default:
-      throw `Unexpected block node type (${node.value}).`;
-  }
-};
-
 export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   let value;
 
   while (node) {
-    value = yield consumeSingleNode(scope, node);
+    switch (node.value) {
+      case NodeTypes.EXPRESSION:
+        value = yield Expression.consumeNode(scope, node.right!);
+        break;
+
+      case NodeTypes.VARIABLE:
+        value = yield Variable.consumeNode(scope, node.right!);
+        break;
+
+      case NodeTypes.IF_ELSE:
+        value = yield Condition.consumeNode(scope, node.right!);
+        break;
+
+      case NodeTypes.BLOCK:
+        value = yield consumeInnerNode(scope, node.right!);
+        break;
+
+      default:
+        throw `Unexpected block node type (${node.value}).`;
+    }
+
     node = node.next!;
   }
 

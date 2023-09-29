@@ -9,8 +9,6 @@ import { Scope } from '../scope';
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const value = yield Expression.consumeNode(scope, node.right!);
   const identifier = node.fragment.data;
-
   scope.createVariable(identifier, value);
-
   return value;
 }

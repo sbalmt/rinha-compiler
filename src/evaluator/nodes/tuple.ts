@@ -27,7 +27,5 @@ function* resolveTuple(scope: Scope, tuple: TupleTypes) {
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const tuple = node.data.value as TupleTypes;
-  const value = resolveTuple(scope, tuple);
-
-  return value;
+  return resolveTuple(scope, tuple);
 };

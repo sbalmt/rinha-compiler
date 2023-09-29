@@ -26,21 +26,17 @@ const insertBuiltIn = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, callba
 
 const firstFn = (scope: Scope, callee: Core.Node<Metadata>) => {
   const tuple = scope.readVariable('arg0');
-
   if (!(tuple instanceof Array)) {
     throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, callee.fragment);
   }
-
   return tuple[0];
 };
 
 const secondFn = (scope: Scope, callee: Core.Node<Metadata>) => {
   const tuple = scope.readVariable('arg0');
-
   if (!(tuple instanceof Array)) {
     throw Errors.getMessage(ErrorTypes.INVALID_TUPLE, callee.fragment);
   }
-
   return tuple[1];
 };
 
@@ -60,8 +56,6 @@ const assertFn = (scope: Scope, callee: Core.Node<Metadata>) => {
 
 const printFn = (scope: Scope, callee: Core.Node<Metadata>) => {
   const message = scope.readVariable('arg0');
-
   console.log(convertToString(message));
-
   return message;
 };
