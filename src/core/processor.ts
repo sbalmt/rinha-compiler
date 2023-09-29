@@ -1,7 +1,7 @@
 import { ValueTypes } from './types';
 
 const isIterable = (value: ValueTypes): value is Generator<ValueTypes> => {
-  return value instanceof Object && (value as any).next instanceof Function;
+  return typeof value === 'object' && (value as any).return instanceof Function;
 };
 
 export const iterateAllOver = (entry: ValueTypes): ValueTypes => {

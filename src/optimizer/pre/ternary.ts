@@ -4,29 +4,33 @@ import * as Expression from './expression';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
+import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const blockScope = new Scope(node, Core.NodeDirection.Right, scope.options);
+
   blockScope.declarationNode = scope.declarationNode;
-  Block.consumeNodes(blockScope, blockScope.currentNode);
+  blockScope.scopeNode = scope.scopeNode;
+
+  return Block.consumeNodes(blockScope, blockScope.currentNode);
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const conditionNode = node.right!;
 
-  Expression.consumeNode(scope, conditionNode.right!);
+  yield Expression.consumeNode(scope, conditionNode.right!);
 
   const successBlock = conditionNode.next!;
   const failureBlock = successBlock.next!;
 
   if (successBlock.right) {
-    consumeInnerNode(scope, successBlock);
+    yield consumeInnerNode(scope, successBlock);
   }
 
   if (failureBlock && failureBlock.right) {
-    consumeInnerNode(scope, failureBlock);
+    yield consumeInnerNode(scope, failureBlock);
   }
 
-  return undefined;
-};
+  return node;
+}

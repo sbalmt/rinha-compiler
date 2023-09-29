@@ -4,7 +4,7 @@ import { Metadata } from '../../core/metadata';
 import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, blockConsumer: AstConsumer) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, blockConsumer: AstConsumer) {
   const parametersNode = node.right!;
 
   const blockNode = parametersNode.next!;
@@ -13,7 +13,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, blockConsum
   blockScope.declarationNode = scope.declarationNode;
   blockScope.scopeNode = node;
 
-  blockConsumer(blockScope, blockScope.currentNode);
+  yield blockConsumer(blockScope, blockScope.currentNode);
 
   return node;
-};
+}

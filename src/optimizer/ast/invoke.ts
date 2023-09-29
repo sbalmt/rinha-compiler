@@ -4,19 +4,19 @@ import { Metadata } from '../../core/metadata';
 import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
-const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) => {
+function* consumeArgumentNodes(scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) {
   while (node) {
-    expressionConsumer(scope, node);
+    yield expressionConsumer(scope, node);
     node = node.next!;
   }
-};
+}
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) {
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
 
-  consumeArgumentNodes(scope, argumentsNode, expressionConsumer);
-  expressionConsumer(scope, callerNode);
+  yield consumeArgumentNodes(scope, argumentsNode, expressionConsumer);
+  yield expressionConsumer(scope, callerNode);
 
   return node;
-};
+}

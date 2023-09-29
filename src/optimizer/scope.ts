@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata } from '../core/metadata';
 import { BaseScope, BaseScopeOptions } from '../core/scope';
+import { Metadata } from '../core/metadata';
 
-export type ScopeScopeOptions = BaseScopeOptions & {
+export type ScopeOptions = BaseScopeOptions & {
   enableHoisting?: boolean;
   constantFolding?: boolean;
   constantPropagation?: boolean;
@@ -26,7 +26,7 @@ export class Scope extends BaseScope {
 
   scopeNode?: Core.Node<Metadata>;
 
-  constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: ScopeScopeOptions) {
+  constructor(anchorNode: Core.Node<Metadata>, anchorDirection: Core.NodeDirection, options?: ScopeOptions) {
     super({
       enableHoisting: true,
       constantFolding: true,
@@ -47,7 +47,7 @@ export class Scope extends BaseScope {
     return this.declarationNode?.fragment.data === node.fragment.data;
   }
 
-  get options(): ScopeScopeOptions {
-    return super.options as ScopeScopeOptions;
+  get options(): ScopeOptions {
+    return super.options as ScopeOptions;
   }
 }

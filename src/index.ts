@@ -9,7 +9,7 @@ import * as MidOptimizer from './optimizer/mid';
 import * as EndOptimizer from './optimizer/end';
 
 import { consumeSource, consumeTokens } from './utils';
-import { ScopeScopeOptions } from './optimizer/scope';
+import { ScopeOptions } from './optimizer/scope';
 import { applyBuiltIn } from './core/builtin';
 import { ErrorTypes } from './core/types';
 
@@ -29,12 +29,12 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 }
 
 try {
-  const options: ScopeScopeOptions = {
-    // enableHoisting: false,
-    // constantFolding: false,
-    // constantPropagation: false,
-    // enableMemoization: false,
-    // enableTailCall: false
+  const options: ScopeOptions = {
+   // enableHoisting: false,
+   // constantFolding: false,
+   // constantPropagation: false,
+   // enableMemoization: false,
+   // enableTailCall: false
   };
 
   applyBuiltIn(context.table);

@@ -7,7 +7,7 @@ import * as Concat from '../../core/concat';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../core/types';
+import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { combineNodes } from '../../core/ast';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
@@ -26,11 +26,11 @@ const replaceConcatExpression = (lhs: Concat.ValueType, rhs: Concat.ValueType, n
   return value;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { constantFolding } = scope.options;
 
-  const lhs = Expression.consumeNode(scope, node.left!);
-  const rhs = Expression.consumeNode(scope, node.right!);
+  const lhs = yield Expression.consumeNode(scope, node.left!);
+  const rhs = yield Expression.consumeNode(scope, node.right!);
 
   if (!isLiteral(lhs) || !isLiteral(rhs)) {
     return node;
@@ -53,4 +53,4 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
-};
+}

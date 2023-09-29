@@ -18,21 +18,21 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, blockConsumer
   return blockConsumer(blockScope, blockScope.currentNode);
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) {
   const conditionNode = node.right!;
 
-  consumers.expressionConsumer(scope, conditionNode);
+  yield consumers.expressionConsumer(scope, conditionNode);
 
   const successBlock = node.next!;
   const failureBlock = successBlock.next!;
 
   if (successBlock.right) {
-    consumeInnerNode(scope, successBlock, consumers.blockConsumer);
+    yield consumeInnerNode(scope, successBlock, consumers.blockConsumer);
   }
 
   if (failureBlock && failureBlock.right) {
-    consumeInnerNode(scope, failureBlock, consumers.blockConsumer);
+    yield consumeInnerNode(scope, failureBlock, consumers.blockConsumer);
   }
 
   return node;
-};
+}

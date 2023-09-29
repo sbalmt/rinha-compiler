@@ -21,34 +21,30 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Co
   return consumeNodes(innerScope, innerScope.currentNode, consumers);
 };
 
-const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) => {
-  switch (node.value) {
-    case NodeTypes.EXPRESSION:
-      return consumers.expressionConsumer(scope, node.right!);
-
-    case NodeTypes.VARIABLE:
-      consumers.variableConsumer(scope, node.right!);
-      break;
-
-    case NodeTypes.IF_ELSE:
-      consumers.conditionConsumer(scope, node.right!);
-      break;
-
-    case NodeTypes.BLOCK:
-      return consumeInnerNode(scope, node, consumers);
-
-    default:
-      throw `Unable to optimize block node type (${node.value}).`;
-  }
-
-  return undefined;
-};
-
-export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes => {
-  let value = undefined;
+export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes {
+  let value;
 
   while (node) {
-    value = consumeSingleNode(scope, node, consumers);
+    switch (node.value) {
+      case NodeTypes.EXPRESSION:
+        value = yield consumers.expressionConsumer(scope, node.right!);
+        break;
+
+      case NodeTypes.VARIABLE:
+        value = yield consumers.variableConsumer(scope, node.right!);
+        break;
+
+      case NodeTypes.IF_ELSE:
+        value = yield consumers.conditionConsumer(scope, node.right!);
+        break;
+
+      case NodeTypes.BLOCK:
+        value = yield consumeInnerNode(scope, node, consumers);
+        break;
+
+      default:
+        throw `Unable to optimize block node type (${node.value}).`;
+    }
 
     if (wasNodeReplaced(scope, node)) {
       node = scope.previousNode.get(scope.previousDirection)!;
@@ -62,4 +58,4 @@ export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>, consumers:
   }
 
   return value;
-};
+}

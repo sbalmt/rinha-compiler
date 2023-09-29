@@ -11,7 +11,6 @@ import { Scope } from './scope';
 export const consumeNodes = (node: Core.Node<Metadata>, options?: BaseScopeOptions) => {
   if (node.next) {
     const scope = new Scope(undefined, options);
-
     applyBuiltIn(scope, node.table);
     iterateAllOver(Block.consumeNodes(scope, node.next));
   }

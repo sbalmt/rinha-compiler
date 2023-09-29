@@ -5,7 +5,7 @@ import * as Logical from '../../core/logical';
 
 import * as Expression from './expression';
 
-import { ErrorTypes, NodeTypes } from '../../core/types';
+import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { Metadata } from '../../core/metadata';
 import { combineNodes } from '../../core/ast';
 import { isLiteral } from '../../core/data';
@@ -18,29 +18,31 @@ const replaceExpression = (lhs: Logical.ValueType, rhs: Logical.ValueType, node:
   return value;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { constantFolding } = scope.options;
 
-  const lhs = Expression.consumeNode(scope, node.left!);
-  const rhs = Expression.consumeNode(scope, node.right!);
+  const lhs = yield Expression.consumeNode(scope, node.left!);
+  const rhs = yield Expression.consumeNode(scope, node.right!);
 
-  if (isLiteral(lhs) && isLiteral(rhs)) {
-    if (!Logical.isComparable(lhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
-    }
+  if (!isLiteral(lhs) || !isLiteral(rhs)) {
+    return node;
+  }
 
-    if (!Logical.isComparable(rhs)) {
-      throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
-    }
+  if (!Logical.isComparable(lhs)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
+  }
 
-    if (!Logical.isCompatible(lhs, rhs)) {
-      throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
-    }
+  if (!Logical.isComparable(rhs)) {
+    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
+  }
 
-    if (constantFolding) {
-      return replaceExpression(lhs, rhs, node);
-    }
+  if (!Logical.isCompatible(lhs, rhs)) {
+    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
+  }
+
+  if (constantFolding) {
+    return replaceExpression(lhs, rhs, node);
   }
 
   return node;
-};
+}

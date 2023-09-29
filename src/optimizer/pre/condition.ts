@@ -4,6 +4,7 @@ import * as Expression from './expression';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
+import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const removeDefinition = (scope: Scope) => {
@@ -21,13 +22,14 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   blockScope.declarationNode = scope.declarationNode;
   blockScope.scopeNode = scope.scopeNode;
 
-  Block.consumeNodes(blockScope, blockScope.currentNode);
+  return Block.consumeNodes(blockScope, blockScope.currentNode);
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { constantFolding } = scope.options;
 
-  const condition = Expression.consumeNode(scope, node.right!);
+  const condition = yield Expression.consumeNode(scope, node.right!);
+
   const successBlock = node.next!;
   const failureBlock = successBlock.next!;
 
@@ -45,13 +47,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     }
   } else {
     if (successBlock.right) {
-      consumeInnerNode(scope, successBlock);
+      yield consumeInnerNode(scope, successBlock);
     }
 
     if (failureBlock && failureBlock.right) {
-      consumeInnerNode(scope, failureBlock);
+      yield consumeInnerNode(scope, failureBlock);
     }
   }
 
-  return undefined;
-};
+  return node;
+}

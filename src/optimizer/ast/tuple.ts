@@ -17,16 +17,14 @@ const resolveValue = (scope: Scope, value: ValueTypes, expressionConsumer: AstCo
   return value;
 };
 
-const resolveTuple = (scope: Scope, tuple: TupleTypes, expressionConsumer: AstConsumer) => {
-  tuple[0] = resolveValue(scope, tuple[0], expressionConsumer);
-  tuple[1] = resolveValue(scope, tuple[1], expressionConsumer);
+function* resolveTuple(scope: Scope, tuple: TupleTypes, expressionConsumer: AstConsumer): ValueTypes {
+  tuple[0] = yield resolveValue(scope, tuple[0], expressionConsumer);
+  tuple[1] = yield resolveValue(scope, tuple[1], expressionConsumer);
 
   return tuple;
-};
+}
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>, expressionConsumer: AstConsumer) => {
   const tuple = node.data.value as TupleTypes;
-  const value = resolveTuple(scope, tuple, expressionConsumer);
-
-  return value;
+  return resolveTuple(scope, tuple, expressionConsumer);
 };

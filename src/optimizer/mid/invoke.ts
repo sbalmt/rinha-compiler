@@ -20,16 +20,16 @@ const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
   return scope.declarationNode && scope.declarationNode.fragment.data === node.fragment.data;
 };
 
-const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
+function* consumeArgumentNodes(scope: Scope, node: Core.Node<Metadata>) {
   while (node) {
-    Expression.consumeNode(scope, node);
+    yield Expression.consumeNode(scope, node);
     node = node.next!;
   }
-};
+}
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const callerNode = node.left!;
-  const closureNode = Expression.consumeNode(scope, callerNode);
+  const closureNode = yield Expression.consumeNode(scope, callerNode);
 
   if (!isAnonymous(closureNode) && !isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, callerNode.fragment);
@@ -37,14 +37,14 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const { minParams } = closureNode.data;
 
-  consumeArgumentNodes(scope, callerNode.next!);
+  yield consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
     selfCall: isRecursiveInvocation(scope, callerNode),
     minParams
   });
 
-  Expression.consumeNode(scope, callerNode);
+  yield Expression.consumeNode(scope, callerNode);
 
   return node;
-};
+}

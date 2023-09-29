@@ -5,6 +5,7 @@ import * as Variable from '../ast/variable';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
+import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const removeDefinition = (scope: Scope) => {
@@ -26,7 +27,7 @@ const hoistDefinition = (scope: Scope) => {
   scope.anchorNode = scope.currentNode;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { enableHoisting, constantFolding, constantPropagation } = scope.options;
 
   const symbol = node.table.find(node.fragment)!;
@@ -34,14 +35,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   if ((constantFolding || constantPropagation) && canRemoveDefinition(symbol)) {
     removeDefinition(scope);
-    return undefined;
+  } else {
+    yield Variable.consumeNode(scope, node, Expression.consumeNode);
+
+    if (data.hoist && enableHoisting) {
+      hoistDefinition(scope);
+    }
   }
 
-  Variable.consumeNode(scope, node, Expression.consumeNode);
-
-  if (data.hoist && enableHoisting) {
-    hoistDefinition(scope);
-  }
-
-  return undefined;
-};
+  return node;
+}

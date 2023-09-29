@@ -12,7 +12,6 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
     const blockScope = new Scope(scope, scope.options);
     return Block.consumeNodes(blockScope, node.right);
   }
-
   return undefined;
 };
 

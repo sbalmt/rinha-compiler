@@ -12,9 +12,9 @@ const isReference = (value: ValueTypes): value is Core.Node<Metadata> => {
   return value instanceof Core.Node;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const symbol = node.table.find(node.fragment)!;
-  const value = Variable.consumeNode(scope, node, Expression.consumeNode);
+  const value = yield Variable.consumeNode(scope, node, Expression.consumeNode);
   const data = initSymbol(symbol);
 
   if (!isReference(value)) {
@@ -23,5 +23,5 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     data.follow = value.data.symbol;
   }
 
-  return undefined;
-};
+  return node;
+}

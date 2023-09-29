@@ -25,25 +25,25 @@ const isOptimizable = (callerNode: ValueTypes): callerNode is Core.Node<Metadata
   return isCallable(callerNode) && (isBuiltInClosure(callerNode.right!) || isUserDefinedClosure(callerNode.right!));
 };
 
-const consumeArgumentNodes = (scope: Scope, argumentNode: Core.Node<Metadata>) => {
+function* consumeArgumentNodes(scope: Scope, argumentNode: Core.Node<Metadata>) {
   let counter = 0;
 
   while (argumentNode) {
-    Expression.consumeNode(scope, argumentNode);
+    yield Expression.consumeNode(scope, argumentNode);
     argumentNode = argumentNode.next!;
     counter++;
   }
 
   return counter;
-};
+}
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { enableMemoization } = scope.options;
 
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
-  const argumentsCount = consumeArgumentNodes(scope, argumentsNode);
-  const closureNode = Expression.consumeNode(scope, callerNode);
+  const argumentsCount = yield consumeArgumentNodes(scope, argumentsNode);
+  const closureNode = yield Expression.consumeNode(scope, callerNode);
 
   // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
   if (!isOptimizable(closureNode)) {
@@ -72,4 +72,4 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   return node;
-};
+}
