@@ -20,10 +20,6 @@ const isRecursiveInvocation = (scope: Scope, node: Core.Node<Metadata>) => {
   return scope.declarationNode && scope.declarationNode.fragment.data === node.fragment.data;
 };
 
-const isTailCallInvocation = (node: Core.Node<Metadata>) => {
-  return node.right!.value === NodeTypes.INVOKE;
-};
-
 const consumeArgumentNodes = (scope: Scope, node: Core.Node<Metadata>) => {
   while (node) {
     Expression.consumeNode(scope, node);
@@ -44,7 +40,6 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   consumeArgumentNodes(scope, callerNode.next!);
 
   initNode(node, {
-    tailCall: isTailCallInvocation(scope.currentNode),
     selfCall: isRecursiveInvocation(scope, callerNode),
     minParams
   });

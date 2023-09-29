@@ -38,7 +38,7 @@ const consumeArgumentNodes = (scope: Scope, argumentNode: Core.Node<Metadata>) =
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  //const { enableTailCall, enableMemoization } = scope.options;
+  const { enableMemoization } = scope.options;
 
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
@@ -52,8 +52,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const closureBody = closureNode.right!;
 
-  const { /*lazy, pure,*/ minParams, maxParams } = closureBody.data;
-  //const { /tailCall, selfCall } = node.data;
+  const { pure, minParams, maxParams } = closureBody.data;
+  const { selfCall } = node.data;
 
   if (argumentsCount < minParams) {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
@@ -63,29 +63,13 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
   }
 
-  /*
-  if (!selfCall && tailCall && lazy) {
-    if (enableTailCall) {
-      replaceNode(node, NodeTypes.TAIL_CALL);
-    }
-    return node;
-  }
-
-  if (selfCall && tailCall) {
-    if (enableTailCall) {
-      replaceNode(node, NodeTypes.LAZY_CALL);
-      closureBody.data.lazy = true;
-    }
-    return node;
-  }
-
   if (selfCall && pure && minParams > 0) {
     if (enableMemoization) {
-      replaceNode(node, NodeTypes.MEMO_CALL);
+      //console.log('MEMO');
+      // replaceNode(node, NodeTypes.MEMO_CALL);
     }
     return node;
   }
-*/
 
   return node;
 };
