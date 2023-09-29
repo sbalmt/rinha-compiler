@@ -10,6 +10,7 @@ import { Scope } from '../scope';
 
 export function* consumeNodes(
   scope: Scope,
+  calleeNode: Core.Node<Metadata>,
   closureNode: Core.Node<Metadata>,
   parameterNode: Core.Node<Metadata>,
   argumentNode: Core.Node<Metadata>
@@ -27,18 +28,18 @@ export function* consumeNodes(
 
     callScope.createVariable(identifier, argumentValue);
 
+    argumentsCount++;
+
     parameterNode = parameterNode.next!;
     argumentNode = argumentNode.next!;
-
-    argumentsCount++;
   }
 
   if (argumentsCount < minParams!) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, closureNode.fragment);
+    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
   }
 
   if (argumentsCount > maxParams!) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, closureNode.fragment);
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
   }
 
   return callScope;

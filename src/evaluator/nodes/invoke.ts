@@ -15,27 +15,28 @@ const isCallable = (node: Core.Node<Metadata> | undefined) => {
 };
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
-  const callerNode = node.left!;
-  const closureNode = yield Expression.consumeNode(scope, callerNode) as Core.Node<Metadata>;
+  const calleeNode = node.left!;
+  const closureNode = yield Expression.consumeNode(scope, calleeNode) as Core.Node<Metadata>;
 
   if (!isCallable(closureNode)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? callerNode).fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? calleeNode).fragment);
   }
 
-  const closureFirstArgumentNode = callerNode.next!;
+  const closureFirstArgumentNode = calleeNode.next!;
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
   const closureBlock = closureParameters.next!;
 
   const closureScope = yield Parameters.consumeNodes(
     scope,
+    calleeNode,
     closureNode,
     closureFirstParameter,
     closureFirstArgumentNode
   );
 
   if (closureNode.value === NodeTypes.BUILT_IN) {
-    return (closureNode.data.value as CallbackTypes)(closureScope, callerNode);
+    return (closureNode.data.value as CallbackTypes)(closureScope, calleeNode);
   }
 
   return Block.consumeNodes(closureScope, closureBlock.right!);
