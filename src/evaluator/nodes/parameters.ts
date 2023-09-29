@@ -42,5 +42,7 @@ export function* consumeNodes(
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
   }
 
+  callScope.closureNode = closureNode;
+
   return callScope;
 }

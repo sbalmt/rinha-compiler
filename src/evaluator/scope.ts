@@ -1,5 +1,5 @@
-import { BaseScope, BaseScopeOptions } from '../core/scope';
 import { ValueTypes } from '../core/types';
+import { BaseScope } from '../core/scope';
 
 type VariablesMap = {
   [identifier: string]: ValueTypes;
@@ -13,12 +13,8 @@ type VariableEntry = {
 export class Scope extends BaseScope {
   private variables: VariablesMap = {};
 
-  private parent: Scope | undefined;
-
-  constructor(parent?: Scope, options?: BaseScopeOptions) {
-    super(options);
-
-    this.parent = parent;
+  get parent(): Scope {
+    return super.parent as Scope;
   }
 
   createVariable(identifier: string, value: ValueTypes): void {

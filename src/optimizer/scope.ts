@@ -24,15 +24,13 @@ export class Scope extends BaseScope {
 
   declarationNode?: Core.Node<Metadata>;
 
-  closureNode?: Core.Node<Metadata>;
-
   constructor(
     anchorNode: Core.Node<Metadata>,
     anchorDirection: Core.NodeDirection,
     parentScope?: Scope,
     options?: ScopeOptions
   ) {
-    super({
+    super(parentScope, {
       enableHoisting: true,
       constantFolding: true,
       constantPropagation: true,
@@ -46,18 +44,14 @@ export class Scope extends BaseScope {
     this.previousDirection = anchorDirection;
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
-
-    if (parentScope) {
-      this.declarationNode = parentScope.declarationNode;
-      this.closureNode = parentScope.closureNode;
-    }
-  }
-
-  isMatchingDeclaration(node: Core.Node<Metadata>) {
-    return this.declarationNode?.fragment.data === node.fragment.data;
+    this.declarationNode = parentScope?.declarationNode;
   }
 
   get options(): ScopeOptions {
     return super.options as ScopeOptions;
+  }
+
+  isMatchingDeclaration(node: Core.Node<Metadata>) {
+    return this.declarationNode?.fragment.data === node.fragment.data;
   }
 }
