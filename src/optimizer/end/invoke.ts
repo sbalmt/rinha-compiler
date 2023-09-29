@@ -21,20 +21,17 @@ const isResolvedClosure = (closureNode: Core.Node<Metadata>) => {
 };
 
 export const getClosureBlock = (closureNode: Core.Node<Metadata>) => {
-  if (!isResolvedClosure(closureNode)) {
-    return undefined;
-  }
-
-  if (isClosureReference(closureNode)) {
-    if (isClosureBlock(closureNode.right!)) {
-      return closureNode.right!;
-    }
-  } else {
-    if (isClosureBlock(closureNode)) {
-      return closureNode;
+  if (isResolvedClosure(closureNode)) {
+    if (isClosureReference(closureNode)) {
+      if (isClosureBlock(closureNode.right!)) {
+        return closureNode.right!;
+      }
+    } else {
+      if (isClosureBlock(closureNode)) {
+        return closureNode;
+      }
     }
   }
-
   return undefined;
 };
 
@@ -56,18 +53,16 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
   const closureNode = yield Expression.consumeNode(scope, calleeNode);
   const closureBlock = getClosureBlock(closureNode);
 
-  if (!closureBlock) {
-    return node;
-  }
+  if (closureBlock) {
+    const { minParams, maxParams } = closureBlock.data;
 
-  const { minParams, maxParams } = closureBlock.data;
+    if (totalArgs! < minParams!) {
+      throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
+    }
 
-  if (totalArgs! < minParams!) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
-  }
-
-  if (totalArgs! > maxParams!) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
+    if (totalArgs! > maxParams!) {
+      throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
+    }
   }
 
   return node;

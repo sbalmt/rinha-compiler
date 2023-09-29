@@ -4,12 +4,12 @@ import { Scope } from '../evaluator/scope';
 import { ValueTypes } from './types';
 
 export type NodeMetadata = {
-  pure: boolean;
+  scope?: Scope;
   minParams?: number;
   maxParams?: number;
-  scope?: Scope;
   symbol?: Core.SymbolRecord<Metadata>;
   value?: ValueTypes;
+  pure: boolean;
 };
 
 export type SymbolMetadata = {

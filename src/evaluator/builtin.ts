@@ -42,19 +42,17 @@ const secondFn = (scope: Scope, callee: Core.Node<Metadata>) => {
 
 const assertFn = (scope: Scope, callee: Core.Node<Metadata>) => {
   const result = scope.readVariable('arg0');
-  if (result !== false) {
-    return result;
+  if (result === false) {
+    const error = scope.readVariable('arg1');
+    if (typeof error !== 'string') {
+      throw Errors.getMessage(ErrorTypes.ASSERTION_FAILED, callee.fragment);
+    }
+    throw Errors.formatMessage(error, callee.fragment);
   }
-
-  const error = scope.readVariable('arg1');
-  if (typeof error !== 'string') {
-    throw Errors.getMessage(ErrorTypes.ASSERTION_FAILED, callee.fragment);
-  }
-
-  throw Errors.formatMessage(error, callee.fragment);
+  return result;
 };
 
-const printFn = (scope: Scope, callee: Core.Node<Metadata>) => {
+const printFn = (scope: Scope) => {
   const message = scope.readVariable('arg0');
   console.log(convertToString(message));
   return message;

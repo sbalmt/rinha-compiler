@@ -10,8 +10,16 @@ import { Metadata } from '../../core/metadata';
 import { CallbackTypes, ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
+const isRecursion = (scope: Scope, closureNode: Core.Node<Metadata>) => {
+  return scope.closureNode === closureNode;
+};
+
 const isCallable = (node: Core.Node<Metadata> | undefined) => {
   return node instanceof Core.Node && (node.value === NodeTypes.CLOSURE || node.value === NodeTypes.BUILT_IN);
+};
+
+const isBuiltIn = (closureNode: Core.Node<Metadata>) => {
+  return closureNode.value === NodeTypes.BUILT_IN;
 };
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
@@ -19,7 +27,11 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
   const closureNode = yield Expression.consumeNode(scope, calleeNode) as Core.Node<Metadata>;
 
   if (!isCallable(closureNode)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? calleeNode).fragment);
+    throw Errors.getMessage(ErrorTypes.INVALID_CALL, calleeNode.fragment);
+  }
+
+  if (isRecursion(scope, closureNode)) {
+    // TODO: re-enable memoization
   }
 
   const closureFirstArgumentNode = calleeNode.next!;
@@ -35,7 +47,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
     closureFirstArgumentNode
   );
 
-  if (closureNode.value === NodeTypes.BUILT_IN) {
+  if (isBuiltIn(closureNode)) {
     return (closureNode.data.value as CallbackTypes)(closureScope, calleeNode);
   }
 
