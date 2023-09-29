@@ -5,15 +5,15 @@ import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { ErrorTypes } from '../../core/types';
+import { ErrorTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNodes = (
-  scope: Scope<Metadata>,
+export function* consumeNodes(
+  scope: Scope,
   closureNode: Core.Node<Metadata>,
   parameterNode: Core.Node<Metadata>,
   argumentNode: Core.Node<Metadata>
-) => {
+): ValueTypes {
   const closureScope = closureNode.data.scope!;
   const callScope = new Scope(closureScope, closureScope.options);
   const { minParams, maxParams } = closureNode.data;
@@ -21,7 +21,7 @@ export const consumeNodes = (
   let argumentsCount = 0;
 
   while (parameterNode && argumentNode) {
-    const argumentValue = Expression.consumeNode(scope, argumentNode);
+    const argumentValue = yield Expression.consumeNode(scope, argumentNode);
     const identifier = parameterNode.fragment.data;
 
     callScope.createVariable(identifier, argumentValue);
@@ -41,4 +41,4 @@ export const consumeNodes = (
   }
 
   return callScope;
-};
+}

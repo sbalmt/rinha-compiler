@@ -7,12 +7,12 @@ import * as Concat from '../../core/concat';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../core/types';
+import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): number | string => {
-  const lhs = Expression.consumeNode(scope, node.left!);
-  const rhs = Expression.consumeNode(scope, node.right!);
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+  const lhs = yield Expression.consumeNode(scope, node.left!);
+  const rhs = yield Expression.consumeNode(scope, node.right!);
 
   if (Arithmetic.isPerformable(lhs) && Arithmetic.isPerformable(rhs)) {
     return Arithmetic.evaluate(lhs, rhs, node.value);
@@ -31,4 +31,4 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   }
 
   throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
-};
+}

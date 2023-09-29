@@ -6,12 +6,12 @@ import * as Equality from '../../core/equality';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { ErrorTypes } from '../../core/types';
+import { ErrorTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
-  const lhs = Expression.consumeNode(scope, node.left!);
-  const rhs = Expression.consumeNode(scope, node.right!);
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+  const lhs = yield Expression.consumeNode(scope, node.left!);
+  const rhs = yield Expression.consumeNode(scope, node.right!);
 
   if (!Equality.isComparable(lhs)) {
     throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
@@ -26,4 +26,4 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   }
 
   return Equality.evaluate(lhs, rhs, node.value);
-};
+}

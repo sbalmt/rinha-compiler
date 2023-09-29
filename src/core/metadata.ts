@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import { Scope, VarValueType } from '../evaluator/scope';
+import { Scope } from '../evaluator/scope';
+import { ValueTypes } from './types';
 
 export type NodeMetadata = {
   lazy: boolean;
@@ -9,15 +10,15 @@ export type NodeMetadata = {
   minParams: number;
   maxParams: number;
   pure: boolean;
-  scope?: Scope<Metadata>;
+  scope?: Scope;
   symbol?: Core.SymbolRecord<Metadata>;
-  value?: VarValueType<Metadata> | Scope<Metadata>;
+  value?: ValueTypes;
 };
 
 export type SymbolMetadata = {
   mutable: boolean;
   references: number;
-  literal?: VarValueType<Metadata>;
+  literal?: ValueTypes;
   follow?: Core.SymbolRecord<Metadata>;
   hoist: boolean;
 };

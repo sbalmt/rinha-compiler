@@ -1,3 +1,16 @@
+import * as Core from '@xcheme/core';
+
+import { Metadata } from './metadata';
+import { Scope } from '../evaluator/scope';
+
+export type TupleTypes = [ValueTypes, ValueTypes];
+
+export type CallbackTypes = (scope: Scope, callee: Core.Node<Metadata>) => ValueTypes;
+
+export type InternalTypes = CallbackTypes | Core.Node<Metadata> | Generator<ValueTypes>;
+
+export type ValueTypes = undefined | string | number | boolean | TupleTypes | InternalTypes;
+
 export const enum ErrorTypes {
   DUPLICATE_IDENTIFIER = 0x100,
   UNEXPECTED_TOKEN,
@@ -52,11 +65,6 @@ export const enum NodeTypes {
   CONDITION = 1400,
   PARAMETERS = 1401,
   BLOCK = 1402,
-
-  FAST_CALL = 1500,
-  LAZY_CALL = 1501,
-  TAIL_CALL = 1502,
-  MEMO_CALL = 1503,
 
   BUILT_IN = 1600
 }

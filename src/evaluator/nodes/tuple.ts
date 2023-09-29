@@ -3,9 +3,10 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { Scope, VarTupleType, VarValueType } from '../scope';
+import { TupleTypes, ValueTypes } from '../../core/types';
+import { Scope } from '../scope';
 
-const resolveValue = (scope: Scope<Metadata>, value: VarValueType<Metadata>): VarValueType<Metadata> => {
+const resolveValue = (scope: Scope, value: ValueTypes): ValueTypes => {
   if (value instanceof Core.Node) {
     return Expression.consumeNode(scope, value);
   }
@@ -17,15 +18,15 @@ const resolveValue = (scope: Scope<Metadata>, value: VarValueType<Metadata>): Va
   return value;
 };
 
-const resolveTuple = (scope: Scope<Metadata>, tuple: VarTupleType<Metadata>): VarTupleType<Metadata> => {
-  tuple[0] = resolveValue(scope, tuple[0]);
-  tuple[1] = resolveValue(scope, tuple[1]);
+function* resolveTuple(scope: Scope, tuple: TupleTypes) {
+  tuple[0] = yield resolveValue(scope, tuple[0]);
+  tuple[1] = yield resolveValue(scope, tuple[1]);
 
   return tuple;
-};
+}
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarTupleType<Metadata> => {
-  const tuple = node.data.value as VarTupleType<Metadata>;
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+  const tuple = node.data.value as TupleTypes;
   const value = resolveTuple(scope, tuple);
 
   return value;

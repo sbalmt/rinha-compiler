@@ -1,8 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import { VarValueType } from '../../evaluator/scope';
 import { Metadata } from '../../core/metadata';
-import { NodeTypes } from '../../core/types';
+import { NodeTypes, ValueTypes } from '../../core/types';
 import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
@@ -45,7 +44,7 @@ const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>, consumers: C
   return undefined;
 };
 
-export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): VarValueType<Metadata> => {
+export const consumeNodes = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes => {
   let value = undefined;
 
   while (node) {

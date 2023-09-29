@@ -1,8 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata, initNode } from './metadata';
-import { VarValueType } from '../evaluator/scope';
-import { NodeTypes, SymbolTypes } from './types';
+import { NodeTypes, SymbolTypes, ValueTypes } from './types';
 
 export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Core.SymbolTable<Metadata>) => {
   return new Core.Node(fragment, value, table);
@@ -42,7 +41,7 @@ export const combineNodes = (
   first: Core.Node<Metadata>,
   last: Core.Node<Metadata>,
   type: NodeTypes,
-  value: VarValueType<Metadata>
+  value: ValueTypes
 ): Core.Node<Metadata> => {
   const lineRange = new Core.Range(first.fragment.location.line.begin, last.fragment.location.line.end);
   const columnRange = new Core.Range(first.fragment.location.column.begin, last.fragment.location.column.end);

@@ -3,14 +3,13 @@ import * as Core from '@xcheme/core';
 import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
-import { NodeTypes } from '../../core/types';
 import { ErrorTypes } from '../../core/types';
 import { Metadata } from '../../core/metadata';
-import { VarValueType } from '../../evaluator/scope';
-import { replaceNode } from '../../core/ast';
+import { NodeTypes, ValueTypes } from '../../core/types';
+//import { replaceNode } from '../../core/ast';
 import { Scope } from '../scope';
 
-const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+const isCallable = (node: ValueTypes): node is Core.Node<Metadata> => {
   return node instanceof Core.Node && node.right instanceof Core.Node;
 };
 
@@ -22,7 +21,7 @@ const isUserDefinedClosure = (node: Core.Node<Metadata>) => {
   return node.value === NodeTypes.CLOSURE;
 };
 
-const isOptimizable = (callerNode: VarValueType<Metadata>): callerNode is Core.Node<Metadata> => {
+const isOptimizable = (callerNode: ValueTypes): callerNode is Core.Node<Metadata> => {
   return isCallable(callerNode) && (isBuiltInClosure(callerNode.right!) || isUserDefinedClosure(callerNode.right!));
 };
 
@@ -39,7 +38,7 @@ const consumeArgumentNodes = (scope: Scope, argumentNode: Core.Node<Metadata>) =
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { enableTailCall, enableMemoization } = scope.options;
+  //const { enableTailCall, enableMemoization } = scope.options;
 
   const callerNode = node.left!;
   const argumentsNode = callerNode.next!;
@@ -53,8 +52,8 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
 
   const closureBody = closureNode.right!;
 
-  const { lazy, pure, minParams, maxParams } = closureBody.data;
-  const { tailCall, selfCall } = node.data;
+  const { /*lazy, pure,*/ minParams, maxParams } = closureBody.data;
+  //const { /tailCall, selfCall } = node.data;
 
   if (argumentsCount < minParams) {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
@@ -64,11 +63,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
   }
 
-  if (isBuiltInClosure(closureNode)) {
-    replaceNode(closureNode, NodeTypes.FAST_CALL);
-    return node;
-  }
-
+  /*
   if (!selfCall && tailCall && lazy) {
     if (enableTailCall) {
       replaceNode(node, NodeTypes.TAIL_CALL);
@@ -90,6 +85,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     }
     return node;
   }
+*/
 
   return node;
 };

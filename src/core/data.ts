@@ -1,10 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import { VarValueType } from '../evaluator/scope';
-import { LazyCall } from '../evaluator/lazy';
-import { Metadata } from './metadata';
+import { ValueTypes } from './types';
 
-export const isLiteral = <T extends Metadata>(value: VarValueType<T>) => {
+export const isLiteral = (value: ValueTypes) => {
   return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value instanceof Array;
 };
 
@@ -16,21 +14,17 @@ export const convertToNumber = (value: string) => {
   return parseInt(value, 10);
 };
 
-export const convertToString = <T extends Metadata>(value: VarValueType<T>) => {
+export const convertToString = (value: ValueTypes) => {
   if (value instanceof Core.Node || value instanceof Function) {
     return '<#closure>';
   }
 
-  if (value instanceof Core.SymbolRecord) {
-    return '<#reference>';
-  }
-
-  if (value instanceof LazyCall) {
-    return '<#lazy-call>';
-  }
-
   if (value instanceof Array) {
     return '(term, term)';
+  }
+
+  if (value instanceof Object) {
+    return '<#object>';
   }
 
   if (typeof value === 'boolean') {

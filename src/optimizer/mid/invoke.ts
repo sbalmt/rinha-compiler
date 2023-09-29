@@ -5,15 +5,14 @@ import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
 import { Metadata, initNode } from '../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../core/types';
-import { VarValueType } from '../../evaluator/scope';
+import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const isAnonymous = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+const isAnonymous = (node: ValueTypes): node is Core.Node<Metadata> => {
   return node instanceof Core.Node && node.value === NodeTypes.CLOSURE;
 };
 
-const isCallable = (node: VarValueType<Metadata>): node is Core.Node<Metadata> => {
+const isCallable = (node: ValueTypes): node is Core.Node<Metadata> => {
   return node instanceof Core.Node && node.data.symbol?.data.literal === undefined;
 };
 

@@ -1,51 +1,31 @@
-import * as Core from '@xcheme/core';
-
-import { Metadata } from '../core/metadata';
+import { ValueTypes } from '../core/types';
 import { BaseScope, BaseScopeOptions } from '../core/scope';
-import { LazyCall } from './lazy';
 
-export type VarCallableType<T extends Metadata> = Core.Node<T> | VarCallbackType<T>;
-
-export type VarCallbackType<T extends Metadata> = (scope: Scope<T>, callee: Core.Node<T>) => VarValueType<T>;
-
-export type VarSingleType<T extends Metadata> =
-  | undefined
-  | number
-  | string
-  | boolean
-  | VarCallableType<T>
-  | Core.SymbolRecord<T>
-  | LazyCall<T>;
-
-export type VarTupleType<T extends Metadata> = [VarValueType<T>, VarValueType<T>];
-
-export type VarValueType<T extends Metadata> = VarSingleType<T> | VarTupleType<T>;
-
-type VarMapType<T extends Metadata> = {
-  [identifier: string]: VarValueType<T>;
+type VarMapType = {
+  [identifier: string]: ValueTypes;
 };
 
-type VarRecordType<T extends Metadata> = {
+type VarRecordType = {
   identifier: string;
-  value: VarValueType<T>;
+  value: ValueTypes;
 };
 
-export class Scope<T extends Metadata> extends BaseScope {
-  private variables: VarMapType<T> = {};
+export class Scope extends BaseScope {
+  private variables: VarMapType = {};
 
-  private parent: Scope<T> | undefined;
+  private parent: Scope | undefined;
 
-  constructor(parent?: Scope<T>, options?: BaseScopeOptions) {
+  constructor(parent?: Scope, options?: BaseScopeOptions) {
     super(options);
 
     this.parent = parent;
   }
 
-  createVariable(identifier: string, value: VarValueType<T>): void {
+  createVariable(identifier: string, value: ValueTypes): void {
     this.variables[identifier] = value;
   }
 
-  updateVariable(identifier: string, value: VarValueType<T>): VarValueType<T> {
+  updateVariable(identifier: string, value: ValueTypes): ValueTypes {
     if (identifier in this.variables) {
       return (this.variables[identifier] = value);
     }
@@ -57,7 +37,7 @@ export class Scope<T extends Metadata> extends BaseScope {
     return value;
   }
 
-  readVariable(identifier: string): VarValueType<T> {
+  readVariable(identifier: string): ValueTypes {
     if (identifier in this.variables) {
       return this.variables[identifier];
     }
@@ -69,7 +49,7 @@ export class Scope<T extends Metadata> extends BaseScope {
     return undefined;
   }
 
-  *[Symbol.iterator](): Iterator<VarRecordType<T>> {
+  *[Symbol.iterator](): Iterator<VarRecordType> {
     for (const identifier in this.variables) {
       yield {
         identifier,

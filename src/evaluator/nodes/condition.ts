@@ -4,10 +4,11 @@ import * as Block from './block';
 import * as Expression from './expression';
 
 import { Metadata } from '../../core/metadata';
-import { Scope, VarValueType } from '../scope';
+import { ValueTypes } from '../../core/types';
+import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
-  const condition = Expression.consumeNode(scope, node.right!);
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+  const condition = yield Expression.consumeNode(scope, node.right!);
   const blockScope = new Scope(scope, scope.options);
 
   const successBlock = node.next!;
@@ -24,4 +25,4 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): 
   }
 
   return undefined;
-};
+}

@@ -5,22 +5,21 @@ import * as Expression from './expression';
 import * as Condition from './condition';
 
 import { Metadata } from '../../core/metadata';
-import { NodeTypes } from '../../core/types';
-import { Scope, VarValueType } from '../scope';
+import { NodeTypes, ValueTypes } from '../../core/types';
+import { Scope } from '../scope';
 
-const consumeInnerNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const innerScope = new Scope(scope, scope.options);
   return consumeNodes(innerScope, node);
 };
 
-const consumeSingleNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+const consumeSingleNode = (scope: Scope, node: Core.Node<Metadata>) => {
   switch (node.value) {
     case NodeTypes.EXPRESSION:
       return Expression.consumeNode(scope, node.right!);
 
     case NodeTypes.VARIABLE:
-      Variable.consumeNode(scope, node.right!);
-      break;
+      return Variable.consumeNode(scope, node.right!);
 
     case NodeTypes.IF_ELSE:
       return Condition.consumeNode(scope, node.right!);
@@ -31,17 +30,15 @@ const consumeSingleNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>): V
     default:
       throw `Unexpected block node type (${node.value}).`;
   }
-
-  return undefined;
 };
 
-export const consumeNodes = (scope: Scope<Metadata>, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   let value;
 
   while (node) {
-    value = consumeSingleNode(scope, node);
+    value = yield consumeSingleNode(scope, node);
     node = node.next!;
   }
 
   return value;
-};
+}

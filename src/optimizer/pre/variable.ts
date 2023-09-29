@@ -5,10 +5,10 @@ import * as Variable from '../ast/variable';
 import * as Expression from './expression';
 
 import { Metadata, initSymbol } from '../../core/metadata';
-import { VarValueType } from '../../evaluator/scope';
+import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const isReference = (value: VarValueType<Metadata>): value is Core.Node<Metadata> => {
+const isReference = (value: ValueTypes): value is Core.Node<Metadata> => {
   return value instanceof Core.Node;
 };
 

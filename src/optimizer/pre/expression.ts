@@ -14,12 +14,11 @@ import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
 import * as Invoke from '../ast/invoke';
 
-import { VarValueType } from '../../evaluator/scope';
 import { Metadata } from '../../core/metadata';
-import { NodeTypes } from '../../core/types';
+import { NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): VarValueType<Metadata> => {
+export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): ValueTypes => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);

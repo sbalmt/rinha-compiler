@@ -7,17 +7,17 @@ import * as Expression from './expression';
 import * as Block from './block';
 
 import { Metadata } from '../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../core/types';
+import { CallbackTypes, ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { isLiteral } from '../../core/data';
-import { Scope, VarCallbackType } from '../scope';
+import { Scope } from '../scope';
 
 const isCallable = (node: Core.Node<Metadata> | undefined) => {
   return node instanceof Core.Node && (node?.value === NodeTypes.CLOSURE || node?.value === NodeTypes.BUILT_IN);
 };
 
-export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) => {
+export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const callerNode = node.left!;
-  const closureNode = Expression.consumeNode(scope, callerNode) as Core.Node<Metadata>;
+  const closureNode = yield Expression.consumeNode(scope, callerNode) as Core.Node<Metadata>;
 
   // TODO: Further investigate why returning literals from inner tail call
   if (isLiteral(closureNode)) {
@@ -32,12 +32,12 @@ export const consumeNode = (scope: Scope<Metadata>, node: Core.Node<Metadata>) =
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
   const closureBlock = closureParameters.next!;
-  const closureScope = Parameters.consumeNodes(scope, closureNode, closureFirstParameter, argumentsNode);
+  const closureScope = yield Parameters.consumeNodes(scope, closureNode, closureFirstParameter, argumentsNode);
 
   if (closureNode.value === NodeTypes.BUILT_IN) {
     const { value } = closureNode.data;
-    return (value as VarCallbackType<Metadata>)(closureScope, callerNode);
+    return (value as CallbackTypes)(closureScope, callerNode);
   }
 
   return Block.consumeNodes(closureScope, closureBlock.right!);
-};
+}
