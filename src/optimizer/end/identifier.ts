@@ -1,17 +1,27 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
+import { SymbolTypes } from '../../core/types';
 import { Scope } from '../scope';
 
+const isNotParameter = (symbol: Core.SymbolRecord<Metadata>) => {
+  return symbol.value !== SymbolTypes.Parameter;
+};
+
+const canBeUnFolded = (symbol: Core.SymbolRecord<Metadata>) => {
+  return symbol.data.literal !== undefined && !symbol.data.mutable;
+};
+
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { constantFolding } = scope.options;
-
   const symbol = node.data.symbol!;
-  const { mutable, literal } = symbol.data;
 
-  if (literal !== undefined && !mutable && constantFolding) {
-    return literal;
+  if (canBeUnFolded(symbol) && scope.options.constantFolding) {
+    return symbol.data.literal;
   }
 
-  return symbol.node ?? node;
+  if (isNotParameter(symbol)) {
+    return symbol.node;
+  }
+
+  return node;
 };

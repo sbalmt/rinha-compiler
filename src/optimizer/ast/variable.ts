@@ -9,8 +9,8 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, expression
   const previousDeclarationNode = scope.declarationNode;
   scope.declarationNode = node;
 
-  const value = yield expressionConsumer(scope, node.right!);
+  const result = yield expressionConsumer(scope, node.right!);
   scope.declarationNode = previousDeclarationNode;
 
-  return value;
+  return result;
 }

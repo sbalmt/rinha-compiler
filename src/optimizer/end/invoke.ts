@@ -3,72 +3,71 @@ import * as Core from '@xcheme/core';
 import * as Errors from '../../core/errors';
 import * as Expression from './expression';
 
-import { ErrorTypes } from '../../core/types';
+import { ErrorTypes, NodeTypes } from '../../core/types';
 import { Metadata } from '../../core/metadata';
-import { NodeTypes, ValueTypes } from '../../core/types';
-//import { replaceNode } from '../../core/ast';
+import { ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const isCallable = (node: ValueTypes): node is Core.Node<Metadata> => {
-  return node instanceof Core.Node && node.right instanceof Core.Node;
+const isClosureBlock = (closureNode: Core.Node<Metadata>) => {
+  return closureNode.value === NodeTypes.CLOSURE;
 };
 
-const isBuiltInClosure = (node: Core.Node<Metadata>) => {
-  return node.value === NodeTypes.BUILT_IN;
+const isClosureReference = (closureNode: Core.Node<Metadata>) => {
+  return closureNode.value === NodeTypes.IDENTIFIER;
 };
 
-const isUserDefinedClosure = (node: Core.Node<Metadata>) => {
-  return node.value === NodeTypes.CLOSURE;
+const isResolvedClosure = (closureNode: Core.Node<Metadata>) => {
+  return closureNode.right !== undefined;
 };
 
-const isOptimizable = (callerNode: ValueTypes): callerNode is Core.Node<Metadata> => {
-  return isCallable(callerNode) && (isBuiltInClosure(callerNode.right!) || isUserDefinedClosure(callerNode.right!));
+export const getClosureBlock = (closureNode: Core.Node<Metadata>) => {
+  if (!isResolvedClosure(closureNode)) {
+    return undefined;
+  }
+
+  if (isClosureReference(closureNode)) {
+    if (isClosureBlock(closureNode.right!)) {
+      return closureNode.right!;
+    }
+  } else {
+    if (isClosureBlock(closureNode)) {
+      return closureNode;
+    }
+  }
+
+  return undefined;
 };
 
-function* consumeArgumentNodes(scope: Scope, argumentNode: Core.Node<Metadata>) {
-  let counter = 0;
-
+function* consumeAndCountArgumentNodes(scope: Scope, argumentNode: Core.Node<Metadata>) {
+  let total = 0;
   while (argumentNode) {
     yield Expression.consumeNode(scope, argumentNode);
     argumentNode = argumentNode.next!;
-    counter++;
+    total++;
   }
-
-  return counter;
+  return total;
 }
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
-  const { enableMemoization } = scope.options;
+  const calleeNode = node.left!;
+  const calleeFirstArgumentNode = calleeNode.next!;
 
-  const callerNode = node.left!;
-  const argumentsNode = callerNode.next!;
-  const argumentsCount = yield consumeArgumentNodes(scope, argumentsNode);
-  const closureNode = yield Expression.consumeNode(scope, callerNode);
+  const totalArgs = yield consumeAndCountArgumentNodes(scope, calleeFirstArgumentNode);
+  const closureNode = yield Expression.consumeNode(scope, calleeNode);
+  const closureBlock = getClosureBlock(closureNode);
 
-  // TODO: If a closureNode is a known expression (literal/reference) replace the call instead.
-  if (!isOptimizable(closureNode)) {
+  if (!closureBlock) {
     return node;
   }
 
-  const closureBody = closureNode.right!;
+  const { minParams, maxParams } = closureBlock.data;
 
-  const { pure, minParams, maxParams } = closureBody.data;
-  const { selfCall } = node.data;
-
-  if (argumentsCount < minParams) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, callerNode.fragment);
+  if (totalArgs! < minParams!) {
+    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
   }
 
-  if (argumentsCount > maxParams) {
-    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, callerNode.fragment);
-  }
-
-  if (selfCall && pure && minParams > 0) {
-    if (enableMemoization) {
-      //console.log('MEMO');
-      // replaceNode(node, NodeTypes.MEMO_CALL);
-    }
-    return node;
+  if (totalArgs! > maxParams!) {
+    throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
   }
 
   return node;

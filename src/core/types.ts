@@ -63,7 +63,7 @@ export const enum NodeTypes {
   IF_ELSE = 1302,
 
   CONDITION = 1400,
-  PARAMETERS = 1401,
+  PARAMETER = 1401,
   BLOCK = 1402,
 
   BUILT_IN = 1600

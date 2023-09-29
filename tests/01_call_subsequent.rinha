@@ -1,9 +1,9 @@
 let call = fn (x) => {
-    fn (y) => {
-        fn (z) => {
-            x * y + z
+    fn () => {
+        fn (y) => {
+            x * y
         }
     }
 };
 
-assert(call(10)(5)(50) == 100)
+assert(call(10)()(10) == 100)

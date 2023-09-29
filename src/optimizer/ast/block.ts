@@ -22,24 +22,24 @@ const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Co
 };
 
 export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes {
-  let value;
+  let result;
 
   while (node) {
     switch (node.value) {
       case NodeTypes.EXPRESSION:
-        value = yield consumers.expressionConsumer(scope, node.right!);
+        result = yield consumers.expressionConsumer(scope, node.right!);
         break;
 
       case NodeTypes.VARIABLE:
-        value = yield consumers.variableConsumer(scope, node.right!);
+        result = yield consumers.variableConsumer(scope, node.right!);
         break;
 
       case NodeTypes.IF_ELSE:
-        value = yield consumers.conditionConsumer(scope, node.right!);
+        result = yield consumers.conditionConsumer(scope, node.right!);
         break;
 
       case NodeTypes.BLOCK:
-        value = yield consumeInnerNode(scope, node, consumers);
+        result = yield consumeInnerNode(scope, node, consumers);
         break;
 
       default:
@@ -57,5 +57,5 @@ export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>, consumers
     scope.currentNode = node;
   }
 
-  return value;
+  return result;
 }

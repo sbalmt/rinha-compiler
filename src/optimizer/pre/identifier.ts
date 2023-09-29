@@ -6,7 +6,7 @@ import { Metadata, initNode, initSymbol } from '../../core/metadata';
 import { ErrorTypes, SymbolTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const canHoist = (symbol: Core.SymbolRecord<Metadata>) => {
+const canBeHoisted = (symbol: Core.SymbolRecord<Metadata>) => {
   return symbol.value === SymbolTypes.Identifier;
 };
 
@@ -24,19 +24,19 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
   }
 
+  initSymbol(symbol, {
+    hoist: isNotSelfCall(scope, node) && canBeHoisted(symbol)
+  });
+
   initNode(node, {
     symbol
   });
 
-  const data = initSymbol(symbol, {
-    hoist: isNotSelfCall(scope, node) && canHoist(symbol)
-  });
-
-  if (data.hoist && !enableHoisting) {
+  if (symbol.data.hoist && !enableHoisting) {
     throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
   }
 
-  data.references++;
+  symbol.data.references++;
 
   return node;
 };

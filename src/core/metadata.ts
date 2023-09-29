@@ -4,10 +4,9 @@ import { Scope } from '../evaluator/scope';
 import { ValueTypes } from './types';
 
 export type NodeMetadata = {
-  selfCall: boolean;
-  minParams: number;
-  maxParams: number;
   pure: boolean;
+  minParams?: number;
+  maxParams?: number;
   scope?: Scope;
   symbol?: Core.SymbolRecord<Metadata>;
   value?: ValueTypes;
@@ -46,7 +45,6 @@ export const initNode = (node: Core.Node<Metadata>, initOptions?: Partial<NodeMe
     const maxParams = initOptions?.maxParams ?? minParams;
 
     node.assign({
-      selfCall: false,
       pure: true,
       ...initOptions,
       minParams,

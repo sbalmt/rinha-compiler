@@ -18,7 +18,7 @@ const createFragment = (identifier: string) => {
 };
 
 const createParameterNode = (identifier: string, table: Core.SymbolTable<Metadata>) => {
-  return new Core.Node(createFragment(identifier), NodeTypes.IDENTIFIER, table);
+  return new Core.Node(createFragment(identifier), NodeTypes.PARAMETER, table);
 };
 
 const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>, options?: Partial<NodeMetadata>) => {
@@ -28,12 +28,12 @@ const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata
     return current;
   }
 
-  const identifierNode = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
+  const calleeNode = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
   const closureNode = new Core.Node(fragment, NodeTypes.BUILT_IN, table);
-  const closureParameters = new Core.Node(fragment, NodeTypes.PARAMETERS, table);
-  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, identifierNode);
+  const closureParameters = new Core.Node(fragment, NodeTypes.BLOCK, table);
+  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, calleeNode);
 
-  identifierNode.set(Core.NodeDirection.Right, closureNode);
+  calleeNode.set(Core.NodeDirection.Right, closureNode);
   closureNode.set(Core.NodeDirection.Right, closureParameters);
 
   table.insert(symbol);
@@ -43,7 +43,7 @@ const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata
   const data = initNode(closureNode, options);
   let parameterDirection = Core.NodeDirection.Right;
 
-  for (let index = 0; index < data.maxParams; ++index) {
+  for (let index = 0; index < data.maxParams!; ++index) {
     const parameterNode = createParameterNode(`arg${index}`, table);
     closureParameters.set(parameterDirection, parameterNode);
     parameterDirection = Core.NodeDirection.Next;

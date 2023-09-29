@@ -6,11 +6,11 @@ import * as Tuple from '../ast/tuple';
 import * as Ternary from '../ast/ternary';
 import * as Assignment from '../ast/assignment';
 import * as Binary from '../ast/binary';
+import * as Invoke from '../ast/invoke';
 
 import * as Block from './block';
 import * as Condition from './condition';
 import * as Identifier from './identifier';
-import * as Invoke from './invoke';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes, ValueTypes } from '../../core/types';
@@ -54,7 +54,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): ValueTypes
       return Binary.consumeNode(scope, node, consumeNode);
 
     case NodeTypes.INVOKE:
-      return Invoke.consumeNode(scope, node);
+      return Invoke.consumeNode(scope, node, consumeNode);
 
     default:
       throw `Unable to optimize expression node type (${node.value}).`;

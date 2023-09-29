@@ -32,11 +32,11 @@ export function* consumeNodes(
     argumentsCount++;
   }
 
-  if (argumentsCount < minParams) {
+  if (argumentsCount < minParams!) {
     throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, closureNode.fragment);
   }
 
-  if (argumentsCount > maxParams) {
+  if (argumentsCount > maxParams!) {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, closureNode.fragment);
   }
 

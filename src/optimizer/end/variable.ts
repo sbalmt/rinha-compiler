@@ -43,5 +43,5 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
     }
   }
 
-  return node;
+  return symbol.node;
 }

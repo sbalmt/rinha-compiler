@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
-import { replaceNode, replaceSymbol } from '../../core/ast';
+import { replaceNode } from '../../core/ast';
 import { NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
@@ -29,9 +29,9 @@ const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node
   const reference = followReferences(symbol);
 
   if (reference && reference !== symbol) {
-    const identifierNode = reference.node!;
-    replaceNode(node, NodeTypes.IDENTIFIER, identifierNode);
-    replaceSymbol(symbol, reference.value, node);
+    const referenceNode = reference.node!;
+    replaceNode(node, NodeTypes.IDENTIFIER, referenceNode);
+    node.data.symbol = reference;
   }
 
   return node;
@@ -51,6 +51,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { constantFolding, constantPropagation } = scope.options;
 
   const symbol = node.data.symbol!;
+
   const { mutable, literal } = symbol.data;
 
   if (mutable || (!constantFolding && !constantPropagation)) {

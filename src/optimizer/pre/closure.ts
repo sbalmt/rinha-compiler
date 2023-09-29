@@ -7,24 +7,22 @@ import * as Block from './block';
 import { Metadata, initNode } from '../../core/metadata';
 import { Scope } from '../scope';
 
-const countParameters = (node: Core.Node<Metadata>): number => {
+const countParameters = (parameterNode: Core.Node<Metadata>): number => {
   let counter = 0;
-
-  while (node) {
-    node = node.next!;
+  while (parameterNode) {
+    parameterNode = parameterNode.next!;
     counter++;
   }
-
   return counter;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const parametersNode = node.right!;
-  const parametersCount = countParameters(parametersNode.right!);
+export const consumeNode = (scope: Scope, closureNode: Core.Node<Metadata>) => {
+  const parameterNode = closureNode.right!;
+  const firstParameterNode = parameterNode.right!;
 
-  initNode(node, {
-    minParams: parametersCount
+  initNode(closureNode, {
+    minParams: countParameters(firstParameterNode)
   });
 
-  return Closure.consumeNode(scope, node, Block.consumeNodes);
+  return Closure.consumeNode(scope, closureNode, Block.consumeNodes);
 };
