@@ -1,4 +1,4 @@
 // TODO: Allow same arguments for anonymous function, no matter the scope.
 
-(fn (arg1) => assert(arg1 == false))(false)
-(fn (arg2) => assert(arg2))(true)
+let x = (fn (arg1) => assert(arg1 == false))(false);
+let y = (fn (arg2) => assert(arg2))(true);

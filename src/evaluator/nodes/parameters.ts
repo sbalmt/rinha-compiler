@@ -16,6 +16,7 @@ export function* consumeNodes(
 ): ValueTypes {
   const closureScope = closureNode.data.scope!;
   const callScope = new Scope(closureScope, closureScope.options);
+
   const { minParams, maxParams } = closureNode.data;
 
   let argumentsCount = 0;

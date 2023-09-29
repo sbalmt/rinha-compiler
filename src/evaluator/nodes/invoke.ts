@@ -19,20 +19,21 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
   const callerNode = node.left!;
   const closureNode = yield Expression.consumeNode(scope, callerNode) as Core.Node<Metadata>;
 
-  // TODO: Further investigate why returning literals from inner tail call
-  if (isLiteral(closureNode)) {
-    return closureNode;
-  }
-
   if (!isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, (closureNode ?? callerNode).fragment);
   }
 
-  const argumentsNode = callerNode.next!;
+  const closureFirstArgumentNode = callerNode.next!;
   const closureParameters = closureNode.right!;
   const closureFirstParameter = closureParameters.right!;
   const closureBlock = closureParameters.next!;
-  const closureScope = yield Parameters.consumeNodes(scope, closureNode, closureFirstParameter, argumentsNode);
+
+  const closureScope = yield Parameters.consumeNodes(
+    scope,
+    closureNode,
+    closureFirstParameter,
+    closureFirstArgumentNode
+  );
 
   if (closureNode.value === NodeTypes.BUILT_IN) {
     const { value } = closureNode.data;
