@@ -30,23 +30,49 @@ const followReferences = (symbol: Core.SymbolRecord<Metadata>): Core.SymbolRecor
   return eligible;
 };
 
-const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
-  const reference = followReferences(symbol);
+const replaceByFollowedReference = (node: Core.Node<Metadata>, reference: Core.SymbolRecord<Metadata>) => {
+  const referenceNode = reference.node!;
 
-  if (reference && reference !== symbol) {
-    const referenceNode = reference.node!;
-    replaceNode(node, NodeTypes.IDENTIFIER, referenceNode);
-    node.data.symbol = reference;
-  }
+  replaceNode(node, NodeTypes.IDENTIFIER, referenceNode);
+  node.data.symbol = reference;
 
   return node;
 };
 
+const replaceByFollowedLiteral = (
+  node: Core.Node<Metadata>,
+  symbol: Core.SymbolRecord<Metadata>,
+  reference: Core.SymbolRecord<Metadata>
+) => {
+  const referenceNode = reference.node!;
+  const literalNode = referenceNode.right!;
+
+  replaceNode(node, literalNode.value, literalNode);
+  symbol.data.references--;
+
+  return reference.data.literal;
+};
+
+const applyReferenceNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
+  const reference = followReferences(symbol);
+  if (!reference || reference === symbol) {
+    return node;
+  }
+
+  const { mutable, literal } = reference.data;
+
+  if (mutable || literal === undefined) {
+    return replaceByFollowedReference(node, reference);
+  }
+
+  return replaceByFollowedLiteral(node, symbol, reference);
+};
+
 const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
   const referenceNode = symbol.node!;
-  const valueNode = referenceNode.right!;
+  const literalNode = referenceNode.right!;
 
-  replaceNode(node, valueNode.value, valueNode);
+  replaceNode(node, literalNode.value, literalNode);
   symbol.data.references--;
 
   return symbol.data.literal;
@@ -54,8 +80,8 @@ const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<M
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { constantPropagation } = scope.options;
-  const symbol = node.data.symbol!;
 
+  const symbol = node.data.symbol!;
   const { mutable, literal } = symbol.data;
 
   if (mutable || !constantPropagation) {
