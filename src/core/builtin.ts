@@ -41,12 +41,15 @@ const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata
   initSymbol(symbol);
 
   const data = initNode(closureNode, options);
+
+  let previousParameter = closureParameters;
   let parameterDirection = Core.NodeDirection.Right;
 
   for (let index = 0; index < data.maxParams!; ++index) {
     const parameterNode = createParameterNode(`arg${index}`, table);
-    closureParameters.set(parameterDirection, parameterNode);
+    previousParameter.set(parameterDirection, parameterNode);
     parameterDirection = Core.NodeDirection.Next;
+    previousParameter = parameterNode;
   }
 
   return symbol;

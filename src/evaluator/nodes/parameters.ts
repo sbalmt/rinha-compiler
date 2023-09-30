@@ -18,27 +18,28 @@ export function* consumeNodes(
   const closureScope = closureNode.data.scope!;
   const callScope = new Scope(closureScope);
 
-  const { minParams, maxParams } = closureNode.data;
+  let argumentCount = 0;
 
-  let argumentsCount = 0;
+  while (parameterNode) {
+    if (!argumentNode) {
+      if (argumentCount < closureNode.data.minParams!) {
+        throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
+      }
+      break;
+    }
 
-  while (parameterNode && argumentNode) {
     const argumentValue = yield Expression.consumeNode(scope, argumentNode);
     const identifier = parameterNode.fragment.data;
 
     callScope.createVariable(identifier, argumentValue);
 
-    argumentsCount++;
-
     parameterNode = parameterNode.next!;
     argumentNode = argumentNode.next!;
+
+    argumentCount++;
   }
 
-  if (argumentsCount < minParams!) {
-    throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
-  }
-
-  if (argumentsCount > maxParams!) {
+  if (argumentNode) {
     throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
   }
 
