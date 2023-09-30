@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Variable from '../ast/variable';
-
 import * as Expression from './expression';
 
 import { Metadata, initSymbol } from '../../core/metadata';
@@ -29,6 +27,16 @@ const canRemoveDefinition = (symbol: Core.SymbolRecord<Metadata>) => {
   return (literal !== undefined || references <= 0) && !mutable;
 };
 
+function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+  const previousDeclarationNode = scope.declarationNode;
+  scope.declarationNode = node;
+
+  const result = yield Expression.consumeNode(scope, node.right!);
+  scope.declarationNode = previousDeclarationNode;
+
+  return result;
+}
+
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
   const { enableHoisting, constantPropagation } = scope.options;
 
@@ -36,7 +44,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
 
   if (!symbol.assigned) {
     const data = initSymbol(symbol);
-    const result = yield Variable.consumeNode(scope, node, Expression.consumeNode);
+    const result = yield consumeInnerNode(scope, node);
 
     if (isLiteral(result)) {
       data.literal = result;
@@ -45,7 +53,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
     }
   } else {
     const data = symbol.data;
-    const result = yield Variable.consumeNode(scope, node, Expression.consumeNode);
+    const result = yield consumeInnerNode(scope, node);
 
     if (constantPropagation && canRemoveDefinition(symbol)) {
       removeDefinition(scope);
