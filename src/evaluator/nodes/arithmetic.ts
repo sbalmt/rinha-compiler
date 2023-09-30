@@ -1,9 +1,7 @@
 import * as Errors from '../../core/errors';
-import * as Arithmetic from '../../core/arithmetic';
-import * as Concat from '../../core/concat';
-
 import * as Expression from './expression';
 
+import { Arithmetic, Concat } from '../../core/operations';
 import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 

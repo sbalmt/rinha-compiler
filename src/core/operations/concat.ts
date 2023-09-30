@@ -1,4 +1,4 @@
-import { convertToString } from './data';
+import { convertToString } from '../data';
 
 export type ValueType = string | number;
 

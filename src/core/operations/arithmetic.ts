@@ -1,5 +1,5 @@
-import { NodeTypes } from './types';
-import { ensureInt32 } from './data';
+import { NodeTypes } from '../types';
+import { ensureInt32 } from '../data';
 
 export type OperationType =
   | NodeTypes.ADD

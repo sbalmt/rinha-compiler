@@ -1,5 +1,4 @@
 import * as Errors from '../../core/errors';
-
 import * as Expression from './expression';
 
 import { initSymbol } from '../../core/metadata';

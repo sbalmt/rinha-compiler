@@ -1,5 +1,5 @@
 import * as Errors from '../../core/errors';
-import * as Equality from '../../core/equality';
+import * as Equality from '../../core/operations/equality';
 
 import * as Expression from './expression';
 

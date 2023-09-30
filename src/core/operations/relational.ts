@@ -1,4 +1,4 @@
-import { NodeTypes } from './types';
+import { NodeTypes } from '../types';
 
 export type OperationType =
   | NodeTypes.GREATER_THAN

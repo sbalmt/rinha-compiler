@@ -1,8 +1,7 @@
 import * as Errors from '../../core/errors';
-import * as Logical from '../../core/logical';
-
 import * as Expression from './expression';
 
+import { Logical } from '../../core/operations';
 import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { combineNodes } from '../../core/ast';
 import { isLiteral } from '../../core/data';

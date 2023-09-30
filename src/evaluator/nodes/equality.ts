@@ -1,8 +1,7 @@
 import * as Errors from '../../core/errors';
-import * as Equality from '../../core/equality';
-
 import * as Expression from './expression';
 
+import { Equality } from '../../core/operations';
 import { ErrorTypes, NodeType, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
