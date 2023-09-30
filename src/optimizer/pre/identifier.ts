@@ -21,7 +21,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   initSymbol(symbol, {
-    hoist: canBeHoisted(symbol)
+    hoist: !scope.isMatchingClosureDeclaration(node) && canBeHoisted(symbol)
   });
 
   initNode(node, {

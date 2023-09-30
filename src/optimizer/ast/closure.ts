@@ -10,6 +10,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, blockConsu
   const blockNode = parametersNode.next!;
   const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope);
 
+  blockScope.closureDeclarationNode = blockScope.declarationNode;
   blockScope.closureNode = node;
 
   yield blockConsumer(blockScope, blockScope.currentNode);

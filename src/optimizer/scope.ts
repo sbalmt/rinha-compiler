@@ -23,6 +23,8 @@ export class Scope extends BaseScope {
 
   declarationNode?: Core.Node<Metadata>;
 
+  closureDeclarationNode?: Core.Node<Metadata>;
+
   constructor(
     anchorNode: Core.Node<Metadata>,
     anchorDirection: Core.NodeDirection,
@@ -43,6 +45,7 @@ export class Scope extends BaseScope {
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
     this.declarationNode = parentScope?.declarationNode;
+    this.closureDeclarationNode = parentScope?.closureDeclarationNode;
   }
 
   get options(): ScopeOptions {
@@ -51,5 +54,9 @@ export class Scope extends BaseScope {
 
   isMatchingDeclaration(node: Core.Node<Metadata>) {
     return this.declarationNode?.fragment.data === node.fragment.data;
+  }
+
+  isMatchingClosureDeclaration(node: Core.Node<Metadata>) {
+    return this.closureDeclarationNode?.fragment.data === node.fragment.data;
   }
 }
