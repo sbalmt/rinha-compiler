@@ -10,10 +10,6 @@ const canBeHoisted = (symbol: Core.SymbolRecord<Metadata>) => {
   return symbol.value === SymbolTypes.Identifier;
 };
 
-const isNotSelfCall = (scope: Scope, node: Core.Node<Metadata>) => {
-  return !scope.isMatchingDeclaration(node);
-};
-
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   const { enableHoisting } = scope.options;
 
@@ -25,7 +21,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
   }
 
   initSymbol(symbol, {
-    hoist: isNotSelfCall(scope, node) && canBeHoisted(symbol)
+    hoist: canBeHoisted(symbol)
   });
 
   initNode(node, {
