@@ -53,13 +53,12 @@ const applyLiteralNode = (symbol: Core.SymbolRecord<Metadata>, node: Core.Node<M
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const { constantFolding, constantPropagation } = scope.options;
-
+  const { constantPropagation } = scope.options;
   const symbol = node.data.symbol!;
 
   const { mutable, literal } = symbol.data;
 
-  if (mutable || (!constantFolding && !constantPropagation)) {
+  if (mutable || !constantPropagation) {
     return node;
   }
 

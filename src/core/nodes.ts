@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import { convertToString } from './data';
 import { serializeString } from './string';
 import { Metadata } from './metadata';
 import { NodeTypes } from './types';
@@ -10,15 +11,27 @@ const formatString = (string: string) => {
   return serializeString(string.length > MaxLength ? `${string.substring(0, MaxLength).trim()}...` : string);
 };
 
+const getExtraSymbolDetails = (node: Core.Node<Metadata>) => {
+  const symbol = node.table.find(node.fragment);
+  const { references, mutable } = symbol!.data;
+  return `[RC: ${references ?? '?'}, IM: ${mutable ? 'F' : 'T'}]`;
+};
+
+const getExtraLiteralDetails = (node: Core.Node<Metadata>) => {
+  return `[LV: ${convertToString(node.data.value)}]`;
+};
+
 const getExtraDetails = (node: Core.Node<Metadata>) => {
-  if (node.value === NodeTypes.IDENTIFIER) {
-    const symbol = node.table.find(node.fragment);
-    const { references, mutable } = symbol!.data;
-
-    return `[RC: ${references ?? '?'}, IM: ${mutable ? 'F' : 'T'}]`;
+  switch (node.value) {
+    case NodeTypes.IDENTIFIER:
+      return getExtraSymbolDetails(node);
+    case NodeTypes.INTEGER:
+    case NodeTypes.STRING:
+    case NodeTypes.BOOLEAN:
+      return getExtraLiteralDetails(node);
+    default:
+      return '';
   }
-
-  return '';
 };
 
 export const printNodes = (node: Core.Node<Metadata>, level: string = '', direction: string = 'T') => {
