@@ -14,9 +14,9 @@ export function* consumeNodes(
   closureNode: Core.Node<Metadata>,
   parameterNode: Core.Node<Metadata>,
   argumentNode: Core.Node<Metadata>
-): ValueTypes {
+): Generator<ValueTypes, Scope, ValueTypes> {
   const closureScope = closureNode.data.scope!;
-  const callScope = new Scope(closureScope, closureScope.options);
+  const callScope = new Scope(closureScope);
 
   const { minParams, maxParams } = closureNode.data;
 
@@ -43,6 +43,7 @@ export function* consumeNodes(
   }
 
   callScope.closureNode = closureNode;
+  callScope.cache = scope.cache;
 
   return callScope;
 }

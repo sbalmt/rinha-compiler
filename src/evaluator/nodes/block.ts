@@ -9,7 +9,7 @@ import { NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
-  const innerScope = new Scope(scope, scope.options);
+  const innerScope = new Scope(scope);
   return consumeNodes(innerScope, node);
 };
 

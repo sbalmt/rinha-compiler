@@ -4,6 +4,7 @@ import { Metadata } from './metadata';
 
 export type BaseScopeOptions = {
   debug?: boolean;
+  enableMemoization?: boolean;
 };
 
 export class BaseScope {
@@ -18,6 +19,7 @@ export class BaseScope {
 
     this.scopeOptions = {
       debug: false,
+      enableMemoization: true,
       ...options
     };
 

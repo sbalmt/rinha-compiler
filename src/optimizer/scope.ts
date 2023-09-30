@@ -7,7 +7,6 @@ export type ScopeOptions = BaseScopeOptions & {
   enableHoisting?: boolean;
   constantFolding?: boolean;
   constantPropagation?: boolean;
-  enableMemoization?: boolean;
   enableTailCall?: boolean;
 };
 
@@ -34,7 +33,6 @@ export class Scope extends BaseScope {
       enableHoisting: true,
       constantFolding: true,
       constantPropagation: true,
-      enableMemoization: true,
       enableTailCall: true,
       ...(options ?? parentScope?.options)
     });

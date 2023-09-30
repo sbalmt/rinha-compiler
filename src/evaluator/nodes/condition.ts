@@ -9,8 +9,8 @@ import { Scope } from '../scope';
 
 const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
   if (node.right) {
-    const blockScope = new Scope(scope, scope.options);
-    return Block.consumeNodes(blockScope, node.right);
+    const innerScope = new Scope(scope);
+    return Block.consumeNodes(innerScope, node.right);
   }
   return undefined;
 };

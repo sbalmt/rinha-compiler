@@ -9,6 +9,7 @@ import * as Block from './block';
 import { Metadata } from '../../core/metadata';
 import { CallbackTypes, ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
+import { Cache } from '../cache';
 
 const isRecursion = (scope: Scope, closureNode: Core.Node<Metadata>) => {
   return scope.closureNode === closureNode;
@@ -23,15 +24,13 @@ const isBuiltIn = (closureNode: Core.Node<Metadata>) => {
 };
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+  const { enableMemoization } = scope.options;
+
   const calleeNode = node.left!;
   const closureNode = yield Expression.consumeNode(scope, calleeNode) as Core.Node<Metadata>;
 
   if (!isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, calleeNode.fragment);
-  }
-
-  if (isRecursion(scope, closureNode)) {
-    // TODO: re-enable memoization
   }
 
   const closureFirstArgumentNode = calleeNode.next!;
@@ -49,6 +48,28 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueType
 
   if (isBuiltIn(closureNode)) {
     return (closureNode.data.value as CallbackTypes)(closureScope, calleeNode);
+  }
+
+  if (enableMemoization && closureFirstArgumentNode && isRecursion(scope, closureNode)) {
+    const cacheKey = Cache.buildKey(closureScope);
+
+    if (!scope.cache) {
+      scope.cache = new Cache();
+      closureScope.cache = scope.cache;
+
+      const result = yield Block.consumeNodes(closureScope, closureBlock.right!);
+      scope.cache.store(cacheKey, result);
+      return result;
+    }
+
+    const cacheResult = scope.cache.retrieve(cacheKey);
+    if (cacheResult !== undefined) {
+      return cacheResult;
+    }
+
+    const result = yield Block.consumeNodes(closureScope, closureBlock.right!);
+    scope.cache.store(cacheKey, result);
+    return result;
   }
 
   return Block.consumeNodes(closureScope, closureBlock.right!);

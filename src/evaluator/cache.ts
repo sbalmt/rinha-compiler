@@ -1,30 +1,34 @@
+import * as Core from '@xcheme/core';
+
 import { ValueTypes } from '../core/types';
 import { Scope } from './scope';
 
-type CacheType = {
+type CacheResults = {
   [key: string]: ValueTypes;
 };
 
-const globalCache: CacheType = {};
+export class Cache {
+  private results: CacheResults = {};
 
-export const storeCache = (key: string, value: ValueTypes): void => {
-  globalCache[key] = value;
-};
+  static buildKey(scope: Scope): string {
+    const pairs = [];
 
-export const retrieveCache = (key: string): ValueTypes => {
-  return globalCache[key];
-};
+    for (const { value } of scope) {
+      if (value instanceof Core.Node) {
+        pairs.push(`#${value.fragment.begin}`);
+      } else {
+        pairs.push(value);
+      }
+    }
 
-export const identifyCache = (scope: Scope): string | undefined => {
-  const pairs = [];
-
-  for (const { value } of scope) {
-    pairs.push(value);
+    return pairs.join('/');
   }
 
-  if (pairs.length > 0) {
-    return pairs.join(':');
+  store(key: string, value: ValueTypes) {
+    this.results[key] = value;
   }
 
-  return undefined;
-};
+  retrieve(key: string): ValueTypes {
+    return this.results[key];
+  }
+}

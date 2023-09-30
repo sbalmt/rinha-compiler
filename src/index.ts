@@ -30,11 +30,11 @@ if (!consumeSource(source, context) || !consumeTokens(context.tokens, context)) 
 
 try {
   const options: ScopeOptions = {
-   // enableHoisting: false,
-   // constantFolding: false,
-   // constantPropagation: false,
-   // enableMemoization: false,
-   // enableTailCall: false
+    // enableHoisting: false,
+    // constantFolding: false,
+    // constantPropagation: false,
+    // enableMemoization: false,
+    // enableTailCall: false
   };
 
   applyBuiltIn(context.table);
