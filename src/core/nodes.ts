@@ -34,8 +34,17 @@ const getExtraDetails = (node: Core.Node<Metadata>) => {
   }
 };
 
-export const printNodes = (node: Core.Node<Metadata>, level: string = '', direction: string = 'T') => {
-  const innerLevel = `${level}   `;
+export const printNodes = (
+  node: Core.Node<Metadata>,
+  levels: string[] = [],
+  direction: string = 'T',
+  next: boolean
+) => {
+  let level = levels.join('');
+
+  if (levels.length > 0) {
+    levels[levels.length - 1] = next ? ' │ ' : '   ';
+  }
 
   while (node) {
     const fragment = node.fragment;
@@ -43,13 +52,16 @@ export const printNodes = (node: Core.Node<Metadata>, level: string = '', direct
     console.log(`${level} ${direction} ${node.value} ${getExtraDetails(node)} ${formatString(fragment.data)}`);
 
     if (node.left) {
-      printNodes(node.left, innerLevel, 'L');
+      const innerLevels = [...levels, node.right || node.next ? ' ├─' : ' └─'];
+      printNodes(node.left, innerLevels, 'L', !!node.next || !!node.right);
     }
 
     if (node.right) {
-      printNodes(node.right, innerLevel, 'R');
+      const innerLevels = [...levels, node.next ? ' ├─' : ' └─'];
+      printNodes(node.right, innerLevels, 'R', !!node.next);
     }
 
+    level = levels.join('');
     node = node.next!;
     direction = 'N';
   }
