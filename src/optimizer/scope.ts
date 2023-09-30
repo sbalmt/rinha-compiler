@@ -35,8 +35,8 @@ export class Scope extends BaseScope {
   ) {
     super(parentScope, {
       enableHoisting: true,
-      constantFolding: true,
       constantPropagation: true,
+      constantFolding: true,
       enableTailCall: true,
       ...(options ?? parentScope?.options)
     });
