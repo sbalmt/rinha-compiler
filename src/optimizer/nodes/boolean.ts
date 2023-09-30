@@ -1,8 +1,7 @@
-import * as Core from '@xcheme/core';
+import { initNode } from '../../core/metadata';
+import { NodeType } from '../../core/types';
 
-import { Metadata, initNode } from '../../core/metadata';
-
-export const consumeNode = (node: Core.Node<Metadata>) => {
+export const consumeNode = (node: NodeType) => {
   if (node.assigned) {
     return node.data.value;
   }

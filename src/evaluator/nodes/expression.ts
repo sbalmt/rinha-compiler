@@ -1,5 +1,3 @@
-import * as Core from '@xcheme/core';
-
 import * as Identifier from './identifier';
 import * as Literals from './literal';
 import * as Tuple from './tuple';
@@ -12,11 +10,10 @@ import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
 import * as Invoke from './invoke';
 
-import { Metadata } from '../../core/metadata';
-import { NodeTypes, ValueTypes } from '../../core/types';
+import { NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): ValueTypes => {
+export const consumeNode = (scope: Scope, node: NodeType): ValueTypes => {
   switch (node.value) {
     case NodeTypes.IDENTIFIER:
       return Identifier.consumeNode(scope, node);

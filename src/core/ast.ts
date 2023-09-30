@@ -1,14 +1,19 @@
 import * as Core from '@xcheme/core';
 
-import { NodeTypes, ValueTypes } from './types';
-import { Metadata, initNode } from './metadata';
+import { initNode } from './metadata';
+import { NodeType, NodeTypes, TableType, ValueTypes } from './types';
 
-export const createNode = (fragment: Core.Fragment, value: NodeTypes, table: Core.SymbolTable<Metadata>) => {
-  return new Core.Node(fragment, value, table);
+export const createFragment = (source: string) => {
+  const range = new Core.Range(-1, -1);
+
+  const location = new Core.Location('@built-in', range, range);
+  const fragment = new Core.Fragment(source, 0, source.length, location);
+
+  return fragment;
 };
 
-export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, base?: Core.Node<Metadata>) => {
-  const replacement = createNode(base?.fragment ?? node.fragment, value, base?.table ?? node.table);
+export const replaceNode = (node: NodeType, value: NodeTypes, base?: NodeType) => {
+  const replacement = new Core.Node(base?.fragment ?? node.fragment, value, base?.table ?? node.table);
 
   replacement.set(Core.NodeDirection.Left, node.left);
   replacement.set(Core.NodeDirection.Right, node.right);
@@ -25,18 +30,9 @@ export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, base?: 
   return node;
 };
 
-export const combineNodes = (
-  nodes: Core.Node<Metadata>[],
-  table: Core.SymbolTable<Metadata>,
-  type: NodeTypes,
-  value: ValueTypes
-): Core.Node<Metadata> => {
+export const combineNodes = (nodes: NodeType[], table: TableType, type: NodeTypes, value: ValueTypes): NodeType => {
   const source = nodes.map((node) => node.fragment.data).join(' ');
-
-  const range = new Core.Range(-1, -1);
-  const location = new Core.Location('@optimizer', range, range);
-  const fragment = new Core.Fragment(source, 0, source.length, location);
-
+  const fragment = createFragment(source);
   const node = new Core.Node(fragment, type, table);
 
   initNode(node, {

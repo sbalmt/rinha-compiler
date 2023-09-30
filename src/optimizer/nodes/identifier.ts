@@ -2,12 +2,12 @@ import * as Core from '@xcheme/core';
 
 import * as Errors from '../../core/errors';
 
-import { Metadata, initSymbol } from '../../core/metadata';
-import { ErrorTypes, NodeTypes, SymbolTypes } from '../../core/types';
+import { initSymbol } from '../../core/metadata';
+import { ErrorTypes, NodeType, NodeTypes, RecordType, SymbolTypes } from '../../core/types';
 import { replaceNode } from '../../core/ast';
 import { Scope } from '../scope';
 
-const followReferences = (symbol: Core.SymbolRecord<Metadata>): Core.SymbolRecord<Metadata> | undefined => {
+const followReferences = (symbol: RecordType): RecordType | undefined => {
   const followed = new WeakSet();
 
   let current = symbol;
@@ -32,7 +32,7 @@ const followReferences = (symbol: Core.SymbolRecord<Metadata>): Core.SymbolRecor
   return eligible;
 };
 
-const replaceByFollowedReference = (node: Core.Node<Metadata>, reference: Core.SymbolRecord<Metadata>) => {
+const replaceByFollowedReference = (node: NodeType, reference: RecordType) => {
   const referenceNode = reference.node!;
 
   replaceNode(node, NodeTypes.IDENTIFIER, referenceNode);
@@ -41,7 +41,7 @@ const replaceByFollowedReference = (node: Core.Node<Metadata>, reference: Core.S
   return node;
 };
 
-const replaceByLiteralNode = (targetNode: Core.Node<Metadata>, literalNode: Core.Node<Metadata>) => {
+const replaceByLiteralNode = (targetNode: NodeType, literalNode: NodeType) => {
   switch (literalNode.value) {
     case NodeTypes.INTEGER:
     case NodeTypes.STRING:
@@ -56,7 +56,7 @@ const replaceByLiteralNode = (targetNode: Core.Node<Metadata>, literalNode: Core
   }
 };
 
-const replaceByFollowedLiteral = (scope: Scope, node: Core.Node<Metadata>, reference: Core.SymbolRecord<Metadata>) => {
+const replaceByFollowedLiteral = (scope: Scope, node: NodeType, reference: RecordType) => {
   const referenceNode = reference.node!;
   const literalNode = referenceNode.right!;
 
@@ -66,7 +66,7 @@ const replaceByFollowedLiteral = (scope: Scope, node: Core.Node<Metadata>, refer
   return reference.data.literal;
 };
 
-const applyReferenceNode = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
+const applyReferenceNode = (scope: Scope, symbol: RecordType, node: NodeType) => {
   const reference = followReferences(symbol);
 
   if (!reference || reference === symbol) {
@@ -83,7 +83,7 @@ const applyReferenceNode = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, n
   return replaceByFollowedLiteral(scope, node, reference);
 };
 
-const applyLiteralNode = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, node: Core.Node<Metadata>) => {
+const applyLiteralNode = (scope: Scope, symbol: RecordType, node: NodeType) => {
   const referenceNode = symbol.node!;
   const literalNode = referenceNode.right!;
 
@@ -93,11 +93,11 @@ const applyLiteralNode = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, nod
   return symbol.data.literal;
 };
 
-const canBeHoisted = (symbol: Core.SymbolRecord<Metadata>) => {
+const canBeHoisted = (symbol: RecordType) => {
   return symbol.value === SymbolTypes.IDENTIFIER;
 };
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: NodeType) => {
   const { enableHoisting, constantPropagation } = scope.options;
 
   const table = scope.isMatchingDeclaration(node) ? node.table.parent! : node.table;

@@ -2,8 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Expression from './expression';
 
-import { Metadata, initSymbol } from '../../core/metadata';
-import { ValueTypes } from '../../core/types';
+import { initSymbol } from '../../core/metadata';
+import { NodeType, RecordType, ValueTypes } from '../../core/types';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
@@ -21,13 +21,13 @@ const removeDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
 };
 
-const canRemoveDefinition = (symbol: Core.SymbolRecord<Metadata>) => {
+const canRemoveDefinition = (symbol: RecordType) => {
   const { literal, references, mutable } = symbol.data;
 
   return (literal !== undefined || references <= 0) && !mutable;
 };
 
-function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+function* consumeInnerNode(scope: Scope, node: NodeType): ValueTypes {
   const previousDeclarationNode = scope.declarationNode;
   scope.declarationNode = node;
 
@@ -37,7 +37,7 @@ function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes 
   return result;
 }
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const { enableHoisting, constantPropagation } = scope.options;
 
   const symbol = node.table.find(node.fragment)!;

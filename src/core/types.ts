@@ -3,11 +3,17 @@ import * as Core from '@xcheme/core';
 import { Metadata } from './metadata';
 import { Scope } from '../evaluator/scope';
 
+export type NodeType = Core.Node<Metadata>;
+
+export type TableType = Core.SymbolTable<Metadata>;
+
+export type RecordType = Core.SymbolRecord<Metadata>;
+
 export type TupleTypes = [ValueTypes, ValueTypes];
 
-export type CallbackTypes = (scope: Scope, callee: Core.Node<Metadata>) => ValueTypes;
+export type CallbackTypes = (scope: Scope, callee: NodeType) => ValueTypes;
 
-export type InternalTypes = CallbackTypes | Core.Node<Metadata> | Generator<ValueTypes>;
+export type InternalTypes = CallbackTypes | NodeType | Generator<ValueTypes>;
 
 export type ValueTypes = undefined | string | number | boolean | TupleTypes | InternalTypes;
 

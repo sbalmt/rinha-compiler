@@ -2,10 +2,11 @@ import * as Core from '@xcheme/core';
 
 import * as Block from './block';
 
-import { Metadata, initNode } from '../../core/metadata';
+import { initNode } from '../../core/metadata';
+import { NodeType } from '../../core/types';
 import { Scope } from '../scope';
 
-const countParameters = (parameterNode: Core.Node<Metadata>): number => {
+const countParameters = (parameterNode: NodeType): number => {
   let counter = 0;
   while (parameterNode) {
     parameterNode = parameterNode.next!;
@@ -14,7 +15,7 @@ const countParameters = (parameterNode: Core.Node<Metadata>): number => {
   return counter;
 };
 
-function* consumeInnerNode(scope: Scope, closureNode: Core.Node<Metadata>) {
+function* consumeInnerNode(scope: Scope, closureNode: NodeType) {
   const parametersNode = closureNode.right!;
 
   const blockNode = parametersNode.next!;
@@ -29,7 +30,7 @@ function* consumeInnerNode(scope: Scope, closureNode: Core.Node<Metadata>) {
   return closureNode;
 }
 
-export const consumeNode = (scope: Scope, closureNode: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, closureNode: NodeType) => {
   if (!closureNode.assigned) {
     const parametersNode = closureNode.right!;
     const firstParameterNode = parametersNode.right!;

@@ -1,24 +1,21 @@
-import * as Core from '@xcheme/core';
-
 import * as Errors from '../../core/errors';
 import * as Logical from '../../core/logical';
 
 import * as Expression from './expression';
 
-import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
-import { Metadata } from '../../core/metadata';
+import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { combineNodes } from '../../core/ast';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
-const replaceExpression = (lhs: Logical.ValueType, rhs: Logical.ValueType, node: Core.Node<Metadata>) => {
+const replaceExpression = (lhs: Logical.ValueType, rhs: Logical.ValueType, node: NodeType) => {
   const value = Logical.evaluate(lhs, rhs, node.value);
   const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.BOOLEAN, value);
   node.swap(newNode);
   return value;
 };
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const { constantFolding } = scope.options;
 
   const lhs = yield Expression.consumeNode(scope, node.left!);

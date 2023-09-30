@@ -1,6 +1,4 @@
-import * as Core from '@xcheme/core';
-
-import { Metadata } from './metadata';
+import { NodeType } from './types';
 
 export type BaseScopeOptions = {
   debug?: boolean;
@@ -12,7 +10,7 @@ export class BaseScope {
 
   private scopeOptions: BaseScopeOptions;
 
-  closureNode?: Core.Node<Metadata>;
+  closureNode?: NodeType;
 
   constructor(parentScope?: BaseScope, options?: BaseScopeOptions) {
     this.parentScope = parentScope;

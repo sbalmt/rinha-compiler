@@ -2,8 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Expression from './expression';
 
-import { Metadata } from '../../core/metadata';
-import { TupleTypes, ValueTypes } from '../../core/types';
+import { NodeType, TupleTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const resolveValue = (scope: Scope, value: ValueTypes): ValueTypes => {
@@ -25,7 +24,7 @@ function* resolveTuple(scope: Scope, tuple: TupleTypes) {
   return tuple;
 }
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: NodeType) => {
   const tuple = node.data.value as TupleTypes;
   return resolveTuple(scope, tuple);
 };

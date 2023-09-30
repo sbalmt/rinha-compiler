@@ -2,8 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Expression from './expression';
 
-import { Metadata, initNode } from '../../core/metadata';
-import { TupleTypes, ValueTypes } from '../../core/types';
+import { initNode } from '../../core/metadata';
+import { NodeType, TupleTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const consumeSingleValueNode = (scope: Scope, value: ValueTypes) => {
@@ -25,11 +25,11 @@ function* consumeTupleValueNodes(scope: Scope, tuple: TupleTypes): ValueTypes {
   return tuple;
 }
 
-const detachTupleValueNodes = (tupleNode: Core.Node<Metadata>) => {
+const detachTupleValueNodes = (tupleNode: NodeType) => {
   tupleNode.set(Core.NodeDirection.Right, undefined);
 };
 
-export function* consumeNode(scope: Scope, tupleNode: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, tupleNode: NodeType): ValueTypes {
   if (tupleNode.assigned) {
     const tuple = tupleNode.data.value as TupleTypes;
     return consumeTupleValueNodes(scope, tuple);

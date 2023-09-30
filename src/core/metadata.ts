@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import { NodeType, RecordType, ValueTypes } from './types';
 import { Scope } from '../evaluator/scope';
-import { ValueTypes } from './types';
 
 export type NodeMetadata = {
   scope?: Scope;
@@ -25,7 +25,7 @@ export type Metadata = {
   node: NodeMetadata;
 };
 
-export const initSymbol = (symbol: Core.SymbolRecord<Metadata>, initOptions?: Partial<SymbolMetadata>) => {
+export const initSymbol = (symbol: RecordType, initOptions?: Partial<SymbolMetadata>) => {
   if (!symbol.assigned) {
     symbol.assign({
       mutable: false,
@@ -38,7 +38,7 @@ export const initSymbol = (symbol: Core.SymbolRecord<Metadata>, initOptions?: Pa
   return symbol.data;
 };
 
-export const initNode = (node: Core.Node<Metadata>, initOptions?: Partial<NodeMetadata>) => {
+export const initNode = (node: NodeType, initOptions?: Partial<NodeMetadata>) => {
   if (!node.assigned) {
     const minParams = initOptions?.minParams ?? 0;
     const maxParams = initOptions?.maxParams ?? minParams;

@@ -1,32 +1,29 @@
-import * as Core from '@xcheme/core';
-
 import * as Errors from '../../core/errors';
 import * as Arithmetic from '../../core/arithmetic';
 import * as Concat from '../../core/concat';
 
 import * as Expression from './expression';
 
-import { Metadata } from '../../core/metadata';
-import { ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
+import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { combineNodes } from '../../core/ast';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
-const replaceMathExpression = (lhs: Arithmetic.ValueType, rhs: Arithmetic.ValueType, node: Core.Node<Metadata>) => {
+const replaceMathExpression = (lhs: Arithmetic.ValueType, rhs: Arithmetic.ValueType, node: NodeType) => {
   const value = Arithmetic.evaluate(lhs, rhs, node.value);
   const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.INTEGER, value);
   node.swap(newNode);
   return value;
 };
 
-const replaceConcatExpression = (lhs: Concat.ValueType, rhs: Concat.ValueType, node: Core.Node<Metadata>) => {
+const replaceConcatExpression = (lhs: Concat.ValueType, rhs: Concat.ValueType, node: NodeType) => {
   const value = Concat.evaluate(lhs, rhs);
   const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.STRING, value);
   node.swap(newNode);
   return value;
 };
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const { constantFolding } = scope.options;
 
   const lhs = yield Expression.consumeNode(scope, node.left!);

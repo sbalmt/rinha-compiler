@@ -3,16 +3,15 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 import * as Block from './block';
 
-import { Metadata } from '../../core/metadata';
-import { ValueTypes } from '../../core/types';
+import { NodeType, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: NodeType) => {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
   return Block.consumeNodes(innerScope, innerScope.currentNode);
 };
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const conditionNode = node.right!;
 
   yield Expression.consumeNode(scope, conditionNode.right!);

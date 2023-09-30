@@ -1,19 +1,16 @@
-import * as Core from '@xcheme/core';
-
 import * as Variable from './variable';
 import * as Expression from './expression';
 import * as Condition from './condition';
 
-import { Metadata } from '../../core/metadata';
-import { NodeTypes, ValueTypes } from '../../core/types';
+import { NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: NodeType) => {
   const innerScope = new Scope(scope);
   return consumeNodes(innerScope, node);
 };
 
-export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNodes(scope: Scope, node: NodeType): ValueTypes {
   let value;
 
   while (node) {

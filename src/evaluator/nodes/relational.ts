@@ -1,15 +1,12 @@
-import * as Core from '@xcheme/core';
-
 import * as Errors from '../../core/errors';
 import * as Relational from '../../core/relational';
 
 import * as Expression from './expression';
 
-import { Metadata } from '../../core/metadata';
-import { ErrorTypes, ValueTypes } from '../../core/types';
+import { ErrorTypes, NodeType, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const lhs = yield Expression.consumeNode(scope, node.left!);
   const rhs = yield Expression.consumeNode(scope, node.right!);
 

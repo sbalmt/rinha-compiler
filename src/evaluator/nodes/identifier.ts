@@ -1,9 +1,7 @@
-import * as Core from '@xcheme/core';
-
-import { Metadata } from '../../core/metadata';
+import { NodeType } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: NodeType) => {
   const identifier = node.fragment.data;
   return scope.readVariable(identifier);
 };

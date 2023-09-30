@@ -3,25 +3,24 @@ import * as Core from '@xcheme/core';
 import * as Expression from './expression';
 import * as Block from './block';
 
-import { Metadata } from '../../core/metadata';
-import { ValueTypes } from '../../core/types';
+import { NodeType, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
 const removeDefinition = (scope: Scope) => {
   scope.previousNode.set(scope.previousDirection, scope.currentNode.next);
 };
 
-const replaceDefinition = (scope: Scope, node: Core.Node<Metadata>) => {
+const replaceDefinition = (scope: Scope, node: NodeType) => {
   node.set(Core.NodeDirection.Next, scope.currentNode.next);
   scope.previousNode.set(scope.previousDirection, node);
 };
 
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>) => {
+const consumeInnerNode = (scope: Scope, node: NodeType) => {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
   return Block.consumeNodes(innerScope, innerScope.currentNode);
 };
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const { constantFolding } = scope.options;
 
   const condition = yield Expression.consumeNode(scope, node.right!);

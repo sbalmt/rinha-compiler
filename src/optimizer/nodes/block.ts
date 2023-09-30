@@ -4,22 +4,21 @@ import * as Variable from './variable';
 import * as Expression from './expression';
 import * as Condition from './condition';
 
-import { Metadata } from '../../core/metadata';
-import { NodeTypes, ValueTypes } from '../../core/types';
+import { NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-const wasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
+const wasNodeReplaced = (scope: Scope, node: NodeType) => {
   return scope.previousNode.get(scope.previousDirection) !== node;
 };
 
-function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+function* consumeInnerNode(scope: Scope, node: NodeType): ValueTypes {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
   const result = yield consumeNodes(innerScope, innerScope.currentNode);
   scope.pending = innerScope.pending;
   return result;
 }
 
-export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNodes(scope: Scope, node: NodeType): ValueTypes {
   let result;
 
   while (node) {

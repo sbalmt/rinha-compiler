@@ -6,28 +6,27 @@ import * as Parameters from './parameters';
 import * as Expression from './expression';
 import * as Block from './block';
 
-import { Metadata } from '../../core/metadata';
-import { CallbackTypes, ErrorTypes, NodeTypes, ValueTypes } from '../../core/types';
+import { CallbackTypes, ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 import { Cache } from '../cache';
 
-const isRecursion = (scope: Scope, closureNode: Core.Node<Metadata>) => {
+const isRecursion = (scope: Scope, closureNode: NodeType) => {
   return scope.closureNode === closureNode;
 };
 
-const isCallable = (node: Core.Node<Metadata> | undefined) => {
+const isCallable = (node: NodeType): node is NodeType => {
   return node instanceof Core.Node && (node.value === NodeTypes.CLOSURE || node.value === NodeTypes.BUILT_IN);
 };
 
-const isBuiltIn = (closureNode: Core.Node<Metadata>) => {
+const isBuiltIn = (closureNode: NodeType) => {
   return closureNode.value === NodeTypes.BUILT_IN;
 };
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
+export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const { enableMemoization } = scope.options;
 
   const calleeNode = node.left!;
-  const closureNode = yield Expression.consumeNode(scope, calleeNode) as Core.Node<Metadata>;
+  const closureNode = yield Expression.consumeNode(scope, calleeNode);
 
   if (!isCallable(closureNode)) {
     throw Errors.getMessage(ErrorTypes.INVALID_CALL, calleeNode.fragment);

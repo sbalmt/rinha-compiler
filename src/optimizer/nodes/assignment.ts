@@ -1,14 +1,12 @@
-import * as Core from '@xcheme/core';
-
 import * as Errors from '../../core/errors';
 
 import * as Expression from './expression';
 
-import { Metadata, initSymbol } from '../../core/metadata';
-import { ErrorTypes, NodeTypes } from '../../core/types';
+import { initSymbol } from '../../core/metadata';
+import { ErrorTypes, NodeType, NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: NodeType) => {
   const lhsNode = node.left!;
   const rhsNode = node.right!;
 

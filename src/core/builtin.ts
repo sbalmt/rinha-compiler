@@ -1,12 +1,12 @@
 import * as Core from '@xcheme/core';
 
-import { Metadata, NodeMetadata, initNode, initSymbol } from './metadata';
-import { NodeTypes, SymbolTypes } from './types';
+import { NodeMetadata, initNode, initSymbol } from './metadata';
+import { NodeTypes, SymbolTypes, TableType } from './types';
 
 const range = new Core.Range(0, 0);
 const location = new Core.Location('built-in', range, range);
 
-export const applyBuiltIn = (table: Core.SymbolTable<Metadata>): void => {
+export const applyBuiltIn = (table: TableType): void => {
   insertBuiltIn(createFragment('first'), table, { minParams: 1 });
   insertBuiltIn(createFragment('second'), table, { minParams: 1 });
   insertBuiltIn(createFragment('assert'), table, { minParams: 1, maxParams: 2 });
@@ -17,11 +17,11 @@ const createFragment = (identifier: string) => {
   return new Core.Fragment(identifier, 0, identifier.length, location);
 };
 
-const createParameterNode = (identifier: string, table: Core.SymbolTable<Metadata>) => {
+const createParameterNode = (identifier: string, table: TableType) => {
   return new Core.Node(createFragment(identifier), NodeTypes.PARAMETER, table);
 };
 
-const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata>, options?: Partial<NodeMetadata>) => {
+const insertBuiltIn = (fragment: Core.Fragment, table: TableType, options?: Partial<NodeMetadata>) => {
   const current = table.find(fragment);
 
   if (current) {

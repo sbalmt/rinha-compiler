@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { BaseScope, BaseScopeOptions } from '../core/scope';
-import { Metadata } from '../core/metadata';
+import { NodeType } from '../core/types';
 
 export type ScopeOptions = BaseScopeOptions & {
   enableHoisting?: boolean;
@@ -11,28 +11,23 @@ export type ScopeOptions = BaseScopeOptions & {
 };
 
 export class Scope extends BaseScope {
-  anchorNode: Core.Node<Metadata>;
+  anchorNode: NodeType;
 
   anchorDirection: Core.NodeDirection;
 
-  previousNode: Core.Node<Metadata>;
+  previousNode: NodeType;
 
   previousDirection: Core.NodeDirection;
 
-  currentNode: Core.Node<Metadata>;
+  currentNode: NodeType;
 
-  declarationNode?: Core.Node<Metadata>;
+  declarationNode?: NodeType;
 
-  closureDeclarationNode?: Core.Node<Metadata>;
+  closureDeclarationNode?: NodeType;
 
   pending: boolean;
 
-  constructor(
-    anchorNode: Core.Node<Metadata>,
-    anchorDirection: Core.NodeDirection,
-    parentScope?: Scope,
-    options?: ScopeOptions
-  ) {
+  constructor(anchorNode: NodeType, anchorDirection: Core.NodeDirection, parentScope?: Scope, options?: ScopeOptions) {
     super(parentScope, {
       enableHoisting: true,
       constantPropagation: true,
@@ -55,11 +50,11 @@ export class Scope extends BaseScope {
     return super.options as ScopeOptions;
   }
 
-  isMatchingDeclaration(node: Core.Node<Metadata>) {
+  isMatchingDeclaration(node: NodeType) {
     return this.declarationNode?.fragment.data === node.fragment.data;
   }
 
-  isMatchingClosureDeclaration(node: Core.Node<Metadata>) {
+  isMatchingClosureDeclaration(node: NodeType) {
     return this.closureDeclarationNode?.fragment.data === node.fragment.data;
   }
 }

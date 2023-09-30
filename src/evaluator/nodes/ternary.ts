@@ -1,10 +1,8 @@
-import * as Core from '@xcheme/core';
-
 import * as Condition from './condition';
 
-import { Metadata } from '../../core/metadata';
+import { NodeType } from '../../core/types';
 import { Scope } from '../scope';
 
-export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
+export const consumeNode = (scope: Scope, node: NodeType) => {
   return Condition.consumeNode(scope, node.right!);
 };
