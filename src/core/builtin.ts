@@ -31,7 +31,7 @@ const insertBuiltIn = (fragment: Core.Fragment, table: Core.SymbolTable<Metadata
   const calleeNode = new Core.Node(fragment, NodeTypes.IDENTIFIER, table);
   const closureNode = new Core.Node(fragment, NodeTypes.BUILT_IN, table);
   const closureParameters = new Core.Node(fragment, NodeTypes.BLOCK, table);
-  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BuiltIn, calleeNode);
+  const symbol = new Core.SymbolRecord(fragment, SymbolTypes.BUILT_IN, calleeNode);
 
   calleeNode.set(Core.NodeDirection.Right, closureNode);
   closureNode.set(Core.NodeDirection.Right, closureParameters);

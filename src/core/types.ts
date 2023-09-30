@@ -28,9 +28,9 @@ export const enum ErrorTypes {
 }
 
 export const enum SymbolTypes {
-  Identifier = 2000,
-  Parameter = 2001,
-  BuiltIn = 2002
+  IDENTIFIER = 2000,
+  PARAMETER = 2001,
+  BUILT_IN = 2002
 }
 
 export const enum NodeTypes {

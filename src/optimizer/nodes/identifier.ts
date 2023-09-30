@@ -94,7 +94,7 @@ const applyLiteralNode = (scope: Scope, symbol: Core.SymbolRecord<Metadata>, nod
 };
 
 const canBeHoisted = (symbol: Core.SymbolRecord<Metadata>) => {
-  return symbol.value === SymbolTypes.Identifier;
+  return symbol.value === SymbolTypes.IDENTIFIER;
 };
 
 export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
