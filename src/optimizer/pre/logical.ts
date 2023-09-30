@@ -13,7 +13,7 @@ import { Scope } from '../scope';
 
 const replaceExpression = (lhs: Logical.ValueType, rhs: Logical.ValueType, node: Core.Node<Metadata>) => {
   const value = Logical.evaluate(lhs, rhs, node.value);
-  const newNode = combineNodes(node.left!, node.right!, NodeTypes.BOOLEAN, value);
+  const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.BOOLEAN, value);
   node.swap(newNode);
   return value;
 };

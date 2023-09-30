@@ -26,18 +26,18 @@ export const replaceNode = (node: Core.Node<Metadata>, value: NodeTypes, base?: 
 };
 
 export const combineNodes = (
-  first: Core.Node<Metadata>,
-  last: Core.Node<Metadata>,
+  nodes: Core.Node<Metadata>[],
+  table: Core.SymbolTable<Metadata>,
   type: NodeTypes,
   value: ValueTypes
 ): Core.Node<Metadata> => {
-  const lineRange = new Core.Range(first.fragment.location.line.begin, last.fragment.location.line.end);
-  const columnRange = new Core.Range(first.fragment.location.column.begin, last.fragment.location.column.end);
+  const source = nodes.map((node) => node.fragment.data).join(' ');
 
-  const location = new Core.Location(first.fragment.location.name, lineRange, columnRange);
-  const fragment = new Core.Fragment(first.fragment.source, first.fragment.begin, last.fragment.end, location);
+  const range = new Core.Range(-1, -1);
+  const location = new Core.Location('@optimizer', range, range);
+  const fragment = new Core.Fragment(source, 0, source.length, location);
 
-  const node = new Core.Node(fragment, type, first.table);
+  const node = new Core.Node(fragment, type, table);
 
   initNode(node, {
     value

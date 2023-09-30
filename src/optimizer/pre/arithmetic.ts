@@ -14,14 +14,14 @@ import { Scope } from '../scope';
 
 const replaceMathExpression = (lhs: Arithmetic.ValueType, rhs: Arithmetic.ValueType, node: Core.Node<Metadata>) => {
   const value = Arithmetic.evaluate(lhs, rhs, node.value);
-  const newNode = combineNodes(node.left!, node.right!, NodeTypes.INTEGER, value);
+  const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.INTEGER, value);
   node.swap(newNode);
   return value;
 };
 
 const replaceConcatExpression = (lhs: Concat.ValueType, rhs: Concat.ValueType, node: Core.Node<Metadata>) => {
   const value = Concat.evaluate(lhs, rhs);
-  const newNode = combineNodes(node.left!, node.right!, NodeTypes.STRING, value);
+  const newNode = combineNodes([node.left!, node, node.right!], node.table, NodeTypes.STRING, value);
   node.swap(newNode);
   return value;
 };
