@@ -49,7 +49,7 @@ export const printNodes = (
   node: Core.Node<Metadata>,
   levels: string[] = [],
   direction: string = 'T',
-  next: boolean
+  next: boolean = false
 ) => {
   let level = levels.join('');
 
