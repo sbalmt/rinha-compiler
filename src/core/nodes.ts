@@ -7,6 +7,17 @@ import { NodeTypes } from './types';
 
 const MaxLength = 40;
 
+const cyanColor = (text: string) => {
+  return `\x1b[36m${text}\x1b[0m`;
+};
+const yellowColor = (text: string) => {
+  return `\x1b[33m${text}\x1b[0m`;
+};
+
+const grayColor = (text: string) => {
+  return `\x1b[90m${text}\x1b[0m`;
+};
+
 const formatString = (string: string) => {
   return serializeString(string.length > MaxLength ? `${string.substring(0, MaxLength).trim()}...` : string);
 };
@@ -49,7 +60,11 @@ export const printNodes = (
   while (node) {
     const fragment = node.fragment;
 
-    console.log(`${level} ${direction} ${node.value} ${getExtraDetails(node)} ${formatString(fragment.data)}`);
+    console.log(
+      `${level} ${cyanColor(direction)} ${yellowColor(node.value.toString())} ${getExtraDetails(node)} ${grayColor(
+        formatString(fragment.data)
+      )}`
+    );
 
     if (node.left) {
       const innerLevels = [...levels, node.right || node.next ? ' ├─' : ' └─'];
