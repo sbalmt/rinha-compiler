@@ -3,10 +3,8 @@ import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Errors from './core/errors';
+import * as Optimizer from './optimizer';
 import * as Evaluator from './evaluator';
-import * as PreOptimizer from './optimizer/pre';
-import * as MidOptimizer from './optimizer/mid';
-import * as EndOptimizer from './optimizer/end';
 
 import { consumeSource, consumeTokens } from './utils';
 import { ScopeOptions } from './optimizer/scope';
@@ -39,10 +37,7 @@ try {
 
   applyBuiltIn(context.table);
 
-  PreOptimizer.consumeNodes(context.node, { ...options, debug: false });
-  MidOptimizer.consumeNodes(context.node, { ...options, debug: false });
-  EndOptimizer.consumeNodes(context.node, { ...options, debug: false });
-
+  Optimizer.consumeNodes(context.node, { ...options, debug: false });
   Evaluator.consumeNodes(context.node, { debug: false });
 } catch (e) {
   console.error(e);

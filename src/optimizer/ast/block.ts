@@ -15,10 +15,12 @@ const wasNodeReplaced = (scope: Scope, node: Core.Node<Metadata>) => {
   return scope.previousNode.get(scope.previousDirection) !== node;
 };
 
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) => {
+function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
-  return consumeNodes(innerScope, innerScope.currentNode, consumers);
-};
+  const result = yield consumeNodes(innerScope, innerScope.currentNode, consumers);
+  scope.pending = innerScope.pending;
+  return result;
+}
 
 export function* consumeNodes(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers): ValueTypes {
   let result;

@@ -25,6 +25,8 @@ export class Scope extends BaseScope {
 
   closureDeclarationNode?: Core.Node<Metadata>;
 
+  pending: boolean;
+
   constructor(
     anchorNode: Core.Node<Metadata>,
     anchorDirection: Core.NodeDirection,
@@ -46,6 +48,7 @@ export class Scope extends BaseScope {
     this.currentNode = anchorNode.get(anchorDirection)!;
     this.declarationNode = parentScope?.declarationNode;
     this.closureDeclarationNode = parentScope?.closureDeclarationNode;
+    this.pending = parentScope?.pending ?? false;
   }
 
   get options(): ScopeOptions {

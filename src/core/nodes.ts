@@ -33,16 +33,17 @@ const getExtraLiteralDetails = (node: Core.Node<Metadata>) => {
 };
 
 const getExtraDetails = (node: Core.Node<Metadata>) => {
-  switch (node.value) {
-    case NodeTypes.IDENTIFIER:
-      return getExtraSymbolDetails(node);
-    case NodeTypes.INTEGER:
-    case NodeTypes.STRING:
-    case NodeTypes.BOOLEAN:
-      return getExtraLiteralDetails(node);
-    default:
-      return '';
+  if (node.assigned) {
+    switch (node.value) {
+      case NodeTypes.IDENTIFIER:
+        return getExtraSymbolDetails(node);
+      case NodeTypes.INTEGER:
+      case NodeTypes.STRING:
+      case NodeTypes.BOOLEAN:
+        return getExtraLiteralDetails(node);
+    }
   }
+  return '';
 };
 
 export const printNodes = (

@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import { Metadata } from '../../core/metadata';
+import { ValueTypes } from '../../core/types';
 import { AstConsumer } from '../types';
 import { Scope } from '../scope';
 
@@ -9,10 +10,12 @@ export type Consumers = {
   blockConsumer: AstConsumer;
 };
 
-const consumeInnerNode = (scope: Scope, node: Core.Node<Metadata>, blockConsumer: AstConsumer) => {
+function* consumeInnerNode(scope: Scope, node: Core.Node<Metadata>, blockConsumer: AstConsumer): ValueTypes {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
-  return blockConsumer(innerScope, innerScope.currentNode);
-};
+  const result = yield blockConsumer(innerScope, innerScope.currentNode);
+  scope.pending = innerScope.pending;
+  return result;
+}
 
 export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, consumers: Consumers) {
   const conditionNode = node.right!;

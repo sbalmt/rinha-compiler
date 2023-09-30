@@ -7,7 +7,6 @@ export type NodeMetadata = {
   scope?: Scope;
   minParams?: number;
   maxParams?: number;
-  symbol?: Core.SymbolRecord<Metadata>;
   value?: ValueTypes;
   pure: boolean;
 };

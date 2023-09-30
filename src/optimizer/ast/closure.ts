@@ -14,6 +14,7 @@ export function* consumeNode(scope: Scope, node: Core.Node<Metadata>, blockConsu
   blockScope.closureNode = node;
 
   yield blockConsumer(blockScope, blockScope.currentNode);
+  scope.pending = blockScope.pending;
 
   return node;
 }

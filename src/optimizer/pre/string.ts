@@ -4,11 +4,13 @@ import { Metadata, initNode } from '../../core/metadata';
 import { parseString } from '../../core/string';
 
 export const consumeNode = (node: Core.Node<Metadata>) => {
-  const value = parseString(node.fragment.data);
+  if (node.assigned) {
+    return node.data.value;
+  }
 
-  initNode(node, {
-    value
+  const data = initNode(node, {
+    value: parseString(node.fragment.data)
   });
 
-  return value;
+  return data.value;
 };

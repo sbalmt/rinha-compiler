@@ -17,12 +17,14 @@ const countParameters = (parameterNode: Core.Node<Metadata>): number => {
 };
 
 export const consumeNode = (scope: Scope, closureNode: Core.Node<Metadata>) => {
-  const parameterNode = closureNode.right!;
-  const firstParameterNode = parameterNode.right!;
+  if (!closureNode.assigned) {
+    const parametersNode = closureNode.right!;
+    const firstParameterNode = parametersNode.right!;
 
-  initNode(closureNode, {
-    minParams: countParameters(firstParameterNode)
-  });
+    initNode(closureNode, {
+      minParams: countParameters(firstParameterNode)
+    });
+  }
 
   return Closure.consumeNode(scope, closureNode, Block.consumeNodes);
 };

@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Invoke from '../ast/invoke';
-
 import * as Identifier from './identifier';
 import * as Integer from './integer';
 import * as String from './string';
@@ -14,6 +12,7 @@ import * as Logical from './logical';
 import * as Equality from './equality';
 import * as Relational from './relational';
 import * as Arithmetic from './arithmetic';
+import * as Invoke from './invoke';
 
 import { Metadata } from '../../core/metadata';
 import { NodeTypes, ValueTypes } from '../../core/types';
@@ -67,7 +66,7 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>): ValueTypes
       return Arithmetic.consumeNode(scope, node);
 
     case NodeTypes.INVOKE:
-      return Invoke.consumeNode(scope, node, consumeNode);
+      return Invoke.consumeNode(scope, node);
 
     default:
       throw `Unable to optimize expression node type (${node.value}).`;

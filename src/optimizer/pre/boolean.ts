@@ -3,11 +3,13 @@ import * as Core from '@xcheme/core';
 import { Metadata, initNode } from '../../core/metadata';
 
 export const consumeNode = (node: Core.Node<Metadata>) => {
-  const value = node.fragment.data === 'true';
+  if (node.assigned) {
+    return node.data.value;
+  }
 
-  initNode(node, {
-    value
+  const data = initNode(node, {
+    value: node.fragment.data === 'true'
   });
 
-  return value;
+  return data.value;
 };

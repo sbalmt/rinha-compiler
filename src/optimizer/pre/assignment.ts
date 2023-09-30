@@ -3,9 +3,8 @@ import * as Core from '@xcheme/core';
 import * as Errors from '../../core/errors';
 
 import * as Expression from './expression';
-import * as Identifier from './identifier';
 
-import { Metadata } from '../../core/metadata';
+import { Metadata, initSymbol } from '../../core/metadata';
 import { ErrorTypes, NodeTypes } from '../../core/types';
 import { Scope } from '../scope';
 
@@ -17,10 +16,23 @@ export const consumeNode = (scope: Scope, node: Core.Node<Metadata>) => {
     throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, lhsNode.fragment);
   }
 
-  const targetNode = Identifier.consumeNode(scope, lhsNode);
-  const { symbol } = targetNode.data;
+  const symbol = node.table.find(lhsNode.fragment)!;
 
-  symbol!.data.mutable = true;
+  if (symbol.assigned) {
+    symbol!.data.mutable = true;
+  } else {
+    if (!scope.options.enableHoisting) {
+      throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
+    }
+
+    scope.pending = true;
+
+    initSymbol(symbol, {
+      references: 1,
+      mutable: true,
+      hoist: true
+    });
+  }
 
   if (scope.closureNode) {
     scope.closureNode.data.pure = false;
