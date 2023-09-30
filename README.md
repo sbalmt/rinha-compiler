@@ -40,8 +40,8 @@ Everyone knows using an interpreted language for interpreting another one is slo
 1. Resolve literal expressions (constant folding)
 2. Resolve reference aliases (constant propagation)
 3. Remove unreferenced symbols and never used statements (dead code removal)
-4. Tail call optimization for recursive functions (when it fits)
-5. Memoization of pure and recursive functions (runtime)
+4. Memoization of pure and recursive functions (runtime)
+5. Trampoline functions for avoiding stack overflows (runtime)
 
 ## License
 
