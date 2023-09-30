@@ -6,13 +6,46 @@ import { Metadata, initNode } from '../../core/metadata';
 import { TupleTypes, ValueTypes } from '../../core/types';
 import { Scope } from '../scope';
 
-export function* consumeNode(scope: Scope, node: Core.Node<Metadata>): ValueTypes {
-  const first = yield Expression.consumeNode(scope, node.right!);
-  const second = yield Expression.consumeNode(scope, node.right!.next!);
+const consumeInnerNode = (scope: Scope, value: ValueTypes) => {
+  if (value instanceof Core.Node) {
+    return Expression.consumeNode(scope, value);
+  }
 
-  const data = initNode(node, {
-    value: [first, second] as TupleTypes
+  if (value instanceof Array) {
+    return consumeTupleNodes(scope, value);
+  }
+
+  return value;
+};
+
+function* consumeTupleNodes(scope: Scope, tuple: TupleTypes): ValueTypes {
+  tuple[0] = yield consumeInnerNode(scope, tuple[0]);
+  tuple[1] = yield consumeInnerNode(scope, tuple[1]);
+
+  return tuple;
+}
+
+const detachTupleValueNode = (tupleNode: Core.Node<Metadata>) => {
+  tupleNode.set(Core.NodeDirection.Right, undefined);
+};
+
+export function* consumeNode(scope: Scope, tupleNode: Core.Node<Metadata>): ValueTypes {
+  if (tupleNode.assigned) {
+    const tupleValue = tupleNode.data.value as TupleTypes;
+    return consumeTupleNodes(scope, tupleValue);
+  }
+
+  const firstTupleNode = tupleNode.right!;
+  const secondTupleNode = firstTupleNode.next!;
+
+  const data = initNode(tupleNode, {
+    value: [
+      yield Expression.consumeNode(scope, firstTupleNode),
+      yield Expression.consumeNode(scope, secondTupleNode)
+    ] as TupleTypes
   });
+
+  detachTupleValueNode(tupleNode);
 
   return data.value;
 }
