@@ -17,11 +17,11 @@ export type Tree = {
 export const matchTree = (node: NodeType, tree: Tree): void => {
   expect(node.value).toBe(tree.kind);
 
-  if (tree.fragment) {
+  if (tree.fragment !== undefined) {
     expect(node.fragment.data).toBe(tree.fragment);
   }
 
-  if (tree.value) {
+  if (tree.value !== undefined) {
     expect(node.assigned).toBeTruthy();
     expect(node.data.value).toBeDefined();
     expect(node.data.value).toStrictEqual(tree.value);

@@ -10,7 +10,8 @@ test('Define a reference', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.IDENTIFIER,
-      fragment: 'print'
+      fragment: 'print',
+      value: undefined
     })
   );
 });
@@ -21,7 +22,8 @@ test('Define an integer', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.INTEGER,
-      fragment: '10'
+      fragment: '10',
+      value: 10
     })
   );
 });
@@ -32,7 +34,8 @@ test('Define a single quoted string', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.STRING,
-      fragment: "'hello rinha'"
+      fragment: "'hello rinha'",
+      value: 'hello rinha'
     })
   );
 });
@@ -43,7 +46,8 @@ test('Define a double quoted string', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.STRING,
-      fragment: '"hello rinha"'
+      fragment: '"hello rinha"',
+      value: 'hello rinha'
     })
   );
 });
@@ -54,7 +58,8 @@ test('Define a boolean (false)', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.BOOLEAN,
-      fragment: 'false'
+      fragment: 'false',
+      value: false
     })
   );
 });
@@ -65,7 +70,8 @@ test('Define a boolean (true)', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.BOOLEAN,
-      fragment: 'true'
+      fragment: 'true',
+      value: true
     })
   );
 });
@@ -76,7 +82,8 @@ test('Define a tuple', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.TUPLE,
-      fragment: '(2, ("a", "b"))'
+      fragment: '(2, ("a", "b"))',
+      value: [2, ['a', 'b']]
     })
   );
 });
