@@ -65,13 +65,11 @@ test('Closure with parameters and single body', () => {
         getMultiplyExpressionTree(
           {
             kind: NodeTypes.IDENTIFIER,
-            fragment: 'x',
-            value: undefined
+            fragment: 'x'
           },
           {
             kind: NodeTypes.IDENTIFIER,
-            fragment: 'y',
-            value: undefined
+            fragment: 'y'
           }
         ),
         getClosureParametersTree('x', 'y')
@@ -92,13 +90,11 @@ test('Closure with parameters and block body', () => {
             getMultiplicationTree(
               {
                 kind: NodeTypes.IDENTIFIER,
-                fragment: 'x',
-                value: undefined
+                fragment: 'x'
               },
               {
                 kind: NodeTypes.IDENTIFIER,
-                fragment: 'y',
-                value: undefined
+                fragment: 'y'
               }
             )
           ),
