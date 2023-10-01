@@ -55,11 +55,14 @@ export const getTernaryTree = (conditionNode: Tree, successNode: Tree, failureNo
   };
 };
 
-export const getLogicalAndTree = (lhsNode: Tree, rhsNode: Tree) => {
+export const getAssignmentTree = (identifier: string, rhsNode: Tree) => {
   return {
-    kind: NodeTypes.LOGICAL_AND,
-    fragment: '&&',
-    left: lhsNode,
+    kind: NodeTypes.ASSIGNMENT,
+    fragment: '=',
+    left: {
+      kind: NodeTypes.IDENTIFIER,
+      fragment: identifier
+    },
     right: rhsNode
   };
 };
@@ -68,6 +71,15 @@ export const getLogicalOrTree = (lhsNode: Tree, rhsNode: Tree) => {
   return {
     kind: NodeTypes.LOGICAL_OR,
     fragment: '||',
+    left: lhsNode,
+    right: rhsNode
+  };
+};
+
+export const getLogicalAndTree = (lhsNode: Tree, rhsNode: Tree) => {
+  return {
+    kind: NodeTypes.LOGICAL_AND,
+    fragment: '&&',
     left: lhsNode,
     right: rhsNode
   };
