@@ -276,3 +276,19 @@ export const getDivideExpressionTree = (lhsNode: Tree, rhsNode: Tree) => {
 export const getModuloExpressionTree = (lhsNode: Tree, rhsNode: Tree) => {
   return getExpressionTree(getModuloTree(lhsNode, rhsNode));
 };
+
+export const getDummyExpressionTree = (assertionValue: boolean) => {
+  return getExpressionTree(
+    getInvocationTree(
+      {
+        kind: NodeTypes.IDENTIFIER,
+        fragment: 'assert'
+      },
+      {
+        kind: NodeTypes.BOOLEAN,
+        fragment: assertionValue ? 'true' : 'false',
+        value: assertionValue
+      }
+    )
+  );
+};
