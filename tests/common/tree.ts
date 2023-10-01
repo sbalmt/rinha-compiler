@@ -20,6 +20,41 @@ export const getExpressionTree = (expressionNode: Tree) => {
   };
 };
 
+export const getClosureTree = (bodyNode: Tree, parametersNode?: Tree) => {
+  return {
+    kind: NodeTypes.CLOSURE,
+    right: {
+      kind: NodeTypes.BLOCK,
+      right: parametersNode && {
+        kind: NodeTypes.PARAMETER,
+        right: parametersNode
+      },
+      next: {
+        kind: NodeTypes.BLOCK,
+        right: bodyNode
+      }
+    }
+  };
+};
+
+export const getTernaryTree = (conditionNode: Tree, successNode: Tree, failureNode?: Tree) => {
+  return {
+    kind: NodeTypes.TERNARY,
+    right: {
+      kind: NodeTypes.CONDITION,
+      right: conditionNode,
+      next: {
+        kind: NodeTypes.BLOCK,
+        right: successNode,
+        next: {
+          kind: NodeTypes.BLOCK,
+          right: failureNode
+        }
+      }
+    }
+  };
+};
+
 export const getLogicalAndTree = (lhsNode: Tree, rhsNode: Tree) => {
   return {
     kind: NodeTypes.LOGICAL_AND,

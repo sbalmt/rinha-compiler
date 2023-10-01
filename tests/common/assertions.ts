@@ -15,6 +15,7 @@ export type Tree = {
 };
 
 export const matchTree = (node: NodeType, tree: Tree): void => {
+  expect(node).toBeDefined();
   expect(node.value).toBe(tree.kind);
 
   if (tree.fragment !== undefined) {
