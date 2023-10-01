@@ -7,7 +7,7 @@ alias token EXTRA as '_';
 alias token ALPHA as from 'A' to 'Z' | from 'a' to 'z';
 alias token DIGIT as from '0' to '9';
 alias token WORD as EXTRA | ALPHA | DIGIT;
-alias token END as not WORD;
+alias token END as not WORD | eos;
 
 // Keyword patterns
 export token<auto> T_KEYWORD as map {
