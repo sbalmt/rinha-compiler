@@ -21,10 +21,16 @@ function* consumeInnerNode(scope: Scope, closureNode: NodeType) {
   const blockNode = parametersNode.next!;
   const blockScope = new Scope(blockNode, Core.NodeDirection.Right, scope);
 
-  blockScope.closureDeclarationNode = blockScope.declarationNode;
   blockScope.closureNode = closureNode;
 
+  blockScope.closureDeclarationNode = blockScope.declarationNode;
+  blockScope.declarationNode = undefined;
+
+  blockScope.closureCallerNode = scope.callerNode;
+  blockScope.callerNode = undefined;
+
   yield Block.consumeNodes(blockScope, blockScope.currentNode);
+
   scope.pending = blockScope.pending;
 
   return closureNode;

@@ -25,6 +25,10 @@ export class Scope extends BaseScope {
 
   closureDeclarationNode?: NodeType;
 
+  closureCallerNode?: NodeType;
+
+  callerNode?: NodeType;
+
   pending: boolean;
 
   constructor(anchorNode: NodeType, anchorDirection: Core.NodeDirection, parentScope?: Scope, options?: ScopeOptions) {
@@ -41,13 +45,28 @@ export class Scope extends BaseScope {
     this.previousDirection = anchorDirection;
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
-    this.declarationNode = parentScope?.declarationNode;
-    this.closureDeclarationNode = parentScope?.closureDeclarationNode;
-    this.pending = parentScope?.pending ?? false;
+
+    if (!parentScope) {
+      this.pending = false;
+    } else {
+      this.declarationNode = parentScope.declarationNode;
+      this.closureDeclarationNode = parentScope.closureDeclarationNode;
+      this.closureCallerNode = parentScope.closureCallerNode;
+      this.callerNode = parentScope.callerNode;
+      this.pending = parentScope.pending;
+    }
   }
 
   get options(): ScopeOptions {
     return super.options as ScopeOptions;
+  }
+
+  isBeingCalled() {
+    return this.closureCallerNode !== undefined;
+  }
+
+  isInsideClosure() {
+    return this.closureNode !== undefined;
   }
 
   isMatchingDeclaration(node: NodeType) {

@@ -46,9 +46,14 @@ export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   const calleeNode = node.left!;
   const calleeFirstArgumentNode = calleeNode.next!;
 
+  const previousCallerNode = scope.callerNode;
+  scope.callerNode = node;
+
   const totalArgs = yield consumeAndCountArgumentNodes(scope, calleeFirstArgumentNode);
   const closureNode = yield Expression.consumeNode(scope, calleeNode);
   const closureBlock = getClosureBlock(closureNode);
+
+  scope.callerNode = previousCallerNode;
 
   if (closureBlock) {
     const { minParams, maxParams } = closureBlock.data;

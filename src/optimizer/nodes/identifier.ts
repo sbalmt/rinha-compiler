@@ -110,7 +110,7 @@ export const consumeNode = (scope: Scope, node: NodeType) => {
   if (!symbol.assigned) {
     const hoist = !scope.isMatchingClosureDeclaration(node) && canBeHoisted(symbol);
 
-    if (hoist && !enableHoisting) {
+    if (hoist && !enableHoisting && scope.isBeingCalled()) {
       throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
     }
 
