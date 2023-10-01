@@ -43,16 +43,29 @@ export const getClosureTree = (bodyNode: Tree, parametersNode?: Tree) => {
     kind: NodeTypes.CLOSURE,
     right: {
       kind: NodeTypes.BLOCK,
-      right: parametersNode && {
-        kind: NodeTypes.PARAMETER,
-        right: parametersNode
-      },
+      right: parametersNode,
       next: {
         kind: NodeTypes.BLOCK,
         right: bodyNode
       }
     }
   };
+};
+
+export const getClosureParametersTree = (first: string, ...remaining: string[]) => {
+  const parameterTree: Tree = {
+    kind: NodeTypes.PARAMETER,
+    fragment: first
+  };
+
+  for (let current = parameterTree, index = 0; index < remaining.length; ++index) {
+    current = current.next = {
+      kind: NodeTypes.PARAMETER,
+      fragment: remaining[index]
+    };
+  }
+
+  return parameterTree;
 };
 
 export const getTernaryTree = (conditionNode: Tree, successNode: Tree, failureNode: Tree) => {
@@ -199,6 +212,16 @@ export const getModuloTree = (lhsNode: Tree, rhsNode: Tree) => {
     fragment: '%',
     left: lhsNode,
     right: rhsNode
+  };
+};
+
+export const getInvocationTree = (callee: Tree, argumentsNode?: Tree) => {
+  return {
+    kind: NodeTypes.INVOKE,
+    left: {
+      ...callee,
+      next: argumentsNode
+    }
   };
 };
 
