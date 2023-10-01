@@ -4,24 +4,17 @@ import * as Assertion from '../common/assertions';
 import { NodeTypes } from '../../src/core/types';
 import { getVariableTree } from '../common/tree';
 
-test('Define a reference', () => {
-  const context = Optimizer.run('let x = print;');
-  Assertion.matchTree(
-    context.node.next!,
-    getVariableTree('x', {
-      kind: NodeTypes.IDENTIFIER,
-      fragment: 'print'
-    })
-  );
-});
+const options: Optimizer.Options = {
+  constantFolding: true
+};
 
-test('Define an integer', () => {
-  const context = Optimizer.run('let x = 10;');
+test('Define an integer (CF optimized)', () => {
+  const context = Optimizer.run('let x = 10;', options);
   Assertion.matchTree(
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.INTEGER,
-      fragment: '10'
+      value: 10
     })
   );
 });
@@ -32,7 +25,7 @@ test('Define a single quoted string', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.STRING,
-      fragment: "'hello rinha'"
+      value: 'hello rinha'
     })
   );
 });
@@ -43,7 +36,7 @@ test('Define a double quoted string', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.STRING,
-      fragment: '"hello rinha"'
+      value: 'hello rinha'
     })
   );
 });
@@ -54,7 +47,7 @@ test('Define a boolean (false)', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.BOOLEAN,
-      fragment: 'false'
+      value: false
     })
   );
 });
@@ -65,7 +58,7 @@ test('Define a boolean (true)', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.BOOLEAN,
-      fragment: 'true'
+      value: true
     })
   );
 });
@@ -76,7 +69,7 @@ test('Define a tuple', () => {
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.TUPLE,
-      fragment: '(2, ("a", "b"))'
+      value: [2, ['a', 'b']]
     })
   );
 });

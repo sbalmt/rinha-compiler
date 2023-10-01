@@ -1,9 +1,11 @@
-import { NodeType, NodeTypes } from '../../src/core/types';
+import { NodeType, NodeTypes, ValueTypes } from '../../src/core/types';
 
 export type Tree = {
   kind: NodeTypes;
 
-  value?: string;
+  fragment?: string;
+
+  value?: ValueTypes;
 
   left?: Tree;
 
@@ -14,8 +16,15 @@ export type Tree = {
 
 export const matchTree = (node: NodeType, tree: Tree): void => {
   expect(node.value).toBe(tree.kind);
+
+  if (tree.fragment) {
+    expect(node.fragment.data).toBe(tree.fragment);
+  }
+
   if (tree.value) {
-    expect(node.fragment.data).toBe(tree.value);
+    expect(node.assigned).toBeTruthy();
+    expect(node.data.value).toBeDefined();
+    expect(node.data.value).toStrictEqual(tree.value);
   }
 
   if (tree.left) {

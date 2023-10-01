@@ -8,7 +8,7 @@ import { ErrorTypes } from '../../src/core/types';
 import { applyBuiltIn } from '../../src/core/builtin';
 import { ScopeOptions } from '../../src/optimizer/scope';
 
-type Options = Omit<ScopeOptions, 'debug'>;
+export type Options = Omit<ScopeOptions, 'debug'>;
 
 export const run = (source: string, options?: Options) => {
   const context = new Core.Context('@tester', {
