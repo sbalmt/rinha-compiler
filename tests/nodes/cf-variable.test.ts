@@ -20,7 +20,7 @@ test('Define an integer (CF optimized)', () => {
   );
 });
 
-test('Define a single quoted string', () => {
+test('Define a single quoted string (CF optimized)', () => {
   const context = Optimizer.run("let x = 'hello' + ' ' + 'rinha';", options);
   Assertion.matchTree(
     context.node.next!,
@@ -32,7 +32,7 @@ test('Define a single quoted string', () => {
   );
 });
 
-test('Define a double quoted string', () => {
+test('Define a double quoted string (CF optimized)', () => {
   const context = Optimizer.run('let x = "hello" + " " + "rinha";', options);
   Assertion.matchTree(
     context.node.next!,
@@ -44,7 +44,7 @@ test('Define a double quoted string', () => {
   );
 });
 
-test('Define a boolean (false)', () => {
+test('Define a boolean (false) (CF optimized)', () => {
   const context = Optimizer.run('let x = false == true;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -56,7 +56,7 @@ test('Define a boolean (false)', () => {
   );
 });
 
-test('Define a boolean (true)', () => {
+test('Define a boolean (true) (CF optimized)', () => {
   const context = Optimizer.run('let x = true != false;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -68,7 +68,7 @@ test('Define a boolean (true)', () => {
   );
 });
 
-test('Define a tuple', () => {
+test('Define a tuple (CF optimized)', () => {
   const context = Optimizer.run('let x = (1 + 1, ("a" + "b", "c" + "d"));', options);
   Assertion.matchTree(
     context.node.next!,
