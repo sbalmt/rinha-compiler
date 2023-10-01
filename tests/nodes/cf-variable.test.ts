@@ -8,19 +8,19 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('Define an integer (CF optimized)', () => {
+test('[CF optimized] Define an integer', () => {
   const context = Optimizer.run('let x = 5 + (5 * 2) - 5;', options);
   Assertion.matchTree(
     context.node.next!,
     getVariableTree('x', {
       kind: NodeTypes.INTEGER,
-      fragment: '5 + 5 * 2 - 5', // NOTE: This doesn't keep precedence
+      fragment: '5 + 5 * 2 - 5', // NOTE: The precedence was kept but isn't explicit.
       value: 10
     })
   );
 });
 
-test('Define a single quoted string (CF optimized)', () => {
+test('[CF optimized] Define a single quoted string', () => {
   const context = Optimizer.run("let x = 'hello' + ' ' + 'rinha';", options);
   Assertion.matchTree(
     context.node.next!,
@@ -32,7 +32,7 @@ test('Define a single quoted string (CF optimized)', () => {
   );
 });
 
-test('Define a double quoted string (CF optimized)', () => {
+test('[CF optimized] Define a double quoted string', () => {
   const context = Optimizer.run('let x = "hello" + " " + "rinha";', options);
   Assertion.matchTree(
     context.node.next!,
@@ -44,7 +44,7 @@ test('Define a double quoted string (CF optimized)', () => {
   );
 });
 
-test('Define a boolean (false) (CF optimized)', () => {
+test('[CF optimized] Define a boolean (false)', () => {
   const context = Optimizer.run('let x = false == true;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -56,7 +56,7 @@ test('Define a boolean (false) (CF optimized)', () => {
   );
 });
 
-test('Define a boolean (true) (CF optimized)', () => {
+test('[CF optimized] Define a boolean (true)', () => {
   const context = Optimizer.run('let x = true != false;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -68,7 +68,7 @@ test('Define a boolean (true) (CF optimized)', () => {
   );
 });
 
-test('Define a tuple (CF optimized)', () => {
+test('[CF optimized] Define a tuple', () => {
   const context = Optimizer.run('let x = (1 + 1, ("a" + "b", "c" + "d"));', options);
   Assertion.matchTree(
     context.node.next!,
