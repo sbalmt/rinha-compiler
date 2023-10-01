@@ -8,7 +8,7 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('[CF optimized] Define an integer', () => {
+test('[Constant Folding] Define an integer', () => {
   const context = Optimizer.run('let x = 5 + (5 * 2) - 5;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -20,7 +20,7 @@ test('[CF optimized] Define an integer', () => {
   );
 });
 
-test('[CF optimized] Define a single quoted string', () => {
+test('[Constant Folding] Define a single quoted string', () => {
   const context = Optimizer.run("let x = 'hello' + ' ' + 'rinha';", options);
   Assertion.matchTree(
     context.node.next!,
@@ -32,7 +32,7 @@ test('[CF optimized] Define a single quoted string', () => {
   );
 });
 
-test('[CF optimized] Define a double quoted string', () => {
+test('[Constant Folding] Define a double quoted string', () => {
   const context = Optimizer.run('let x = "hello" + " " + "rinha";', options);
   Assertion.matchTree(
     context.node.next!,
@@ -44,7 +44,7 @@ test('[CF optimized] Define a double quoted string', () => {
   );
 });
 
-test('[CF optimized] Define a boolean (false)', () => {
+test('[Constant Folding] Define a boolean (false)', () => {
   const context = Optimizer.run('let x = false == true;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -56,7 +56,7 @@ test('[CF optimized] Define a boolean (false)', () => {
   );
 });
 
-test('[CF optimized] Define a boolean (true)', () => {
+test('[Constant Folding] Define a boolean (true)', () => {
   const context = Optimizer.run('let x = true != false;', options);
   Assertion.matchTree(
     context.node.next!,
@@ -68,7 +68,7 @@ test('[CF optimized] Define a boolean (true)', () => {
   );
 });
 
-test('[CF optimized] Define a tuple', () => {
+test('[Constant Folding] Define a tuple', () => {
   const context = Optimizer.run('let x = (1 + 1, ("a" + "b", "c" + "d"));', options);
   Assertion.matchTree(
     context.node.next!,

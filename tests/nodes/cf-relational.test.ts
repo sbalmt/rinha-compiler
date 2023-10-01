@@ -9,7 +9,7 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('[CF optimized] Greater Than', () => {
+test('[Constant Folding] Greater Than', () => {
   const context = Optimizer.run('10 > 5', options);
   Assertion.matchTree(
     context.node.next!,
@@ -21,7 +21,7 @@ test('[CF optimized] Greater Than', () => {
   );
 });
 
-test('[CF optimized] Less Than', () => {
+test('[Constant Folding] Less Than', () => {
   const context = Optimizer.run('10 < 5', options);
   Assertion.matchTree(
     context.node.next!,
@@ -33,7 +33,7 @@ test('[CF optimized] Less Than', () => {
   );
 });
 
-test('[CF optimized] Greater Than or Equal', () => {
+test('[Constant Folding] Greater Than or Equal', () => {
   const context = Optimizer.run('10 >= 5', options);
   Assertion.matchTree(
     context.node.next!,
@@ -45,7 +45,7 @@ test('[CF optimized] Greater Than or Equal', () => {
   );
 });
 
-test('[CF optimized] Less Than or Equal', () => {
+test('[Constant Folding] Less Than or Equal', () => {
   const context = Optimizer.run('10 <= 5', options);
   Assertion.matchTree(
     context.node.next!,

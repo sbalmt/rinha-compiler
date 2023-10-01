@@ -9,7 +9,7 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('[CF optimized] Logical Or', () => {
+test('[Constant Folding] Logical Or', () => {
   const context = Optimizer.run('false || true', options);
   Assertion.matchTree(
     context.node.next!,
@@ -21,7 +21,7 @@ test('[CF optimized] Logical Or', () => {
   );
 });
 
-test('[CF optimized] Logical And', () => {
+test('[Constant Folding] Logical And', () => {
   const context = Optimizer.run('true && false', options);
   Assertion.matchTree(
     context.node.next!,

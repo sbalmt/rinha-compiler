@@ -8,7 +8,7 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('[CF optimized] Define an if/else condition (alway true)', () => {
+test('[Constant Folding] Define an if/else condition (alway true)', () => {
   const context = Optimizer.run('if (true) { "success" } else { "failure" }', options);
   Assertion.matchTree(context.node.next!, {
     kind: NodeTypes.BLOCK,
@@ -20,7 +20,7 @@ test('[CF optimized] Define an if/else condition (alway true)', () => {
   });
 });
 
-test('[CF optimized] Define an if/else condition (always false)', () => {
+test('[Constant Folding] Define an if/else condition (always false)', () => {
   const context = Optimizer.run('if (false) { "success" } else { "failure" }', options);
   Assertion.matchTree(context.node.next!, {
     kind: NodeTypes.BLOCK,
@@ -32,7 +32,7 @@ test('[CF optimized] Define an if/else condition (always false)', () => {
   });
 });
 
-test('[CF optimized] Define an if condition (always true)', () => {
+test('[Constant Folding] Define an if condition (always true)', () => {
   const context = Optimizer.run('if (true) { "success" }', options);
   Assertion.matchTree(context.node.next!, {
     kind: NodeTypes.BLOCK,
@@ -44,7 +44,7 @@ test('[CF optimized] Define an if condition (always true)', () => {
   });
 });
 
-test('[CF optimized] Define an if condition (always false)', () => {
+test('[Constant Folding] Define an if condition (always false)', () => {
   const context = Optimizer.run('if (false) { "success" }', options);
   expect(context.node.next).toBeUndefined();
 });

@@ -9,7 +9,7 @@ const options: Optimizer.Options = {
   constantFolding: true
 };
 
-test('[CF optimized] Equal', () => {
+test('[Constant Folding] Equal', () => {
   const context = Optimizer.run('false == false', options);
   Assertion.matchTree(
     context.node.next!,
@@ -21,7 +21,7 @@ test('[CF optimized] Equal', () => {
   );
 });
 
-test('[CF optimized] Not Equal', () => {
+test('[Constant Folding] Not Equal', () => {
   const context = Optimizer.run('true != true', options);
   Assertion.matchTree(
     context.node.next!,
