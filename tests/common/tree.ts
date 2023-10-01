@@ -2,6 +2,13 @@ import { NodeTypes } from '../../src/core/types';
 
 import { Tree } from './assertions';
 
+export const getExpressionTree = (expressionNode: Tree) => {
+  return {
+    kind: NodeTypes.EXPRESSION,
+    right: expressionNode
+  };
+};
+
 export const getVariableTree = (identifier: string, expressionNode: Tree) => {
   return {
     kind: NodeTypes.VARIABLE,
@@ -13,10 +20,21 @@ export const getVariableTree = (identifier: string, expressionNode: Tree) => {
   };
 };
 
-export const getExpressionTree = (expressionNode: Tree) => {
+export const getConditionTree = (conditionNode: Tree, successNode: Tree, failureNode?: Tree) => {
   return {
-    kind: NodeTypes.EXPRESSION,
-    right: expressionNode
+    kind: NodeTypes.IF_ELSE,
+    right: {
+      kind: NodeTypes.CONDITION,
+      right: conditionNode,
+      next: {
+        kind: NodeTypes.BLOCK,
+        right: successNode,
+        next: failureNode && {
+          kind: NodeTypes.BLOCK,
+          right: failureNode
+        }
+      }
+    }
   };
 };
 
@@ -37,7 +55,7 @@ export const getClosureTree = (bodyNode: Tree, parametersNode?: Tree) => {
   };
 };
 
-export const getTernaryTree = (conditionNode: Tree, successNode: Tree, failureNode?: Tree) => {
+export const getTernaryTree = (conditionNode: Tree, successNode: Tree, failureNode: Tree) => {
   return {
     kind: NodeTypes.TERNARY,
     right: {
