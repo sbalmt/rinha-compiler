@@ -76,6 +76,32 @@ test('Define a boolean (true)', () => {
   );
 });
 
+test('Define a closure', () => {
+  const context = Optimizer.run('let x = fn () => 10;');
+  Assertion.matchTree(
+    context.node.next!,
+    getVariableTree('x', {
+      kind: NodeTypes.CLOSURE,
+      fragment: 'fn () => 10',
+      value: undefined,
+      right: {
+        kind: NodeTypes.BLOCK,
+        next: {
+          kind: NodeTypes.BLOCK,
+          right: {
+            kind: NodeTypes.EXPRESSION,
+            right: {
+              kind: NodeTypes.INTEGER,
+              fragment: '10',
+              value: 10
+            }
+          }
+        }
+      }
+    })
+  );
+});
+
 test('Define a tuple', () => {
   const context = Optimizer.run('let x = (2, ("a", "b"));');
   Assertion.matchTree(
