@@ -19,15 +19,15 @@ export const isComparable = (value: unknown): value is ValueType => {
 export const evaluate = (lhs: ValueType, rhs: ValueType, operation: OperationType) => {
   switch (operation) {
     case NodeTypes.GREATER_THAN:
-      return lhs! > rhs!;
+      return lhs > rhs;
 
     case NodeTypes.LESS_THAN:
-      return lhs! < rhs!;
+      return lhs < rhs;
 
     case NodeTypes.GREATER_THAN_OR_EQUAL:
-      return lhs! >= rhs!;
+      return lhs >= rhs;
 
     case NodeTypes.LESS_THAN_OR_EQUAL:
-      return lhs! <= rhs!;
+      return lhs <= rhs;
   }
 };
