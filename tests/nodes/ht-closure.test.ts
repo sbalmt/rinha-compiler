@@ -16,7 +16,7 @@ const options: Optimizer.Options = {
 };
 
 test('[Hoisting] Closure using a post defined variable', () => {
-  const context = Optimizer.run('(fn () => { x }) assert(true) let x = 10; assert(false)', options);
+  const context = Optimizer.run('assert(true) let y = fn () => { x }; let x = 10; assert(false)', options);
   Assertion.matchTree(context.node.next!, {
     ...getVariableTree('x', {
       kind: NodeTypes.INTEGER,
@@ -24,16 +24,17 @@ test('[Hoisting] Closure using a post defined variable', () => {
       value: 10
     }),
     next: {
-      ...getExpressionTree(
-        getClosureTree(
-          getExpressionTree({
-            kind: NodeTypes.IDENTIFIER,
-            fragment: 'x'
-          })
-        )
-      ),
+      ...getDummyExpressionTree(true),
       next: {
-        ...getDummyExpressionTree(true),
+        ...getVariableTree(
+          'y',
+          getClosureTree(
+            getExpressionTree({
+              kind: NodeTypes.IDENTIFIER,
+              fragment: 'x'
+            })
+          )
+        ),
         next: getDummyExpressionTree(false)
       }
     }
@@ -69,7 +70,7 @@ test('[Hoisting] Calling a post defined closure', () => {
 });
 
 test('[Hoisting] Closure calling a post defined closure', () => {
-  const context = Optimizer.run('(fn () => { x() }) assert(true) let x = fn () => 30; assert(false) ', options);
+  const context = Optimizer.run('assert(true) fn () => { x() } let x = fn () => 30; assert(false) ', options);
   Assertion.matchTree(context.node.next!, {
     ...getVariableTree(
       'x',
@@ -82,20 +83,46 @@ test('[Hoisting] Closure calling a post defined closure', () => {
       )
     ),
     next: {
-      ...getExpressionTree(
-        getClosureTree(
-          getExpressionTree(
-            getInvocationTree({
-              kind: NodeTypes.IDENTIFIER,
-              fragment: 'x'
-            })
-          )
-        )
-      ),
+      ...getDummyExpressionTree(true),
       next: {
-        ...getDummyExpressionTree(true),
+        ...getExpressionTree(
+          getClosureTree(
+            getExpressionTree(
+              getInvocationTree({
+                kind: NodeTypes.IDENTIFIER,
+                fragment: 'x'
+              })
+            )
+          )
+        ),
         next: getDummyExpressionTree(false)
       }
     }
   });
+});
+
+test('[Hoisting] Variable inside a closure', () => {
+  const context = Optimizer.run('fn () => { assert(false) let x = y; assert(true) let y = 40; }', options);
+  Assertion.matchTree(
+    context.node.next!,
+    getExpressionTree(
+      getClosureTree({
+        ...getVariableTree('y', {
+          kind: NodeTypes.INTEGER,
+          fragment: '40',
+          value: 40
+        }),
+        next: {
+          ...getDummyExpressionTree(false),
+          next: {
+            ...getVariableTree('x', {
+              kind: NodeTypes.IDENTIFIER,
+              fragment: 'y'
+            }),
+            next: getDummyExpressionTree(true)
+          }
+        }
+      })
+    )
+  );
 });
