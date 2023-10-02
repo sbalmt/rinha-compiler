@@ -8,7 +8,9 @@ import { Scope } from '../scope';
 
 const consumeInnerNode = (scope: Scope, node: NodeType) => {
   const innerScope = new Scope(node, Core.NodeDirection.Right, scope);
-  return Block.consumeNodes(innerScope, innerScope.currentNode);
+  const result = Block.consumeNodes(innerScope, innerScope.currentNode);
+  scope.pending = innerScope.pending;
+  return result;
 };
 
 export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
