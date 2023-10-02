@@ -3,6 +3,10 @@ import * as Core from '@xcheme/core';
 import { Metadata } from './metadata';
 import { Scope } from '../evaluator/scope';
 
+export type LogType = Core.LogType;
+
+export type LogList = Core.LogList;
+
 export type NodeType = Core.Node<Metadata>;
 
 export type TableType = Core.SymbolTable<Metadata>;

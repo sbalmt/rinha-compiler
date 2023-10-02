@@ -1,4 +1,5 @@
-import * as Errors from '../../core/errors';
+import * as Core from '@xcheme/core';
+
 import * as Expression from './expression';
 
 import { ErrorTypes, NodeType, NodeTypes } from '../../core/types';
@@ -59,11 +60,13 @@ export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
     const { minParams, maxParams } = closureBlock.data;
 
     if (totalArgs! < minParams!) {
-      throw Errors.getMessage(ErrorTypes.MISSING_ARGUMENT, calleeNode.fragment);
+      scope.logs.emplace(Core.LogType.ERROR, calleeNode.fragment, ErrorTypes.MISSING_ARGUMENT);
+      return undefined;
     }
 
     if (totalArgs! > maxParams!) {
-      throw Errors.getMessage(ErrorTypes.EXTRA_ARGUMENT, calleeNode.fragment);
+      scope.logs.emplace(Core.LogType.ERROR, calleeNode.fragment, ErrorTypes.EXTRA_ARGUMENT);
+      return undefined;
     }
   }
 

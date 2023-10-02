@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../core/errors';
-
 import { initSymbol } from '../../core/metadata';
 import { ErrorTypes, NodeType, NodeTypes, RecordType, SymbolTypes } from '../../core/types';
 import { replaceNode } from '../../core/ast';
@@ -104,14 +102,16 @@ export const consumeNode = (scope: Scope, node: NodeType) => {
   const symbol = table.find(node.fragment);
 
   if (!symbol) {
-    throw Errors.getMessage(ErrorTypes.UNDEFINED_IDENTIFIER, node.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNDEFINED_IDENTIFIER);
+    return undefined;
   }
 
   if (!symbol.assigned) {
     const hoist = !scope.isMatchingClosureDeclaration(node) && canBeHoisted(symbol);
 
     if (hoist && !enableHoisting && scope.isBeingCalled()) {
-      throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
+      scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNSUPPORTED_REFERENCE);
+      return undefined;
     }
 
     initSymbol(symbol, {

@@ -10,6 +10,12 @@ import * as Utils from './utils';
 import { applyBuiltIn } from './core/builtin';
 import { ErrorTypes } from './core/types';
 
+const contextOptions = {
+  errors: {
+    duplicateSymbolIdentifier: ErrorTypes.DUPLICATE_IDENTIFIER
+  }
+};
+
 try {
   const cliOptions = Utils.CLI.getInputArguments();
 
@@ -17,12 +23,7 @@ try {
   const fileName = typeof filePath === 'string' ? Path.basename(filePath) : 'stdin';
 
   const source = FS.readFileSync(filePath).toString();
-
-  const context = new Core.Context(fileName, {
-    errors: {
-      duplicateSymbolIdentifier: ErrorTypes.DUPLICATE_IDENTIFIER
-    }
-  });
+  const context = new Core.Context(fileName, contextOptions);
 
   if (!Utils.Lexer.consumeSource(source, context) || !Utils.Parser.consumeTokens(context.tokens, context)) {
     Errors.printLogs(context.logs);
@@ -31,7 +32,7 @@ try {
 
   applyBuiltIn(context.table);
 
-  Optimizer.consumeNodes(context.node, {
+  const logs = Optimizer.consumeNodes(context.node, {
     debug: cliOptions.debug,
     enableHoisting: cliOptions.enableHoisting,
     constantFolding: cliOptions.constantFolding,
@@ -39,9 +40,12 @@ try {
     enableMemoization: cliOptions.enableMemoization
   });
 
-  Evaluator.consumeNodes(context.node, {
-    debug: false
-  });
+  if (logs.length > 0) {
+    Errors.printLogs(logs);
+    process.exit(1);
+  }
+
+  Evaluator.consumeNodes(context.node);
 } catch (e) {
   console.error(e);
   process.exit(1);

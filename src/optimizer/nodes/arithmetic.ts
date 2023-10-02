@@ -1,4 +1,5 @@
-import * as Errors from '../../core/errors';
+import * as Core from '@xcheme/core';
+
 import * as Expression from './expression';
 
 import { Arithmetic, Concat } from '../../core/operations';
@@ -40,12 +41,12 @@ export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   }
 
   if (!Concat.isPerformable(lhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.left!.fragment, ErrorTypes.INVALID_OPERATION);
+  } else if (!Concat.isPerformable(rhs)) {
+    scope.logs.emplace(Core.LogType.ERROR, node.right!.fragment, ErrorTypes.INVALID_OPERATION);
+  } else {
+    scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNSUPPORTED_OPERATION);
   }
 
-  if (!Concat.isPerformable(rhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
-  }
-
-  throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
+  return undefined;
 }

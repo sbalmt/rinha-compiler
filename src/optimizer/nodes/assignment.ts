@@ -1,4 +1,5 @@
-import * as Errors from '../../core/errors';
+import * as Core from '@xcheme/core';
+
 import * as Expression from './expression';
 
 import { initSymbol } from '../../core/metadata';
@@ -10,7 +11,8 @@ export const consumeNode = (scope: Scope, node: NodeType) => {
   const rhsNode = node.right!;
 
   if (lhsNode.value !== NodeTypes.IDENTIFIER) {
-    throw Errors.getMessage(ErrorTypes.INVALID_ASSIGNMENT, lhsNode.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, lhsNode.fragment, ErrorTypes.INVALID_ASSIGNMENT);
+    return undefined;
   }
 
   const symbol = node.table.find(lhsNode.fragment)!;
@@ -18,11 +20,12 @@ export const consumeNode = (scope: Scope, node: NodeType) => {
   if (symbol.assigned) {
     symbol!.data.mutable = true;
   } else {
-    if (!scope.options.enableHoisting) {
-      throw Errors.getMessage(ErrorTypes.UNSUPPORTED_REFERENCE, node.fragment);
-    }
-
     scope.pending = true;
+
+    if (!scope.options.enableHoisting) {
+      scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNSUPPORTED_REFERENCE);
+      return undefined;
+    }
 
     initSymbol(symbol, {
       references: 1,

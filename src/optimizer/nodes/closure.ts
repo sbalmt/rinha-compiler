@@ -8,10 +8,12 @@ import { Scope } from '../scope';
 
 const countParameters = (parameterNode: NodeType): number => {
   let counter = 0;
+
   while (parameterNode) {
     parameterNode = parameterNode.next!;
     counter++;
   }
+
   return counter;
 };
 

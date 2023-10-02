@@ -1,10 +1,11 @@
-import * as Errors from '../../core/errors';
+import * as Core from '@xcheme/core';
+
 import * as Equality from '../../core/operations/equality';
 
 import * as Expression from './expression';
 
-import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { combineNodes } from '../../core/ast';
+import { ErrorTypes, NodeType, NodeTypes, ValueTypes } from '../../core/types';
 import { isLiteral } from '../../core/data';
 import { Scope } from '../scope';
 
@@ -26,15 +27,18 @@ export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   }
 
   if (!Equality.isComparable(lhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.left!.fragment, ErrorTypes.INVALID_OPERATION);
+    return undefined;
   }
 
   if (!Equality.isComparable(rhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.right!.fragment, ErrorTypes.INVALID_OPERATION);
+    return undefined;
   }
 
   if (!Equality.isCompatible(lhs, rhs)) {
-    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNSUPPORTED_OPERATION);
+    return undefined;
   }
 
   if (constantFolding) {

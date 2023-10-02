@@ -1,4 +1,5 @@
-import * as Errors from '../../core/errors';
+import * as Core from '@xcheme/core';
+
 import * as Expression from './expression';
 
 import { Logical } from '../../core/operations';
@@ -25,15 +26,18 @@ export function* consumeNode(scope: Scope, node: NodeType): ValueTypes {
   }
 
   if (!Logical.isComparable(lhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.left!.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.left!.fragment, ErrorTypes.INVALID_OPERATION);
+    return undefined;
   }
 
   if (!Logical.isComparable(rhs)) {
-    throw Errors.getMessage(ErrorTypes.INVALID_OPERATION, node.right!.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.right!.fragment, ErrorTypes.INVALID_OPERATION);
+    return undefined;
   }
 
   if (!Logical.isCompatible(lhs, rhs)) {
-    throw Errors.getMessage(ErrorTypes.UNSUPPORTED_OPERATION, node.fragment);
+    scope.logs.emplace(Core.LogType.ERROR, node.fragment, ErrorTypes.UNSUPPORTED_OPERATION);
+    return undefined;
   }
 
   if (constantFolding) {

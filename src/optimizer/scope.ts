@@ -11,6 +11,8 @@ export type ScopeOptions = BaseScopeOptions & {
 };
 
 export class Scope extends BaseScope {
+  private logList: Core.LogList;
+
   anchorNode: NodeType;
 
   anchorDirection: Core.NodeDirection;
@@ -46,15 +48,17 @@ export class Scope extends BaseScope {
     this.previousNode = anchorNode;
     this.currentNode = anchorNode.get(anchorDirection)!;
 
-    if (!parentScope) {
-      this.pending = false;
-    } else {
-      this.declarationNode = parentScope.declarationNode;
-      this.closureDeclarationNode = parentScope.closureDeclarationNode;
-      this.closureCallerNode = parentScope.closureCallerNode;
-      this.callerNode = parentScope.callerNode;
-      this.pending = parentScope.pending;
-    }
+    this.pending = parentScope?.pending ?? false;
+    this.logList = parentScope?.logList ?? new Core.LogList();
+
+    this.declarationNode = parentScope?.declarationNode;
+    this.closureDeclarationNode = parentScope?.closureDeclarationNode;
+    this.closureCallerNode = parentScope?.closureCallerNode;
+    this.callerNode = parentScope?.callerNode;
+  }
+
+  get logs(): Core.LogList {
+    return this.logList;
   }
 
   get options(): ScopeOptions {
