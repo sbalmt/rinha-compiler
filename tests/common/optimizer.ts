@@ -1,6 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Errors from '../../src/core/errors';
 import * as Optimizer from '../../src/optimizer';
 import * as Utils from '../../src/utils';
 
@@ -10,21 +9,22 @@ import { ScopeOptions } from '../../src/optimizer/scope';
 
 export type Options = Omit<ScopeOptions, 'debug'>;
 
+const contextOptions = {
+  errors: {
+    duplicateSymbolIdentifier: ErrorTypes.DUPLICATE_IDENTIFIER
+  }
+};
+
 export const run = (source: string, options?: Options) => {
-  const context = new Core.Context('@tester', {
-    errors: {
-      duplicateSymbolIdentifier: ErrorTypes.DUPLICATE_IDENTIFIER
-    }
-  });
+  const context = new Core.Context('@tester', contextOptions);
 
   if (!Utils.Lexer.consumeSource(source, context) || !Utils.Parser.consumeTokens(context.tokens, context)) {
-    Errors.printLogs(context.logs);
     return context;
   }
 
   applyBuiltIn(context.table);
 
-  Optimizer.consumeNodes(context.node, {
+  const logs = Optimizer.consumeNodes(context.node, {
     debug: false,
     enableHoisting: false,
     enableMemoization: false,
@@ -32,6 +32,8 @@ export const run = (source: string, options?: Options) => {
     constantFolding: false,
     ...options
   });
+
+  context.logs.insert(...logs);
 
   return context;
 };
